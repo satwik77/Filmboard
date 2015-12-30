@@ -1,0 +1,35 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>
+  {% block title %}
+      WireFrame
+  {% endblock title %}      
+  </title>
+  <meta name="description" content="">
+  <meta name="author" content="Satwik Bhattamishra">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'Wireframe/css/skeleton.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'registration/images/favicon.ico' %}">
+{% block head %}
+  
+{% endblock head %}
+</head>
+<body>
+{% block body %}
+    
+{% endblock body %}
+
+</body>
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns">
+        <footer id="footer" class="textcenter">
+          Developed by SmokingGauss
+        </footer>
+      </div>
+    </div>
+  </div>
+</html>

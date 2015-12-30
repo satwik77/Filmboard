@@ -1,0 +1,14 @@
+{% extends "registration/base.html" %}
+{% block title %}
+    WireFrame | Error
+{% endblock title %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="twelve columns textcenter">
+                <h1>{{error_heading}}</h1>
+                <p>{{error_message | safe}}</p>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

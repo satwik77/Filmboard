@@ -1,0 +1,23 @@
+{% extends "registration/base.html" %}
+{% block title %}
+	WireFrame Login
+{% endblock title %}
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="twelve columns textcenter">
+		<h1>Log into FutureArtist</h1>
+			{% csrf_token %}
+			<form action='../login/' method='POST'>
+				{% csrf_token %}
+				<label for="username">Username</label>
+				<input type="text" maxlength="254" name="username" />
+				<label for="password">Password:</label>
+				<input type="password" name="password" ><br/>
+				<a class="button" href="../register/">Register</a>
+				<button class="button button-primary" type="submit" name="submit" value="Login" > Login </button>
+			</form>			
+		</div>
+	</div>
+</div>
+{% endblock body %}

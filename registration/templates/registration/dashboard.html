@@ -1,0 +1,35 @@
+{% extends "registration/base.html" %}
+{% block title %}
+    Dashboard
+{% endblock title %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <h2 style="align:center"> <strong>Dashboard Page </strong></h2><br>
+
+            <strong><li>Name : {{artist.name}} </li><strong> </strong>
+            <strong><li>Gender : {{artist.gender}} </li> </strong>
+            <strong><li>Height : {{artist.height}} </li> </strong>
+            <strong><li>Weight : {{artist.weight}} </li> </strong>
+            <strong><li>Email Address: {{artist.email_id}} </li> </strong>
+            <strong><li>Phone : {{artist.phone}} </li> </strong>
+            <strong><li>location : {{artist.phone}} </li> </strong>
+            <strong><li>Body Type : {{artist.body_type}} </li> </strong>
+
+            <strong><li>Skills : {{artist.skills}} </li> </strong>
+            <strong><li>Certifications : {{artist.certifications}} </li> </strong>
+            <strong><li>education_background : {{artist.education_background}} </li> </strong>
+            <br>
+            <a class= 'button button-primary' href='../updateprofile/'>Update Profile</a> <strong>Add skills,Educational Background... </strong><br>
+            <a class= 'button' href='../addexp/'> Add Past Experiences </a> &nbsp;
+            <button class= 'button' > Seek Recommendation </button> &nbsp;<br>
+            <!-- <a class= 'button' href='../seekrec'> Seek Recommendation </a><br> -->
+
+            <a  href='../viewexp'> View Past Experiences</a> &nbsp;
+
+            <a href='.'> Add Past Experiences </a> 
+            <!-- <a  href='../viewrec'> View Recommendation </a> -->
+
+        </div>
+    </div>
+{% endblock body %}

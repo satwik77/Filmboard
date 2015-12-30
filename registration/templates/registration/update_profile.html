@@ -1,0 +1,35 @@
+{% extends "registration/base.html" %}
+{% block title %}
+    Edit | Profile
+{% endblock title %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <h2 style="align:center"><strong> Update Profile </strong> </h2>
+            <a href='../dashboard/' class='button'>Dashboard </a>
+
+            <form method='POST' action='../updateprofile/'>
+                {% csrf_token %}
+            <strong><li>Name : <input type='text' name='name' value='{{artist.name}}'> </li><strong> </strong>
+            <strong><li>Gender : <input type='text' name='gender' value='{{artist.gender}}'>  </li> </strong>
+            <strong><li>Height : <input type='text' name='height' value='{{artist.height}}'> </li> </strong>
+            <strong><li>Weight : <input type='text' name='weight' value='{{artist.weight}}'>  </li> </strong>
+            <strong><li>Email Address: <input type='text' name='email_id' value='{{artist.email_id}}'>  </li> </strong>
+            <strong><li>Phone : <input type='text' name='phone' value='{{artist.phone}}'>  </li> </strong>
+            <strong><li>location : <input type='text' name='location' value='{{artist.location}}'>  </li> </strong>
+            <strong><li>Body Type: <input type='text' name='body_type' value='{{artist.body_type}}'>  </li> </strong>
+            <strong><li>Skills : <input type='text' name='skills' value='{{artist.skills}}'>  </li> </strong>
+
+
+
+            <strong>Educational Background:<br><textarea name="ed_back" id="body" cols="44">{{ artist.education_background }}</textarea><br> </strong>
+
+
+            <strong>Certifications:<br><textarea name="certifications" id="body" cols="44">{{ artist.certifications }}</textarea> </strong>
+            <br>
+            <button type='submit' class='button button-primary' name='save'>Add </button>
+        </form>
+
+        </div>
+    </div>
+{% endblock body %}
