@@ -1,0 +1,50 @@
+{% extends 'registration/base.html' %}
+{% block title %}
+    FutureArtist | Register
+{% endblock title %}
+
+{% block body %}
+<div class="container">
+
+    <div class="row">
+        <div class="twelve columns textcenter">
+        <h1>Register for FutureArtist</h1>
+
+        {% if registered %}
+        <strong>Thank you for registering!</strong><br>
+        Please check your email for further instructions <br>
+        <a href="../login/"><button>Back Home</button></a><br>        
+        {% else %}
+        <form id="user_form" method="POST" enctype="multipart/form-data" onsubmit="submitfake.value='Registering... Please Wait'; submitfake.disabled=true;">
+            <p>All fields are mandatory</p>
+
+            {% csrf_token %}
+            {{ user_form.as_table }}
+            {{ artist_form.as_table }}
+            <br>
+            <input type="hidden" name="submit" value="Register">
+
+            <input class="button button-primary" type="submit" name="submitfake" value="Register"/>
+            </div>
+        </form>
+        {% endif %}            
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+var parentdiv = $('#user_form').parent().parent();
+$('#user_form').submit(function(e) {
+    e.preventDefault();
+	console.log('register');
+	 $.ajax({
+  url: "http://128.199.157.163/register/",
+  method : "POST",
+  data: $('#user_form').serialize()
+}).done(function(data) {
+	console.log(data);
+   $(parentdiv).html(data);
+  }); });
+</script>
+    
+{% endblock body %}

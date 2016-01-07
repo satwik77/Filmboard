@@ -1,0 +1,136 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+ <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<!-- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
+ <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  
+<title>Title</title>
+</head>
+
+<body style="background-color:#ECECEC">
+{% block body %}
+<nav class="navbar navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+       </button>
+      <a class="navbar-brand" style="padding-top:5px;" href="#"><img src="image/logo.png" /></a>
+	  <div class="col-sm-8 col-md-10 col-xs-6">
+      	<div class="searchbar">
+      		<div class="search-icon"> <img src="image/search-logo.png" />
+        </div>
+            <form>
+            <input class="large" type="text" id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
+            <input class="small" type="text" id="focusedInput" placeholder="Search">
+            </form>
+      </div>    
+    </div>
+      
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar"> 
+
+    <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+       		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
+			<span class="badge">3</span>
+       		<span class="caret"></span></a>
+       		<ul class="dropdown-menu">
+           		<li><a href="#">Notification 1</a></li>
+           		<li><a href="#">Notification 2</a></li>
+           		<li><a href="#">Notification 3</a></li> 
+       		</ul>
+    	</li>
+       	<li id="avatar-wrapper"> <a href="#">Akhil <img class="avatar-icon" src="image/user-male.png"/></a></li>
+    </ul>
+    </div>
+</nav>
+<div class="container-fluid" id="after-nav">
+	<div class="col-sm-3">
+    	<ul class="content-nav">
+        	<li id="profile"> <div class="icon"> <img src="image/profile-icon-active.png"> </div> <a target="_blank"> Profile </a> </li>
+            <li id="login"> <div class="icon"> <img src="image/message-icon.png"> </div> <a target="_blank"> Message </a> </li>
+            <li id="register"> <div class="icon"> <img src="image/video-icon.png"> </div> <a target="_blank"> Videos </a> </li>
+        </ul>
+    </div>
+    <div class="col-sm-8 content" >
+    	<div class="row">
+            <h2 style="align:center"> <strong>Dashboard Page </strong></h2><br>
+
+            <strong><li>Name : {{artist.name}} </li><strong> </strong>
+            <strong><li>Gender : {{artist.gender}} </li> </strong>
+            <strong><li>Height : {{artist.height}} </li> </strong>
+            <strong><li>Weight : {{artist.weight}} </li> </strong>
+            <strong><li>Email Address: {{artist.email_id}} </li> </strong>
+            <strong><li>Phone : {{artist.phone}} </li> </strong>
+            <strong><li>location : {{artist.phone}} </li> </strong>
+            <strong><li>Body Type : {{artist.body_type}} </li> </strong>
+
+            <strong><li>Skills : {{artist.skills}} </li> </strong>
+            <strong><li>Certifications : {{artist.certifications}} </li> </strong>
+            <strong><li>education_background : {{artist.education_background}} </li> </strong>
+            <br>
+            <a class= 'button button-primary' href='../updateprofile/'>Update Profile</a> <strong>Add skills,Educational Background... </strong><br>
+            <a class= 'button' href='../addexp/'> Add Past Experiences </a> &nbsp;
+            <a class= 'button' href='../seekrec'> Seek Recommendation </a><br>
+
+            <a  href='../viewexp'> View Past Experiences</a>
+
+            <a  href='../viewrec'> View Recommendation </a>
+
+        </div>
+    </div>
+    <div class="col-sm-1">
+    </div>
+</div>
+<script>
+//var cookie = document.cookie;
+//console.log(cookie+'null');
+
+$('#profile').click(function() {
+    console.log('click');
+	$('.active').removeClass('active');
+	$(this).addClass('active');
+	 $.ajax({
+  url: "http://localhost:8000/dashboard/",
+  method : "GET"
+}).done(function( html ) {
+    $( ".content" ).html( html );
+  }); });
+$('#login').click(function() {
+  console.log('click');
+  $('.active').removeClass('active');
+	$(this).addClass('active');
+  $.ajax({
+  url: "http://localhost:8000/login/",
+  method : "GET"
+}).done(function( html ) {
+    $( ".content" ).html( html );
+  }); });
+$('#register').click(function() {
+  console.log('click');
+  $('.active').removeClass('active');
+	$(this).addClass('active');
+  $.ajax({
+  url: "http://localhost:8000/register/",
+  method : "GET"
+}).done(function( html ) {
+    $( ".content" ).html( html );
+  }); });
+
+
+</script>
+{% endblock body %}
+</body>
+</html>
