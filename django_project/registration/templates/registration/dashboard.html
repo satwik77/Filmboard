@@ -1,4 +1,3 @@
-{% extends "registration/base.html" %}
 {% load staticfiles %}
 <!DOCTYPE html>
 <html>
@@ -6,8 +5,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+ <link href="{% static 'registration/css/bootstrap-material-design.min.css' %}" rel="stylesheet">
+ <link href="{% static 'registration/css/ripples.min.css' %}" rel="stylesheet">
  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-<!-- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
+<!-- <link rel="import" href="https://www.polymer-project.org/0.5/components/paper-ripple/paper-ripple.html">
+ <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
  <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -26,10 +28,10 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>                        
        </button>
-      <a class="navbar-brand" style="padding-top:5px;" href="#"><img src="image/logo.png" /></a>
+      <a class="navbar-brand" style="padding-top:5px;" href="#"><img src="{% static 'registration/image/logo.png' %}" /></a>
 	  <div class="col-sm-8 col-md-10 col-xs-6">
       	<div class="searchbar">
-      		<div class="search-icon"> <img src="image/search-logo.png" />
+      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
         </div>
             <form>
             <input class="large" type="text" id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
@@ -52,52 +54,53 @@
            		<li><a href="#">Notification 3</a></li> 
        		</ul>
     	</li>
-       	<li id="avatar-wrapper"> <a href="#">Akhil <img class="avatar-icon" src="image/user-male.png"/></a></li>
+       	<li id="avatar-wrapper"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
     </ul>
     </div>
 </nav>
 <div class="container-fluid" id="after-nav">
 	<div class="col-sm-3">
     	<ul class="content-nav">
-        	<li id="profile"> <div class="icon"> <img src="image/profile-icon-active.png"> </div> <a target="_blank"> Profile </a> </li>
-            <li id="login"> <div class="icon"> <img src="image/message-icon.png"> </div> <a target="_blank"> Message </a> </li>
-            <li id="register"> <div class="icon"> <img src="image/video-icon.png"> </div> <a target="_blank"> Videos </a> </li>
+        	<li id="profile" class="btn"> <div class="icon"> <img src="{% static 'registration/image/profile-icon.png' %}"> </div> <a href="../dashboard" style="text-transform:capitalize;text-align:left;display: block;"> Profile </a> </li>
+            
+            <li id="login" class="btn"> <div class="icon"> <img src="{% static 'registration/image/edit-icon.png' %}"> </div> <a href='../updateprofile/' style="text-transform:capitalize;text-align:left;display: block;">Update Profile</a> </li>
+            <li id="register" class="btn"> <div class="icon"> <img src="{% static 'registration/image/addexp-icon.png' %}"> </div> <a href='../addexp/' style="text-transform:capitalize;text-align:left;display: block;"> Add Past Experiences </a> </li>
+            <li class="btn"> <div class="icon"> <img src="{% static 'registration/image/sreco-icon.png' %}"> </div> <a href='../seek_rec' style="text-transform:capitalize;text-align:left;display: block;"> Seek Recommendation </a> </li>
         </ul>
     </div>
     <div class="col-sm-8 content" >
     	<div class="row">
-            <h2 style="align:center"> <strong>Dashboard Page </strong></h2><br>
+            <div>
+	            <h2 class="col-sm-9" style="text-align:center">{{artist.name}}</h2><br> <img src="{% static 'registration/image/user-male-big.png'  %}" />
 
-            <strong><li>Name : {{artist.name}} </li><strong> </strong>
-            <strong><li>Gender : {{artist.gender}} </li> </strong>
-            <strong><li>Height : {{artist.height}} </li> </strong>
-            <strong><li>Weight : {{artist.weight}} </li> </strong>
-            <strong><li>Email Address: {{artist.email_id}} </li> </strong>
-            <strong><li>Phone : {{artist.phone}} </li> </strong>
-            <strong><li>location : {{artist.phone}} </li> </strong>
-            <strong><li>Body Type : {{artist.body_type}} </li> </strong>
-
-            <strong><li>Skills : {{artist.skills}} </li> </strong>
-            <strong><li>Certifications : {{artist.certifications}} </li> </strong>
-            <strong><li>education_background : {{artist.education_background}} </li> </strong>
-            <br>
-            <a class= 'button button-primary' href='../updateprofile/'>Update Profile</a> <strong>Add skills,Educational Background... </strong><br>
-            <a class= 'button' href='../addexp/'> Add Past Experiences </a> &nbsp;
-            <a class= 'button' href='../seekrec'> Seek Recommendation </a><br>
-
-            <a  href='../viewexp'> View Past Experiences</a>
-
-            <a  href='../viewrec'> View Recommendation </a>
-
-        </div>
+    	        <li class="col-sm-4"><label>Gender</label><span>{{artist.gender}}</span> </li>
+        	    <li class="col-sm-4"><label>Height</label><span>{{artist.height}}</span> </li>
+           	    <li class="col-sm-4"><label>Weight</label><span>{{artist.weight}}</span> </li>
+            	<li class="col-sm-4"><label>Phone</label><span>{{artist.phone}}</span> </li> 
+            	<li class="col-sm-4"><label>location</label><span>{{artist.location}}</span> </li>
+            	<li class="col-sm-4"><label>Body Type</label><span>{{artist.body_type}}</span> </li>
+            	<li class="col-sm-12"><label>Email Address :</label><span>{{artist.email_id}}</span> </li>
+            	<li class="col-sm-12"><label>Skills :</label><span>{{artist.skills}}</span> </li> 
+            	<li class="col-sm-12"><label>Certifications :</label><span>{{artist.certifications}}</span> </li> 
+            	<li class="col-sm-12"><label>Education :</label><span>{{artist.education_background}}</span> </li>
+            </div>
+            <div class="col-sm-12" style="padding:5px;padding-bottom:10px;">
+            	<br>     			
+                <br>
+      		 	<a  href='../viewexp' style="color:#000" class="btn btn-raised btn-default"> View Past Experiences</a>
+      			<a  href='../view_rec' style="color:#000" class="btn btn-raised btn-default"> View Recommendation </a>
+      	 	</div>
+       </div>
     </div>
     <div class="col-sm-1">
     </div>
 </div>
+<script src="{% static 'registration/js/ripples.min.js' %}"></script>
+<script src="{% static 'registration/js/material.min.js' %}"></script>
 <script>
 //var cookie = document.cookie;
 //console.log(cookie+'null');
-
+$.material.init();
 $('#profile').click(function() {
     console.log('click');
 	$('.active').removeClass('active');

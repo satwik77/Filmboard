@@ -1,35 +1,142 @@
-{% extends "registration/base.html" %}
-{% block title %}
-    Edit | Profile
-{% endblock title %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+   <link href="{% static 'registration/css/bootstrap-material-design.min.css' %}" rel="stylesheet">
+ <link href="{% static 'registration/css/ripples.min.css' %}" rel="stylesheet">
+ <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<!-- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
+ <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  
+<title>Title</title>
+</head>
+
+<body style="background-color:#ECECEC">
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <h2 style="align:center"><strong> Update Profile </strong> </h2>
-            <a href='../dashboard/' class='button'>Dashboard </a>
+<nav class="navbar navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+       </button>
+      <a class="navbar-brand" style="padding-top:5px;" href="#"><img src="{% static 'registration/image/logo.png' %}" /></a>
+	  <div class="col-sm-8 col-md-10 col-xs-6">
+      	<div class="searchbar">
+      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
+        </div>
+            <form>
+            <input class="large" type="text" id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
+            <input class="small" type="text" id="focusedInput" placeholder="Search">
+            </form>
+      </div>    
+    </div>
+      
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar"> 
+
+    <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+       		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
+			<span class="badge">3</span>
+       		<span class="caret"></span></a>
+       		<ul class="dropdown-menu">
+           		<li><a href="#">Notification 1</a></li>
+           		<li><a href="#">Notification 2</a></li>
+           		<li><a href="#">Notification 3</a></li> 
+       		</ul>
+    	</li>
+       	<li id="avatar-wrapper"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
+    </ul>
+    </div>
+</nav>
+<div class="container-fluid" id="after-nav">
+	<div class="col-sm-3">
+    	<ul class="content-nav">
+        <li id="profile"> <div class="icon"> <img src="{% static 'registration/image/profile-icon.png' %}"> </div> <a href="../dashboard"> Profile </a> </li>
+        </ul>
+        
+    </div>
+    <div class="col-sm-8 content" >
+            <div class="row">
+            <h2 style="align:center">Update Profile</h2>
+           
 
             <form method='POST' action='../updateprofile/'>
                 {% csrf_token %}
-            <strong><li>Name : <input type='text' name='name' value='{{artist.name}}'> </li><strong> </strong>
-            <strong><li>Gender : <input type='text' name='gender' value='{{artist.gender}}'>  </li> </strong>
-            <strong><li>Height : <input type='text' name='height' value='{{artist.height}}'> </li> </strong>
-            <strong><li>Weight : <input type='text' name='weight' value='{{artist.weight}}'>  </li> </strong>
-            <strong><li>Email Address: <input type='text' name='email_id' value='{{artist.email_id}}'>  </li> </strong>
-            <strong><li>Phone : <input type='text' name='phone' value='{{artist.phone}}'>  </li> </strong>
-            <strong><li>location : <input type='text' name='location' value='{{artist.location}}'>  </li> </strong>
-            <strong><li>Body Type: <input type='text' name='body_type' value='{{artist.body_type}}'>  </li> </strong>
-            <strong><li>Skills : <input type='text' name='skills' value='{{artist.skills}}'>  </li> </strong>
+            <fieldset>
+              <div class="form-group col-sm-8">
+             	<input type='text' class="form-control col-sm-8" name='name' value='{{artist.name}}'>
+             </div>  <img src="{% static 'registration/image/user-male-big.png'  %}" />
 
-
-
-            <strong>Educational Background:<br><textarea name="ed_back" id="body" cols="44">{{ artist.education_background }}</textarea><br> </strong>
-
-
-            <strong>Certifications:<br><textarea name="certifications" id="body" cols="44">{{ artist.certifications }}</textarea> </strong>
+    	        <li class="col-sm-4"><label>Gender</label><span><input type='text' class="form-control" name='gender' value='{{artist.gender}}'>  </li></span> </li>
+        	    <li class="col-sm-4"><label>Height</label><span><input type='text' name='height' class="form-control" value='{{artist.height}}'> </li></span> </li>
+           	    <li class="col-sm-4"><label>Weight</label><span><input type='text' name='weight' class="form-control" value='{{artist.weight}}'>  </li></span> </li>
+            	<li class="col-sm-4"><label>Phone</label><span><input type='text' name='email_id' class="form-control" value='{{artist.phone}}'></span> </li> 
+            	<li class="col-sm-4"><label>location</label><span><input type='text' name='location' class="form-control" value='{{artist.location}}'></span> </li>
+            	<li class="col-sm-4"><label>Body Type</label><span><input type='text' name='body_type' class="form-control" value='{{artist.body_type}}'></span> </li>
+            	<li class="col-sm-12"><label>Email Address :</label><span><input type='text' name='email_id' class="form-control" value='{{artist.email_id}}'></span> </li> 
+            	<li class="col-sm-12"><label>Skills :</label><span><input type='text' name='skills' class="form-control" value='{{artist.skills}}'>  </li></span> </li> 
+            	<li class="col-sm-12"><label>Certifications :</label><span><textarea name="certifications" id="body" class="form-control" rows="3"></textarea></span> </li> 
+            	<li class="col-sm-12"><label>Education :</label><span><textarea name="ed_back" id="body" class="form-control" rows="3"></textarea></span> </li>
             <br>
-            <button type='submit' class='button button-primary' name='save'>Add </button>
+            <button type='submit' class='btn btn-raised btn-primary' style="float:right;margin-right:30px;" name='save'>Add</button>
         </form>
 
         </div>
+        </div>
+
+        </div>
     </div>
+    <div class="col-sm-1">
+    </div>
+</div>
+<script src="{% static 'registration/js/ripples.min.js' %}"></script>
+<script src="{% static 'registration/js/material.min.js' %}"></script>
+<script>
+//var cookie = document.cookie;
+//console.log(cookie+'null');
+$.material.init();
+$('#profile').click(function() {
+    console.log('click');
+	$('.active').removeClass('active');
+	$(this).addClass('active');
+	 $.ajax({
+  url: "http://localhost:8000/dashboard/",
+  method : "GET"
+}).done(function( html ) {
+    $( ".content" ).html( html );
+  }); });
+$('#login').click(function() {
+  console.log('click');
+  $('.active').removeClass('active');
+	$(this).addClass('active');
+  $.ajax({
+  url: "http://localhost:8000/login/",
+  method : "GET"
+}).done(function( html ) {
+    $( ".content" ).html( html );
+  }); });
+$('#register').click(function() {
+  console.log('click');
+  $('.active').removeClass('active');
+	$(this).addClass('active');
+  $.ajax({
+  url: "http://localhost:8000/register/",
+  method : "GET"
+}).done(function( html ) {
+    $( ".content" ).html( html );
+  }); });
+
+
+</script>
 {% endblock body %}
+</body>
+</html>

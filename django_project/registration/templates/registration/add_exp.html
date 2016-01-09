@@ -1,33 +1,186 @@
-{% extends "registration/base.html" %}
-{% block title %}
-    Future Artist
-{% endblock title %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link href="{% static 'registration/css/bootstrap-material-design.min.css' %}" rel="stylesheet">
+ <link href="{% static 'registration/css/ripples.min.css' %}" rel="stylesheet">
+ <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<!-- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
+ <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <style>
+  .form-group label.control-label {
+	  font-weight:900;
+  }
+  </style>
+<title>Title</title>
+</head>
+
+<body style="background-color:#ECECEC">
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <h2 style="align:center"><strong> Add Past Experience</strong> </h2>
-            <a href='../dashboard/' class='button'>Dashboard </a>
+<nav class="navbar navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+       </button>
+      <a class="navbar-brand" style="padding-top:5px;" href="#"><img src="{% static 'registration/image/logo.png' %}" /></a>
+	  <div class="col-sm-8 col-md-10 col-xs-6">
+      	<div class="searchbar">
+      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
+        </div>
+            <form>
+            <input class="large" type="text" id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
+            <input class="small" type="text" id="focusedInput" placeholder="Search">
+            </form>
+      </div>    
+    </div>
+      
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar"> 
 
-            <form method='POST' action='../addexp/'>
+    <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+       		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
+			<span class="badge">3</span>
+       		<span class="caret"></span></a>
+       		<ul class="dropdown-menu">
+           		<li><a href="#">Notification 1</a></li>
+           		<li><a href="#">Notification 2</a></li>
+           		<li><a href="#">Notification 3</a></li> 
+       		</ul>
+    	</li>
+       	<li id="avatar-wrapper"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
+    </ul>
+    </div>
+</nav>
+<div class="container-fluid" id="after-nav">
+	<div class="col-sm-3">
+    	<ul class="content-nav">
+        <li id="profile"> <div class="icon"> <img src="{% static 'registration/image/profile-icon.png' %}"> </div> <a href="../dashboard"> Profile </a> </li>
+        </ul>
+    </div>
+    <div class="col-sm-8 content" >
+            <div class="row">
+            <h2 style="text-align:center;color:#000;">Add Past Experience</h2>
+           
+			
+            <form method='POST' action='../addexp/' class="form-horizontal">
                 {% csrf_token %}
-            <strong><li>Project Name : <input type='text' name='name' > </li><strong> </strong>
-            <strong><li>Project Type : <input type='text' name='type' >  </li> </strong>
-            <strong><li>Project Status : <input type='text' name='status' > </li> </strong>
-            <strong><li>Skills : <input type='text' name='skills' >  </li> </strong>
-            <strong><li>Character Name : <input type='text' name='char_name'>  </li> </strong>
-            <strong><li>Role Played: <input type='text' name='role_played'>  </li> </strong>
-            <strong><li>Duration Start : <input type='text' name='start'>  </li> </strong>
-            <strong><li>Duration End : <input type='text' name='end'>  </li> </strong>
-
-
-            <strong>Remarks:<br><textarea name="remarks" id="body" cols="44"></textarea><br> </strong>
-
-
-            <strong>Special Mention:<br><textarea name="mention" id="body" cols="44">{{ artist.certifications }}</textarea> </strong>
+            <strong>
+            <fieldset>
+            <div class="form-group">
+            	<label for="projectName" class="col-sm-2 control-label">Project Name</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='name' >
+                </div>
+            </div>
+            <div class="form-group">
+            	<label for="projectType" class="col-sm-2 control-label">Project Type</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='type' >
+                </div>
+            </div>
+            <div class="form-group">
+            	<label for="projectStatus" class="col-sm-2 control-label">Project Status</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='status' >
+                </div>
+            </div>
+            <div class="form-group">
+            	<label for="skills" class="col-sm-2 control-label">Skills</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='skills' >
+                </div>
+            </div>
+            <div class="form-group">
+            	<label for="charName" class="col-sm-2 control-label">Character Name</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='char_name' >
+                </div>
+            </div>
+            
+            <div class="form-group">
+            	<label for="rolePlayed" class="col-sm-2 control-label">Role Played</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='role_played' >
+                </div>
+            </div>
+            <div class="form-group">
+            	<label for="start" class="col-sm-2 control-label">Start Duration</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='start' >
+                </div>
+            </div>
+            <div class="form-group">
+            	<label for="end" class="col-sm-2 control-label">End Duration</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='end' >
+                </div>
+            </div>
+            <div class="form-group">
+      			<label for="textArea" class="col-md-2 control-label">Remarks</label>
+		        <div class="col-md-10">
+      				<textarea name="remarks" id="body" class="form-control" rows="3"></textarea>
+                </div>
+           </div>
+			<div class="form-group">
+      			<label for="textArea" class="col-md-2 control-label">Special Mention</label>
+		        <div class="col-md-10">
+      				<textarea name="mention" id="body" class="form-control" rows="3">{{ artist.certifications }}</textarea>
+                </div>
+           </div>
             <br>
-            <button type='submit' class='button button-primary' name='save'>Save </button>
+            <button type='submit' class="btn btn-raised btn-primary" name='save' style="float:right;margin-right:30px;">Save</button>
         </form>
+        </fieldset>
+        </strong>
+        </div>
+    </div>
 
         </div>
     </div>
+    <div class="col-sm-1">
+    </div>
+</div>
+<script src="{% static 'registration/js/ripples.min.js' %}"></script>
+<script src="{% static 'registration/js/material.min.js' %}"></script>
+<script>
+//var cookie = document.cookie;
+//console.log(cookie+'null');
+$.material.init();
+$('#profile').click(function() {
+    console.log('click');
+	$('.active').removeClass('active');
+	$(this).addClass('active');
+	 $.ajax({
+  url: "http://localhost:8000/dashboard/",
+  method : "GET"
+}).done(function( html ) {
+    $( ".content" ).html( html );
+  }); });
+$('#login').click(function() {
+  console.log('click');
+  $('.active').removeClass('active');
+	$(this).addClass('active');
+  $.ajax({
+  url: "http://localhost:8000/login/",
+  method : "GET"
+}).done(function( html ) {
+    $( ".content" ).html( html );
+  }); });
+$('#register').click(function() {
+  console.log('click');
+  $('.active').removeClass('active');
+	$(this).addClass('active');
+  $.ajax({
+  url: "http://localhost:8000/register/",
+  method : "GET"
+}).done(function( html ) {
+    $( ".content" ).html( html );
+  }); });
+
+
+</script>
 {% endblock body %}
+</body>
+</html>

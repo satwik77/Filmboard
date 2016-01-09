@@ -2,6 +2,9 @@ from registration.models import Artist
 from django.contrib.auth.models import User
 from django import forms
 from django.utils import timezone
+from django.contrib.admin.widgets import AdminDateWidget 
+
+
 
 GENDER= (('M', 'Male'),
          ('F', 'Female'),
@@ -20,6 +23,7 @@ class UserForm(forms.ModelForm):
 
 class ArtistForm(forms.ModelForm):
     phone = forms.RegexField(regex=r'^\d{10}$', error_message = ("Enter a valid 10 digit mobile number!"))
+    dob = forms.DateField(widget=AdminDateWidget )
     class Meta:
         model = Artist
         fields = ('name', 'gender', 'dob','height','weight','phone')

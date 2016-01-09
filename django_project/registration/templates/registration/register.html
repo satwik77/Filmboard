@@ -1,3 +1,11 @@
+{% load i18n admin_modify adminmedia %}
+{% block extrahead %}{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/base.css" />
+<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/widgets.css" />
+<script type="text/javascript" src="/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+{{ form.media }}
+{% endblock %}
 {% extends 'registration/base.html' %}
 {% block title %}
     FutureArtist | Register
@@ -31,20 +39,5 @@
         </div>
     </div>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>
-var parentdiv = $('#user_form').parent().parent();
-$('#user_form').submit(function(e) {
-    e.preventDefault();
-	console.log('register');
-	 $.ajax({
-  url: "http://128.199.157.163/register/",
-  method : "POST",
-  data: $('#user_form').serialize()
-}).done(function(data) {
-	console.log(data);
-   $(parentdiv).html(data);
-  }); });
-</script>
-    
+
 {% endblock body %}

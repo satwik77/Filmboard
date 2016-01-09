@@ -153,25 +153,25 @@ def dashboard(request):
 def update_profile(request):
     if request.method == 'POST':
     	user = request.user
-    	artist=request.user.artist
-        artist.name = request.POST['name']
-        artist.gender = request.POST['gender']
-        # artist.dob = request.POST['dob']
-        artist.height = request.POST['height']
-        artist.weight = request.POST['weight']
-        artist.email_id = request.POST['email_id']
-        artist.body_type = request.POST['body_type']
-        artist.location = request.POST['location']
-        artist.skills = request.POST['skills']
-        artist.education_background = request.POST['ed_back']
-        artist.certifications = request.POST['certifications']
-        artist.save()
+    	artist_ob=request.user.artist
+        artist_ob.name = request.POST['name']
+        artist_ob.gender = request.POST['gender']
+        # arti_obst.dob = request.POST['dob']
+        artist_ob.height = request.POST['height']
+        artist_ob.weight = request.POST['weight']
+        artist_ob.email_id = request.POST['email_id']
+        artist_ob.body_type = request.POST['body_type']
+        artist_ob.location = request.POST['location']
+        artist_ob.skills = request.POST['skills']
+        artist_ob.education_background = request.POST['ed_back']
+        artist_ob.certifications = request.POST['certifications']
+        artist_ob.save()
         return HttpResponseRedirect('../dashboard/')
 
     else:
 		user= request.user
-		artist= request.user.artist
-		return render(request,'registration/update_profile.html', {'user':user, 'artist' : artist})
+		artist_ob= request.user.artist
+		return render(request,'registration/update_profile.html', {'user':user, 'artist' : artist_ob})
 
 
 #FUNCTIONALITIES FOR ADDING EXPERIENCE
@@ -179,7 +179,7 @@ def update_profile(request):
 def add_exp(request):
     if request.method == 'POST':
     	user = request.user
-    	artist=request.user.artist
+    	artist_ob=request.user.artist
         proj_type = request.POST['type']
         proj_name = request.POST['name']
         proj_status = request.POST['status']
@@ -193,9 +193,9 @@ def add_exp(request):
         exp_ob =PastExperiences(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, remarks=remarks,special_mention=special_mention)
         exp_ob.save()
         # proj_type = request.POST['name']
-        artist.past_experiences.add(exp_ob)
+        artist_ob.past_experiences.add(exp_ob)
 
-        artist.save()
+        artist_ob.save()
         return HttpResponseRedirect('../dashboard/')
 
     else:
@@ -219,7 +219,7 @@ def view_experiences(request):
 def seek_rec(request):
     if request.method == 'POST':
     	user = request.user
-    	artist=request.user.artist
+    	artist_ob=request.user.artist
         proj_type = request.POST['type']
         proj_name = request.POST['name']
         proj_status = request.POST['status']
@@ -231,12 +231,13 @@ def seek_rec(request):
         seek_from_type = request.POST['seek_type']
         seek_from_name = request.POST['seek_name']
         message = request.POST['message']
-        rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, remarks=remarks,special_mention=special_mention)
+        email_id = request.POST['email']
+        rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
         rec_ob.save()
         # proj_type = request.POST['name']
-        artist.recommendations.add(exp_ob)
+        artist_ob.recommendations.add(rec_ob)
 
-        artist.save()
+        artist_ob.save()
         return HttpResponseRedirect('../dashboard/')
 
     else:
@@ -246,4 +247,4 @@ def seek_rec(request):
 def view_rec(request):
 	artist= request.user.artist
 	recommendations = artist.recommendations.all()
-	return render(request,'registration/view_rec.html' , {'exp' : recommendations})	
+	return render(request,'registration/view_rec.html' , {'rec' : recommendations})	

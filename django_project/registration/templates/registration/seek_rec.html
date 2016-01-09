@@ -1,0 +1,35 @@
+{% extends "registration/base.html" %}
+{% block title %}
+    Future Artist
+{% endblock title %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <h2 style="align:center"><strong> Seek Recommendation</strong> </h2>
+            <a href='../dashboard/' class='button'>Dashboard </a>
+
+            <form method='POST' action='../seek_rec/'>
+                {% csrf_token %}
+            <strong><li>Project Name : <input type='text' name='name' > </li><strong> </strong>
+            <strong><li>Project Type : <input type='text' name='type' >  </li> </strong>
+            <strong><li>Project Status : <input type='text' name='status' > </li> </strong>
+            <strong><li>Skills : <input type='text' name='skills' >  </li> </strong>
+            <strong><li>Character Name : <input type='text' name='char_name'>  </li> </strong>
+            <strong><li>Role Played: <input type='text' name='role_played'>  </li> </strong>
+            <strong><li>Duration Start : <input type='text' name='start'>  </li> </strong>
+            <strong><li>Duration End : <input type='text' name='end'>  </li> </strong>
+            <strong><li>Email : <input type='text' name='email' > </li><strong> </strong>
+
+            <strong><li>Seek From type : <input type='text' name='seek_type'>  </li> </strong>
+            <strong><li>Seek From Name : <input type='text' name='seek_name'>  </li> </strong>
+
+            <strong>Additional Message:<br><textarea name="message" id="body" cols="44"></textarea><br> </strong>
+
+
+            <br>
+            <button type='submit' class='button button-primary' name='save'>Save </button>
+        </form>
+
+        </div>
+    </div>
+{% endblock body %}
