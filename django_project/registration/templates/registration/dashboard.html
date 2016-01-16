@@ -54,7 +54,10 @@
            		<li><a href="#">Notification 3</a></li> 
        		</ul>
     	</li>
-       	<li id="avatar-wrapper"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
+       	<li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
+        	<ul class="dropdown-menu">
+           		<li><a href="../logout/">Logout</a></li>
+            </ul>
     </ul>
     </div>
 </nav>
@@ -88,7 +91,7 @@
             	<br>     			
                 <br>
       		 	<a  href='../viewexp' style="color:#000" class="btn btn-raised btn-default"> View Past Experiences</a>
-      			<a  href='../view_rec' style="color:#000" class="btn btn-raised btn-default"> View Recommendation </a>
+      			<a  href='../viewrec' style="color:#000" class="btn btn-raised btn-default"> View Recommendation </a>
       	 	</div>
        </div>
     </div>

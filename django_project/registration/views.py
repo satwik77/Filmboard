@@ -19,37 +19,41 @@ from registration.forms import *
 
 @csrf_exempt
 def home(request):
-	return render(request,'registration/home.html')
+    return render(request,'registration/home.html')
 
 #LOGIN FUNCTIONALITY
 @csrf_exempt
 def user_login(request):
 
-	context = RequestContext(request)
+    context = RequestContext(request)
 
-	if request.method == 'POST':
-		username = request.POST['username']
-		password = request.POST['password']
-		user = authenticate(username=username, password=password)
-		if user:
-			if user.is_active:
-				if user.is_staff:
-					login(request, user)
-					return HttpResponseRedirect('../dashboard/')
-				else:
-					login(request, user)
-					return HttpResponseRedirect('../dashboard/')
-			else:
-				context = {'error_heading' : "Account Inactive", 'error_message' :  'Your account is currently INACTIVE. To activate it, call the following members of the Department of Publications and Correspondence depending on the region of your college.<br> <strong> North India :- Ankit Dube | +91 9983083610 </strong> <br> <strong>Delhi/NCR :- Aditya Shetty :- +91 7240105157 </strong><br><strong>Central India :- Poonam Brar | +91 7240105158 </strong><br><strong>Rajasthan, Gujarat & Maharashtra :- Karthik Maddipoti | +91 8003193680 </strong><br><strong>East India :- Tanhya Chitle | +91 7240105155 </strong><br><strong>South India :- Archana Tatavarti |+91 7240105150 </strong><br />Return back <a href="/">home</a>'}
-				return render(request, 'registration/error.html', context)
-		else:
-			context = {'error_heading' : "Invalid Login Credentials", 'error_message' :  'Please <a href=".">try again</a>'}
-			return render(request, 'registration/error.html', context)
-	else:
-		return render(request, 'registration/login.html')
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                if user.is_staff:
+                    login(request, user)
+                    return HttpResponseRedirect('../dashboard/')
+                else:
+                    login(request, user)
+                    return HttpResponseRedirect('../dashboard/')
+            else:
+                context = {'error_heading' : "Account Inactive", 'error_message' :  'Your account is currently INACTIVE. To activate it, call the following members of the Department of Publications and Correspondence depending on the region of your college.<br> <strong> North India :- Ankit Dube | +91 9983083610 </strong> <br> <strong>Delhi/NCR :- Aditya Shetty :- +91 7240105157 </strong><br><strong>Central India :- Poonam Brar | +91 7240105158 </strong><br><strong>Rajasthan, Gujarat & Maharashtra :- Karthik Maddipoti | +91 8003193680 </strong><br><strong>East India :- Tanhya Chitle | +91 7240105155 </strong><br><strong>South India :- Archana Tatavarti |+91 7240105150 </strong><br />Return back <a href="/">home</a>'}
+                return render(request, 'registration/error.html', context)
+        else:
+            context = {'error_heading' : "Invalid Login Credentials", 'error_message' :  'Please <a href=".">try again</a>'}
+            return render(request, 'registration/error.html', context)
+    else:
+        return render(request, 'registration/login.html')
 
 
 
+
+def user_logout(request):
+    logout(request)
+    return redirect('../home/')
 
 #ARTIST REGISTRATION FUNCTION
 @csrf_exempt
@@ -73,7 +77,7 @@ def artist_registration(request):
             # Save the user's form data to the database.
             # emailadds = [k.email for k in User.objects.all()]
             # if user_form.email in emailadds:
-            # 	return HttpResponse('Email Address not unique')
+            #   return HttpResponse('Email Address not unique')
             user = user_form.save()
 
             # Now we hash the password with the set_password method.
@@ -152,8 +156,8 @@ def dashboard(request):
 @login_required
 def update_profile(request):
     if request.method == 'POST':
-    	user = request.user
-    	artist_ob=request.user.artist
+        user = request.user
+        artist_ob=request.user.artist
         artist_ob.name = request.POST['name']
         artist_ob.gender = request.POST['gender']
         # arti_obst.dob = request.POST['dob']
@@ -169,17 +173,17 @@ def update_profile(request):
         return HttpResponseRedirect('../dashboard/')
 
     else:
-		user= request.user
-		artist_ob= request.user.artist
-		return render(request,'registration/update_profile.html', {'user':user, 'artist' : artist_ob})
+        user= request.user
+        artist_ob= request.user.artist
+        return render(request,'registration/update_profile.html', {'user':user, 'artist' : artist_ob})
 
 
 #FUNCTIONALITIES FOR ADDING EXPERIENCE
 @login_required
 def add_exp(request):
     if request.method == 'POST':
-    	user = request.user
-    	artist_ob=request.user.artist
+        user = request.user
+        artist_ob=request.user.artist
         proj_type = request.POST['type']
         proj_name = request.POST['name']
         proj_status = request.POST['status']
@@ -199,15 +203,15 @@ def add_exp(request):
         return HttpResponseRedirect('../dashboard/')
 
     else:
-		return render(request,'registration/add_exp.html')		
+        return render(request,'registration/add_exp.html')      
 
 
 #FUNC FOR VIEW EXPERIENCE
 @login_required
 def view_experiences(request):
-	artist= request.user.artist
-	past_experiences = artist.past_experiences.all()
-	return render(request,'registration/view_exp.html' , {'exp' : past_experiences})
+    artist= request.user.artist
+    past_experiences = artist.past_experiences.all()
+    return render(request,'registration/view_exp.html' , {'exp' : past_experiences})
 
 
 
@@ -218,8 +222,8 @@ def view_experiences(request):
 @login_required
 def seek_rec(request):
     if request.method == 'POST':
-    	user = request.user
-    	artist_ob=request.user.artist
+        user = request.user
+        artist_ob=request.user.artist
         proj_type = request.POST['type']
         proj_name = request.POST['name']
         proj_status = request.POST['status']
@@ -241,10 +245,10 @@ def seek_rec(request):
         return HttpResponseRedirect('../dashboard/')
 
     else:
-		return render(request,'registration/seek_rec.html')		
+        return render(request,'registration/seek_rec.html')     
 
 @login_required
 def view_rec(request):
-	artist= request.user.artist
-	recommendations = artist.recommendations.all()
-	return render(request,'registration/view_rec.html' , {'rec' : recommendations})	
+    artist= request.user.artist
+    recommendations = artist.recommendations.all()
+    return render(request,'registration/view_rec.html' , {'rec' : recommendations}) 

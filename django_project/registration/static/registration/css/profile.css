@@ -38,6 +38,9 @@ color: #fff !important;
 .searchbar input:-ms-input-placeholder {  
 color: #fff !important;  
 }
+#avatar-wrapper>a {
+	font-size:12px;
+}
 .avatar-icon {
 	height:40px;
 	margin-left:20px;
@@ -48,7 +51,7 @@ color: #fff !important;
 .content {
 	color:#000;
 	background-color:#fff;
-	height:500px;
+
 }
 .content-nav {
 	margin-top:10%;
@@ -64,7 +67,7 @@ color: #fff !important;
 }
 
 .content-nav li {
-	width:75%;
+	width:100%;
 	height:40px;
 	padding:5px;
 	margin-top:10px;
@@ -76,6 +79,9 @@ color: #fff !important;
 .content-nav li:hover a {
 	color:#CCC;
 }
+.content-nav li a {
+	font-size:16px;
+}
 .content-nav li .icon {
 	float:left;
 	margin-left:10%;
@@ -83,6 +89,45 @@ color: #fff !important;
 }
 .content, .content input, .content label, .content button {
 	color:#000;
+}
+.content {
+	padding-top:2%;
+}
+.content h2 {
+	text-align: center;
+    font-size: 25px;
+}
+.content li {
+	padding:5px 10px;
+}
+.content li label {
+	color: #555;
+}
+.content li.col-sm-12 label {
+	padding:10px;
+	padding-right: 15px;
+}
+.content li.col-sm-4 label{
+	font-size: 12px;
+    display: block;
+    text-align: center;
+    color: #555;
+}
+.content li span {
+	text-align: center;
+    color: #000;
+	min-height:20px;
+}	
+.content li.col-sm-4 span {
+    text-align: center;
+    color: #000;
+    display: block;
+    font-weight: 900;
+	
+}
+.content img {
+	height:120px;
+	display:inline-block;
 }
 @media (min-width: 768px) {
 .navbar-nav>li>a {
@@ -108,3 +153,36 @@ color: #fff !important;
 	display:block;
 }
 }
+.button {
+      display: inline-block;
+      position: relative;
+      min-width: 200px;
+      height: 43px;
+      line-height: 43px;
+      border-radius: 2px;
+      font-size: 0.9em;
+      background-color: #fff;
+      color: #646464;
+}
+    
+.button > paper-ripple {
+      border-radius: 2px;
+      overflow: hidden;
+}
+.button.grey {
+      background-color: #eee;
+    }
+.button.blue {
+      background-color: #4285f4;
+      color: #fff;
+}
+.button.raised {
+      transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition-delay: 0.2s;
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    }
+    
+    .button.raised:active {
+      box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+      transition-delay: 0s;
+    }

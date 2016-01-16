@@ -14,7 +14,7 @@
 <body>
 <div id="menu-wrapper">
 	<div id="logo">
-    	<img src="{% static 'registration/image/logo.png' %}" style="float:left;margin-right:10px;"/>
+    	<a href="#home" ><img src="{% static 'registration/image/logo.png' %}" style="float:left;margin-right:10px;"/></a>
         <div>FilmBoard</div>
     </div>
     <div id="menu-links">
@@ -80,7 +80,7 @@
 <script src="{% static 'registration/js/javascript.fullPage.min.js' %}"></script>
 <script type="text/javascript">
 	fullpage.initialize('#fullpage', {
-		anchors: ['', 'producers', 'artists', 'business'],
+		anchors: ['home', 'producers', 'artists', 'business'],
 		menu: '#menu',
 		css3:true,
 		scrollOverflow: true,

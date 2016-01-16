@@ -1,4 +1,3 @@
-{% extends "registration/base.html" %}
 {% block title %}
 	WireFrame Login
 {% endblock title %}
@@ -8,7 +7,7 @@
 		<div class="twelve columns textcenter box">
 		<h1 class="title">Log into FutureArtist</h1>
 			{% csrf_token %}
-			<form action='../login/' method='POST' id="login_form">
+			<form action='../login/' method='GET' id="login_form">
 				{% csrf_token %}
                 <div class="input">
 					<label for="username">Username</label>
@@ -50,164 +49,164 @@
 	   </div>
 	</div>
 </div>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script>
 
 
-// var parentdiv = $('#login_form').parent().parent();
-// $('#login_form').submit(function(e) {
-//     e.preventDefault();
-// 	console.log('login');
-// 	 $.ajax({
-//   url: "http://128.199.157.163/login/",
-//   beforeSend:function(xhr, settings) {
-//                     function getCookie(name) {
-//                             var cookieValue = null;
-//                             if (document.cookie && document.cookie != '') {
-//                                 var cookies = document.cookie.split(';');
-//                                 for (var i = 0; i < cookies.length; i++) {
-//                                     var cookie = jQuery.trim(cookies[i]);
-//                                     if (cookie.substring(0, name.length + 1) == (name + '=')) {
-//                                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-//                                         break;
-//                                     }
-//                                 }
-//                             }
-//                             return cookieValue;
-//                         }
-//                         if (settings.url == "your-url")
-//                             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-//   },
-//   method : "POST",
-//   data: $('#login_form').serialize()
-// }).done(function(data) {
-// 	console.log(data);
-//    setTimeout(
-//   function() 
-//   {
-//     $('#login_form').parent().parent().parent().parent().parent().html(data)
-//   }, 3000);
+var parentdiv = $('#login_form').parent().parent();
+$('#login_form').submit(function(e) {
+    e.preventDefault();
+	console.log('login');
+	 $.ajax({
+  url: "http://128.199.157.163/login/",
+  beforeSend:function(xhr, settings) {
+                    function getCookie(name) {
+                            var cookieValue = null;
+                            if (document.cookie && document.cookie != '') {
+                                var cookies = document.cookie.split(';');
+                                for (var i = 0; i < cookies.length; i++) {
+                                    var cookie = jQuery.trim(cookies[i]);
+                                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                            return cookieValue;
+                        }
+                        if (settings.url == "your-url")
+                            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+  },
+  method : "POST",
+  data: $('#login_form').serialize()
+}).done(function(data) {
+	console.log(data);
+   setTimeout(
+  function() 
+  {
+    window.location.href ="http://128.199.157.163/dashboard";
+  }, 3000);
    
-//   }); });
+  }); });
   
-//   $(function() {
+  $(function() {
 
-//    $(".input input").focus(function() {
+   $(".input input").focus(function() {
 
-//       $(this).parent(".input").each(function() {
-//          $("label", this).css({
-//             "line-height": "18px",
-//             "font-size": "18px",
-//             "font-weight": "100",
-//             "top": "0px"
-//          })
-//          $(".spin", this).css({
-//             "width": "100%"
-//          })
-//       });
-//    }).blur(function() {
-//       $(".spin").css({
-//          "width": "0px"
-//       })
-//       if ($(this).val() == "") {
-//          $(this).parent(".input").each(function() {
-//             $("label", this).css({
-//                "line-height": "60px",
-//                "font-size": "24px",
-//                "font-weight": "300",
-//                "top": "10px"
-//             })
-//          });
+      $(this).parent(".input").each(function() {
+         $("label", this).css({
+            "line-height": "18px",
+            "font-size": "18px",
+            "font-weight": "100",
+            "top": "0px"
+         })
+         $(".spin", this).css({
+            "width": "100%"
+         })
+      });
+   }).blur(function() {
+      $(".spin").css({
+         "width": "0px"
+      })
+      if ($(this).val() == "") {
+         $(this).parent(".input").each(function() {
+            $("label", this).css({
+               "line-height": "60px",
+               "font-size": "24px",
+               "font-weight": "300",
+               "top": "10px"
+            })
+         });
 
-//       }
-//    });
+      }
+   });
 
-//    $(".button").click(function(e) {
-//       var pX = e.pageX,
-//          pY = e.pageY,
-//          oX = parseInt($(this).offset().left),
-//          oY = parseInt($(this).offset().top);
+   $(".button").click(function(e) {
+      var pX = e.pageX,
+         pY = e.pageY,
+         oX = parseInt($(this).offset().left),
+         oY = parseInt($(this).offset().top);
 
-//       $(this).append('<span class="click-efect x-' + oX + ' y-' + oY + '" style="margin-left:' + (pX - oX) + 'px;margin-top:' + (pY - oY) + 'px;"></span>')
-//       $('.x-' + oX + '.y-' + oY + '').animate({
-//          "width": "500px",
-//          "height": "500px",
-//          "top": "-250px",
-//          "left": "-250px",
+      $(this).append('<span class="click-efect x-' + oX + ' y-' + oY + '" style="margin-left:' + (pX - oX) + 'px;margin-top:' + (pY - oY) + 'px;"></span>')
+      $('.x-' + oX + '.y-' + oY + '').animate({
+         "width": "500px",
+         "height": "500px",
+         "top": "-250px",
+         "left": "-250px",
 
-//       }, 600);
-//       $("button", this).addClass('active');
-//    })
+      }, 600);
+      $("button", this).addClass('active');
+   })
 
-//    $(".alt-2").click(function() {
-//       if (!$(this).hasClass('material-button')) {
-//          $(".shape").css({
-//             "width": "100%",
-//             "height": "100%",
-//             "transform": "rotate(0deg)"
-//          })
+   $(".alt-2").click(function() {
+      if (!$(this).hasClass('material-button')) {
+         $(".shape").css({
+            "width": "100%",
+            "height": "100%",
+            "transform": "rotate(0deg)"
+         })
 
-//          setTimeout(function() {
-//             $(".overbox").css({
-//                "overflow": "initial"
-//             })
-//          }, 600)
+         setTimeout(function() {
+            $(".overbox").css({
+               "overflow": "initial"
+            })
+         }, 600)
 
-//          $(this).animate({
-//             "width": "140px",
-//             "height": "140px"
-//          }, 500, function() {
-//             $(".box").removeClass("back");
+         $(this).animate({
+            "width": "140px",
+            "height": "140px"
+         }, 500, function() {
+            $(".box").removeClass("back");
 
-//             $(this).removeClass('active')
-//          });
+            $(this).removeClass('active')
+         });
 
-//          $(".overbox .title").fadeOut(300);
-//          $(".overbox .input").fadeOut(300);
-//          $(".overbox .button").fadeOut(300);
+         $(".overbox .title").fadeOut(300);
+         $(".overbox .input").fadeOut(300);
+         $(".overbox .button").fadeOut(300);
 
-//          $(".alt-2").addClass('material-buton');
-//       }
+         $(".alt-2").addClass('material-buton');
+      }
 
-//    })
+   })
 
-//    $(".material-button").click(function() {
+   $(".material-button").click(function() {
 
-//       if ($(this).hasClass('material-button')) {
-//          setTimeout(function() {
-//             $(".overbox").css({
-//                "overflow": "hidden"
-//             })
-//             $(".box").addClass("back");
-//          }, 200)
-//          $(this).addClass('active').animate({
-//             "width": "700px",
-//             "height": "700px"
-//          });
+      if ($(this).hasClass('material-button')) {
+         setTimeout(function() {
+            $(".overbox").css({
+               "overflow": "hidden"
+            })
+            $(".box").addClass("back");
+         }, 200)
+         $(this).addClass('active').animate({
+            "width": "700px",
+            "height": "700px"
+         });
 
-//          setTimeout(function() {
-//             $(".shape").css({
-//                "width": "50%",
-//                "height": "50%",
-//                "transform": "rotate(45deg)"
-//             })
+         setTimeout(function() {
+            $(".shape").css({
+               "width": "50%",
+               "height": "50%",
+               "transform": "rotate(45deg)"
+            })
 
-//             $(".overbox .title").fadeIn(300);
-//             $(".overbox .input").fadeIn(300);
-//             $(".overbox .button").fadeIn(300);
-//          }, 700)
+            $(".overbox .title").fadeIn(300);
+            $(".overbox .input").fadeIn(300);
+            $(".overbox .button").fadeIn(300);
+         }, 700)
 
-//          $(this).removeClass('material-button');
+         $(this).removeClass('material-button');
 
-//       }
+      }
 
-//       if ($(".alt-2").hasClass('material-buton')) {
-//          $(".alt-2").removeClass('material-buton');
-//          $(".alt-2").addClass('material-button');
-//       }
+      if ($(".alt-2").hasClass('material-buton')) {
+         $(".alt-2").removeClass('material-buton');
+         $(".alt-2").addClass('material-button');
+      }
 
-//    });
+   });
 
-// });
-// </script>
+});
+</script>
 {% endblock body %}
