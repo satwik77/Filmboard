@@ -11,11 +11,20 @@
 <!-- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
  <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'registration/css/bootstrap-datepicker3.min.css' %}" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <style>
+  <script src="{% static 'registration/js/bootstrap-datepicker.min.js' %}"></script>
+<style>
   .form-group label.control-label {
 	  font-weight:900;
+  }
+  h2 {
+	  font-size:24px;
+	  color:#BDBDBD;
+  }
+  #after-nav {
+	  margin-top:120px;
   }
   </style>
 <title>Title</title>
@@ -31,7 +40,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>                        
        </button>
-      <a class="navbar-brand" style="padding-top:5px;" href="../dashboard/"><img src="{% static 'registration/image/logo.png' %}" /></a>
+      <a class="navbar-brand" style="padding-top:5px;" href="#"><img src="{% static 'registration/image/logo.png' %}" /></a>
 	  <div class="col-sm-8 col-md-10 col-xs-6">
       	<div class="searchbar">
       		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
@@ -57,22 +66,19 @@
            		<li><a href="#">Notification 3</a></li> 
        		</ul>
     	</li>
-        <li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
-          <ul class="dropdown-menu">
-              <li><a href="../logout/">Logout</a></li>
-            </ul>
+       	<li id="avatar-wrapper"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
     </ul>
     </div>
 </nav>
 <div class="container-fluid" id="after-nav">
-	<div class="col-sm-3">
+	<div class="col-sm-2">
     	<ul class="content-nav">
-        <li id="profile"> <div class="icon"> <img src="{% static 'registration/image/profile-icon.png' %}"> </div> <a href="../dashboard"> Profile </a> </li>
+        <li id="profile"> <div class="icon">&#8592;</div> <a href="../dashboard">Back to Profile</a> </li>
         </ul>
     </div>
     <div class="col-sm-8 content" >
         <div class="row">
-            <h2 style="text-align:center;color:#000;">Seek Recommendation</h2>
+            <h2 style="text-align:center;">Seek Recommendation</h2>
             <form method='POST' action='../seek_rec/' class="form-horizontal">
             
                 {% csrf_token %}
@@ -84,30 +90,59 @@
                 </div>
             </div>
             <div class="form-group">
-            	<label for="projectType" class="col-sm-2 control-label">Project Type</label> 	            	<div class="col-sm-10">
-                	<input type='text' class="form-control" name='type' >
-                </div>
-            </div>
+      			<label for="select111" class="col-md-2 control-label">Project Type</label>
+		        <div class="col-md-10">
+        			<select id="select1" class="form-control"  name='type' style="color:#000">
+          				<option style="color:#000">Feature Film</option>
+          				<option style="color:#000">Short Film</option>
+          				<option style="color:#000">Music Video</option>
+          				<option style="color:#000">TV Serial</option>
+          				<option style="color:#000">Advertisement</option>
+                        <option style="color:#000">Reality Show</option>
+                        <option style="color:#000">Any Other</option>
+        			</select>
+      			</div>
+    		</div>
             <div class="form-group">
-            	<label for="projectStatus" class="col-sm-2 control-label">Project Status</label> 	            	<div class="col-sm-10">
-                	<input type='text' class="form-control" name='status' >
-                </div>
-            </div>
+      			<label for="select222" class="col-md-2 control-label">Current Project Status</label>
+		        <div class="col-md-10">
+        			<select id="select1" class="form-control"  name='status' style="color:#000">
+          				<option style="color:#000">On going</option>
+          				<option style="color:#000">Completed</option>
+          				<option style="color:#000">Shelved</option>
+          				<option style="color:#000">Live</option>
+          			</select>
+      			</div>
+    		</div>
             <div class="form-group">
-            	<label for="skills" class="col-sm-2 control-label">Skills</label> 	            	<div class="col-sm-10">
-                	<input type='text' class="form-control" name='skills' >
-                </div>
-            </div>
+      			<label for="skills" class="col-md-2 control-label">Skills</label>
+		        <div class="col-md-10">
+        			<select id="select3" class="form-control"  name='skills'>
+          				<option style="color:#000">Actor,Actress</option>
+          				<option style="color:#000">Script Writer</option>
+          				<option style="color:#000">Lyricist</option>
+          				<option style="color:#000">Singer</option>
+          				<option style="color:#000">Musician</option>
+                        <option style="color:#000">Any Other</option>
+        			</select>
+      			</div>
+    		</div>
             <div class="form-group">
             	<label for="charName" class="col-sm-2 control-label">Character Name</label> 	            	<div class="col-sm-10">
                 	<input type='text' class="form-control" name='char_name' >
                 </div>
             </div>
-            
             <div class="form-group">
-            	<label for="rolePlayed" class="col-sm-2 control-label">Role Played</label> 	            	<div class="col-sm-10">
-                	<input type='text' class="form-control" name='role_played' >
-                </div>
+            	<label for="rolePlayed" class="col-md-2 control-label">Role Played</label>
+            	<div class="col-md-10">
+              		<select id="select00" class="form-control"  name='role_played' style="color:#000">
+                  		<option style="color:#000">Hero</option>
+                 	 	<option style="color:#000">Heroine</option>
+                 	   <option style="color:#000">Villain</option>
+               	 	   <option style="color:#000">Supporting</option>
+                 	   <option style="color:#000">Technician</option>
+                	</select>
+            	</div>
             </div>
             <div class="form-group">
             	<label for="start" class="col-sm-2 control-label">Start Duration</label> 	            	<div class="col-sm-10">
@@ -125,14 +160,18 @@
       				<input type='text' class="form-control" name='email' >
                 </div>
            </div>
-			<div class="form-group">
-      			<label for="seektpe" class="col-md-2 control-label">Seek from type</label>
-		        <div class="col-md-10">
-      				<input type='text'class="form-control" name='seek_type'>
-                </div>
-           </div>
            <div class="form-group">
-      			<label for="seekname" class="col-md-2 control-label">Seek from Name</label>
+      			<label for="seektype" class="col-md-2 control-label">Recommender type</label>
+		        <div class="col-md-10">
+        			<select id="select1" class="form-control"  name='seek_type' style="color:#000">
+          				<option style="color:#000">Superior</option>
+          				<option style="color:#000">Colleague</option>
+          				<option style="color:#000">Junior</option>
+          			</select>
+      			</div>
+    		</div>
+		    <div class="form-group">
+      			<label for="seekname" class="col-md-2 control-label">Recommender Name</label>
 		        <div class="col-md-10">
       				<input type='text'class="form-control" name='seek_name'>
                 </div>
@@ -156,8 +195,7 @@
 
         </div>
     </div>
-    <div class="col-sm-1">
-    </div>
+    
 </div>
 <script src="{% static 'registration/js/ripples.min.js' %}"></script>
 <script src="{% static 'registration/js/material.min.js' %}"></script>
@@ -165,6 +203,15 @@
 //var cookie = document.cookie;
 //console.log(cookie+'null');
 $.material.init();
+$('input[name=start]').datepicker({
+    format: "yyyy-mm-dd",
+	orientation: "bottom right"
+});
+$('input[name=end]').datepicker({
+    format: "yyyy-mm-dd",
+	orientation: "bottom right"
+});
+
 </script>
 {% endblock body %}
 </body>

@@ -13,7 +13,15 @@
 <link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  
+  <style>
+  .row h2 {
+	  font-size:24px;
+	  color:#BDBDBD;
+  }
+  #after-nav {
+	  margin-top:120px;
+  }
+  </style>
 <title>Title</title>
 </head>
 
@@ -30,7 +38,7 @@
       <a class="navbar-brand" style="padding-top:5px;" href="../dashboard/"><img src="{% static 'registration/image/logo.png' %}" /></a>
 	  <div class="col-sm-8 col-md-10 col-xs-6">
       	<div class="searchbar">
-      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
+      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" style="float:right"/>
         </div>
             <form>
             <input class="large" type="text" id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
@@ -45,12 +53,12 @@
     <ul class="nav navbar-nav navbar-right">
 		<li class="dropdown">
        		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
-			<span class="badge">3</span>
+			<span class="badge"></span>
        		<span class="caret"></span></a>
        		<ul class="dropdown-menu">
-           		<li><a href="#">Notification 1</a></li>
-           		<li><a href="#">Notification 2</a></li>
-           		<li><a href="#">Notification 3</a></li> 
+           		{% for m in msg %}
+           		<li><a href="https://{{m.url}}">{{m.message}}</a></li>
+              {% endfor %} 
        		</ul>
     	</li>
         <li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
@@ -61,34 +69,51 @@
     </div>
 </nav>
 <div class="container-fluid" id="after-nav">
-	<div class="col-sm-3">
+	<div class="col-sm-2">
     	<ul class="content-nav">
-        <li id="profile"> <div class="icon"> <img src="{% static 'registration/image/profile-icon.png' %}"> </div> <a href="../dashboard"> Profile </a> </li>
+        <li id="profile"> <div class="icon">&#8592;</div> <a href="../dashboard">Back to Profile</a> </li>
         </ul>
         
     </div>
     <div class="col-sm-8 content" >
             <div class="row">
-            <h2 style="align:center">Update Profile</h2>
+            <h2 style="text-align:center">Update Profile</h2>
            
 
-            <form method='POST' action='../updateprofile/'>
+            <form id="profile_update">
                 {% csrf_token %}
             <fieldset>
+              <input type='file' id="dp">
               <div class="form-group col-sm-8">
-             	<input type='text' class="form-control col-sm-8" name='name' value='{{artist.name}}'>
-             </div>  <img src="{% static 'registration/image/user-male-big.png'  %}" />
+             	<input type='text' class="form-control col-sm-8" name='name' value='{{artist.name}}' placeholder="Name">
+             </div>  
+             <ul>
+                <li class="col-sm-3"><img src="{% static 'registration/image/user-male-big.png'  %}"  style="width:188px;float:right"/></li>
+    	        <li class="col-sm-3"><label>Gender</label><span>  <div class="col-md-10">
+              <select id="select111" class="form-control"  name='gender'><option value='M'>M</option><option value='F'>F</option></select></div></li></span> </li>
+        	    <li class="col-sm-3"><label>Height (in m)</label><span><input type='number' name='height' class="form-control" value='{{artist.height}}'> </li></span> </li>
+           	    <li class="col-sm-3"><label>Weight (in KGs)</label><span><input type='number' name='weight' class="form-control" value='{{artist.weight}}'>  </li></span> </li>
+            	<li class="col-sm-3"><label>Phone</label><span><input type='number' name='phone' class="form-control" value='{{artist.phone}}'></span> </li> 
+            	
 
-    	        <li class="col-sm-4"><label>Gender</label><span><input type='text' class="form-control" name='gender' value='{{artist.gender}}'>  </li></span> </li>
-        	    <li class="col-sm-4"><label>Height</label><span><input type='text' name='height' class="form-control" value='{{artist.height}}'> </li></span> </li>
-           	    <li class="col-sm-4"><label>Weight</label><span><input type='text' name='weight' class="form-control" value='{{artist.weight}}'>  </li></span> </li>
-            	<li class="col-sm-4"><label>Phone</label><span><input type='text' name='email_id' class="form-control" value='{{artist.phone}}'></span> </li> 
-            	<li class="col-sm-4"><label>location</label><span><input type='text' name='location' class="form-control" value='{{artist.location}}'></span> </li>
-            	<li class="col-sm-4"><label>Body Type</label><span><input type='text' name='body_type' class="form-control" value='{{artist.body_type}}'></span> </li>
-            	<li class="col-sm-12"><label>Email Address :</label><span><input type='text' name='email_id' class="form-control" value='{{artist.email_id}}'></span> </li> 
+<!--               <li class="col-sm-3"><label>location</label><span><input type='text' name='location' class="form-control" value='{{artist.location}}'></span> </li> -->
+				 <li class="col-sm-3"><label>Location</label><span>  <div class="col-md-10">
+                 <select name="location" class="form-control" >
+                 {% for l in loc %}
+                <option value="{{l.0}}" >{{l.0}}</option>
+                 {% endfor %}
+              </select>  
+               </li>
+                          
+
+
+              <li class="col-sm-3"><label>Body Type</label><span>  <div class="col-md-10">
+              <select id="select111" class="form-control"  name='body_type' style="color:#000"><option value='Slim' style="color:#000">Slim</option><option value='Atheletic' style="color:#000">Atheletic</option><option value='Regular' style="color:#000">Regular</option><option value='Over_weight' style="color:#000">Over weight</option></div></select></li></span> </li>
+                          	<li class="col-sm-12"><label>Email Address :</label><span><input type='text' name='email_id' class="form-control" value='{{artist.email_id}}'></span> </li> 
             	<li class="col-sm-12"><label>Skills :</label><span><input type='text' name='skills' class="form-control" value='{{artist.skills}}'>  </li></span> </li> 
-            	<li class="col-sm-12"><label>Certifications :</label><span><textarea name="certifications" id="body" class="form-control" rows="3"></textarea></span> </li> 
+            	<li class="col-sm-12"><label>Certifications :</label><span><textarea name="certifications" id="body" class="form-control" rows="3"></textarea></span> </li>  
             	<li class="col-sm-12"><label>Education :</label><span><textarea name="ed_back" id="body" class="form-control" rows="3"></textarea></span> </li>
+                </ul>
             <br>
             <button type='submit' class='btn btn-raised btn-primary' style="float:right;margin-right:30px;" name='save'>Add</button>
         </form>
@@ -98,8 +123,7 @@
 
         </div>
     </div>
-    <div class="col-sm-1">
-    </div>
+    
 </div>
 <script src="{% static 'registration/js/ripples.min.js' %}"></script>
 <script src="{% static 'registration/js/material.min.js' %}"></script>
@@ -107,39 +131,60 @@
 //var cookie = document.cookie;
 //console.log(cookie+'null');
 $.material.init();
-$('#profile').click(function() {
-    console.log('click');
-	$('.active').removeClass('active');
-	$(this).addClass('active');
-	 $.ajax({
-  url: "http://localhost:8000/dashboard/",
-  method : "GET"
-}).done(function( html ) {
-    $( ".content" ).html( html );
-  }); });
-$('#login').click(function() {
-  console.log('click');
-  $('.active').removeClass('active');
-	$(this).addClass('active');
-  $.ajax({
-  url: "http://localhost:8000/login/",
-  method : "GET"
-}).done(function( html ) {
-    $( ".content" ).html( html );
-  }); });
-$('#register').click(function() {
-  console.log('click');
-  $('.active').removeClass('active');
-	$(this).addClass('active');
-  $.ajax({
-  url: "http://localhost:8000/register/",
-  method : "GET"
-}).done(function( html ) {
-    $( ".content" ).html( html );
-  }); });
-
 
 </script>
+<script type="text/javascript">
+
+  $("input#dp").on('change', function(e) {
+        dp = e.target.files;
+    });
+  function collect_data() {
+        var data = new FormData() ;
+        data.append('name', $('input[name="name"]').val());
+        data.append('phone', $('input[name="phone"]').val());
+        data.append('height', $('input[name="height"]').val());
+        data.append('weight', $('input[name="weight"]').val());
+        data.append('skills', $('input[name="skills"]').val());
+        data.append('email_id', $('input[name="email_id"]').val());
+
+        data.append('certifications', $('textarea[name="certifications"]').val());
+        data.append('ed_back', $('textarea[name="ed_back"]').val());
+
+        data.append('gender', $('select[name="gender"] option:selected').val());
+        data.append('body_type', $('select[name="body_type"] option:selected').val());
+        data.append('location', $('select[name="location"] option:selected').val());
+        
+        $.each(dp, function(key, value)
+        {
+            data.append(key, value);
+        });
+
+        return data;
+    }
+    $("form#profile_update").submit(function(e) {
+        e.preventDefault();
+        var dat = collect_data();
+
+        $.ajax({
+            url: '../updateprofile/',
+            type: 'POST',
+            data: dat,
+            cache: false,
+            // dataType: 'html',
+            processData: false,
+            contentType: false,
+
+            success: function(data)
+            {
+                if(data=='done')
+                  window.location.href="../dashboard";
+            }
+        });
+        
+    });
+</script>
+
+<script src="{% static 'registration/js/common.js' %}"></script>
 {% endblock body %}
 </body>
 </html>

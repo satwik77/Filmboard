@@ -1,0 +1,22 @@
+<h2> Applicants for {{req.req_type}}, {{req.role}}, {{req.skills}}</h2>
+<table>
+	<tbody>
+	{% if req.req_type == "Artist" %}
+		{% for u in artlist %}
+		<tr>
+			<td><a href = '../../artist_search/{{u.id}}/'>{{u.name}}</a></td>
+			<td>{{u.phone}}</td>
+		</tr>
+		{% endfor %}
+		{% endif %}
+	{% if req.req_type == "Allied Service" %}
+		{% for u in alllist %}
+		<tr>
+			<td><a href = '../../artist_search/{{u.id}}/'>{{u.name}}</a></td>
+			<td>{{u.phone}}</td>
+		</tr>
+		{% endfor %}
+		{% endif %}
+	</tbody>
+</table>
+

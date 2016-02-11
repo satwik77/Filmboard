@@ -66,14 +66,26 @@
         {% if registered %}
         <strong>Thank you for registering!</strong><br>
         Please check your email for further instructions <br>
-        <a href="../login/"><button>Back Home</button></a><br>        
+        <a href="../home/"><button>Back Home</button></a><br>        
         {% else %}
-        <form id="user_form" method="POST" action='../register/' enctype="multipart/form-data" onsubmit="submitfake.value='Registering... Please Wait'; submitfake.disabled=true;">
+        <form id="user_form" method="POST" action='../register_profile/' enctype="multipart/form-data" onsubmit="submitfake.value='Registering... Please Wait'; submitfake.disabled=true;">
             <p>All fields are mandatory</p>
 
             {% csrf_token %}
-            {{ user_form.as_table }}
-            {{ artist_form.as_table }}
+            {% if choice == '1' %}            
+            {{ a_form.as_table }}
+            <input type="hidden" name='choice' value='1'>
+            
+            {% elif choice == '2' %}            
+            {{ a_form.as_table }}
+            <input type="hidden" name='choice' value='2'>
+
+            {% elif choice == '3' %}            
+            {{ a_form.as_table }}
+            <input type="hidden" name='choice' value='3'>
+
+            {% endif %}
+
             <br>
             <input type="hidden" name="submit" value="Register">
 

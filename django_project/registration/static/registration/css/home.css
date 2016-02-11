@@ -35,7 +35,7 @@
 #menu-links ul {
 	position:absolute;
 	right:1%;
-	top:1%;
+	top:calc(50% - 24px);
 }
 #menu-links ul li {
 	padding:25px;
@@ -330,12 +330,23 @@
 /*-------Login-lightbox-------*/
 #lightbox {
 	position:absolute;
-	top: 25%;
+	top: 5%;
 	left:calc(50% - 250px);
 	width:30%;
-	height:30%;
+	height:100%;
 	z-index:1000;
 	color:#000;
+}
+#overlay {
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	background-color:#000;
+	opacity:0.8;
+	z-index:999;
+	display:none;
 }
 #login-submit {
 	position:relative;
@@ -346,6 +357,49 @@
 }
 #register-link {
 	display:none;
+}
+.error_login {
+	float:left;
+	clear:left;
+	width:100%;
+	padding:5px;
+	color:#000;
+	opacity:0;
+	text-align:center;
+}
+div.social-wrap.c button, .g-signin2 {
+    padding-left: 10px;
+    padding-right: 0px;
+    height: 35px;
+    background: none;
+    border: none;
+    display: inline-block;
+    background-size: 25px 25px, cover;
+    background-position: 10px center, center center;
+    background-repeat: no-repeat, repeat;
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 15px;
+    width: 150px;
+    border-bottom: 2px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    box-shadow: 0 4px 2px -2px gray;
+    text-shadow: rgba(0, 0, 0, .4) -1px -1px 0;
+}
+div.social-wrap.c {
+}
+div.social-wrap.c > .googleplus {
+    background-size: 30px 30px, cover;
+    background-image: url(http://dl.dropbox.com/u/109135764/gplus.png), -webkit-gradient(linear, left top, left bottom, color-stop(1%, #353233), color-stop(100%, #1d1b1c));
+    
+}
+div.social-wrap.c > .facebook {
+    background: url(http://dl.dropbox.com/u/109135764/facebookf.png), -webkit-gradient(linear, left top, left bottom, color-stop(0%, #4c74c4), color-stop(100%, #3b5998));
+    background-size: 25px 25px, cover;
+    background-position: 10px center, center center;
+    background-repeat: no-repeat, repeat;
 }
 .box {
    position: relative;
@@ -401,7 +455,7 @@
    font-size: 34px;
    font-weight: 700;
    letter-spacing: 2px;
-   color: #1976d2;
+   color: #ED2553;
    position: relative;
 }
 
@@ -412,7 +466,7 @@
    position: absolute;
    top: 0;
    left: -50px;
-   background: #1976d2;
+   background: #ED2553;
 }
 
 .input,
@@ -451,7 +505,7 @@
 
 .input,
 .button {
-   margin-top: 30px;
+   margin-top: 5px;
    height: 70px;
 }
 
@@ -467,19 +521,17 @@
    top: 10px;
    border: none;
    background: transparent;
-   outline: none;
-}
-.input input:focus {
-	outline: none;
+   outline:none;
 }
 
 .input input,
 .input label,
-.button button {
-   font-family: 'Roboto', sans-serif;
+.button button, .button input {
+   font-family: 'Open Sans',Arial, sans-serif;
    font-size: 24px;
    color: rgba(0, 0, 0, 0.8);
    font-weight: 300;
+   z-index:1300;
 }
 
 .input:before,
@@ -498,7 +550,7 @@
 }
 
 .input .spin {
-   background: #1976d2;
+   background: #ED2553;
    z-index: 4;
    width: 0;
 }
@@ -518,6 +570,7 @@
    z-index: 2;
    cursor: pointer;
    line-height: 60px;
+   z-index:1300;
 }
 
 .button.login {
@@ -526,7 +579,7 @@
 }
 
 .button.login button,
-.button button {
+.button button .button input {
    width: 100%;
    line-height: 64px;
    left: 0%;
@@ -538,7 +591,7 @@
 }
 
 .button.login {
-   margin-top: 30px;
+   margin-top: 9px;
 }
 
 .button {
@@ -547,7 +600,7 @@
 
 .button button {
    background-color: #fff;
-   color: #1976d2;
+   color: #ED2553;
    border: none;
 }
 
@@ -583,8 +636,8 @@
 }
 
 .button.login button:hover {
-   color: #1976d2;
-   border-color: #1976d2;
+   color: #ED2553;
+   border-color: #ED2553;
 }
 
 .button {
@@ -599,11 +652,19 @@
    z-index: 2;
 }
 
+.pass-forgot {
+   width: 100%;
+   float: left;
+   text-align: center;
+   color: rgba(0, 0, 0, 0.4);
+   font-size: 18px;
+}
+
 .click-efect {
    position: absolute;
    top: 0;
    left: 0;
-   background: #1976d2;
+   background: #ED2553;
    border-radius: 50%;
 }
 
@@ -632,8 +693,9 @@
 }
 
 .overbox .input {
-   margin-top: 4px;
+   margin-top: 20px;
 }
+
 .overbox .input input,
 .overbox .input label {
    color: #fff;
@@ -651,7 +713,7 @@
    width: 140px;
    height: 140px;
    border-radius: 50%;
-   background: #1976d2;
+   background: #ED2553;
    position: absolute;
    top: 40px;
    right: -70px;
@@ -714,12 +776,6 @@
    transform: translate(-50%, -50%);
    -webkit-transform: translate(-50%, -50%);
    -ms-transform: translate(-50%, -50%);
-}
-.button button span {
-	color:#1976d2;
-}
-.materialContainer input {
-	z-index:2;
 }
 
 @media (max-width: 1200px) {

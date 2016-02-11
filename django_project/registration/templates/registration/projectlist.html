@@ -1,0 +1,168 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+ <link href="{% static 'registration/css/bootstrap-material-design.min.css' %}" rel="stylesheet">
+ <link href="{% static 'registration/css/ripples.min.css' %}" rel="stylesheet">
+  <link href="{% static 'registration/css/rippler.min.css' %}" rel="stylesheet">
+ <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+ <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+ <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="{% static 'registration/js/jquery.rippler.min.js' %}"></script>
+  <script> $(document).ready(function() {
+  $(".rippler").rippler({
+    
+  });
+});</script>
+<style>
+.card {
+	height:400px;
+}
+.card-block.last {
+	position:relative;
+	top:-290px;
+}
+</style>
+  
+<title>Title</title>
+</head>
+
+<body style="background-color:#fafafa">
+{% block body %}
+
+<nav class="navbar navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+       </button>
+      <a class="navbar-brand" style="padding-top:5px;" href="#"><img src="{% static 'registration/image/logo.png' %}" /></a>
+	  <div class="col-sm-8 col-md-10 col-xs-6">
+      	<div class="searchbar">
+      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
+        </div>
+            <form action='../artist_search/' method='POST'>
+              {% csrf_token %}
+            <input class="large" type="textbox" name='search' id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
+            <button type='submit' style="display:none;"> Search </button>
+            <!-- <input class="small" type="text" id="focusedInput" placeholder="Search"> -->
+              </form>
+      </div>    
+    </div>
+      
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar"> 
+{% if user.is_authenticated %}  
+    <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+       		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
+			<span class="badge">3</span>
+       		<span class="caret"></span></a>
+       		<ul class="dropdown-menu">
+           		<li><a href="#">Notification 1</a></li>
+           		<li><a href="#">Notification 2</a></li>
+           		<li><a href="#">Notification 3</a></li> 
+       		</ul>
+    	</li>
+       	<li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
+        	<ul class="dropdown-menu">
+           		<li><a href="../logout/">Logout</a></li>
+            </ul>
+    </ul>
+    </div>
+</nav>
+<div class="col-sm-12 sec-nav">
+    	<ul class="col-xs-12">
+        	<li class="sec-nav"><a href="../dashboard" id="nav-about">About</a></li>
+            <li class="sec-nav"><a href="../dashboard#exp" id="nav-exp">Experience</a></li>
+            <li class="sec-nav"><a href="../dashboard#rec" id="nav-rec">Recommendations</a></li>
+            <li class="sec-nav active"><a href="../projects" id="">Projects</a></li>
+       	</ul>
+</div>
+    {% else &}
+    <h2> You are logged in as guest.</h2>
+
+{% endif %}
+{% if choice == 'myproj' %}
+<div class="right float-container">
+	<div class="wrapper">
+		<div class="addrec-button">
+  	 	 	<a href="../addproject/"  class="rippler rippler-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+  	    </div>
+     </div>
+</div>
+{% endif %}
+<div class="container-fluid" id="after-nav">
+        
+        <div class="col-sm-12 main">
+        	<div class="sec">
+            {% if choice == 'myproj' %}
+			<h2 style="text-align:center;margin-bottom:20px;font-size:24px;color:#BDBDBD;"> My Projects</h2>
+            {% else %}
+			<h2 style="text-align:center;margin-bottom:20px;font-size:24px;color:#BDBDBD;">Project Listings</h2><br>
+            {% endif %}
+            
+            <!-- <a href='../dashboard/' class='button'>Dashboard </a> -->
+
+            
+                
+            
+                {% for p in projectlist %}
+                            
+            <!-- <a href='../dashboard/' class='button'>Dashboard </a> -->
+			<div class="card">
+               	 <ul class="list-group list-group-flush">
+   					 	<li class="list-group-item"><span class="text left">{{p.duration_start}}-{{p.duration_end}}</span><span class="tag right">{{p.project_type}} {{p.project_status}}</span></li>
+                  </ul>
+ 				 <div class="card-img-top" data-src="..." style="height:225px;background-color:#ddd;" ></div>
+ 					 <div class="card-block desc rippler rippler-inverse">
+                      	  <h4 class="card-title">{{p.project_name}}</h4>
+   						  <p class="card-text">{{p.date_posted}}</p>
+                          <div class="card-reveal"><span class="label right">Description</span>{{p.description}}</div>
+                     </div>
+                     <div class="card-block last">
+                    <!--  	<a href="#" class="btn btn-primary">Apply</a> -->
+    					{% if choice == 'myproj' %}
+              <a href="../my-projects-details/{{p.id}}/" class="btn btn-warning">View Details</a>
+              {% else %}
+              <a href="../projects-details/{{p.id}}/" class="btn btn-warning">View Details</a>
+               {% endif %}
+                     </div>
+                
+                              
+           </div>
+
+                        
+                {% endfor %}
+                
+         
+        
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'registration/js/ripples.min.js' %}"></script>
+<script src="{% static 'registration/js/material.min.js' %}"></script>
+<script>
+//var cookie = document.cookie;
+//console.log(cookie+'null');
+$.material.init();
+$('.card-block.desc').click(function() {
+	if ($(this).css('top') == '0px')
+    	$(this).css('top','-285px');
+	else $(this).css('top','0px');
+});
+$('.last a').click(function(e) {
+    $('last').css('top','-290px');
+});
+</script>
+{% endblock body %}

@@ -42,7 +42,7 @@ q:before,q:after {
 abbr,acronym { border: 0;}
 
 * {
-	font-size:18px;
+	font-size:14px;
 	font-family: 'Open Sans',Arial, sans-serif;
 	/*font-family: 'Roboto', sans-serif;*/
 	color: #ffffff;

@@ -11,11 +11,20 @@
 <!-- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
  <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'registration/css/bootstrap-datepicker3.min.css' %}" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="{% static 'registration/js/bootstrap-datepicker.min.js' %}"></script>
   <style>
   .form-group label.control-label {
 	  font-weight:900;
+  }
+  h2 {
+	  font-size:24px;
+	  color:#BDBDBD;
+  }
+  #after-nav {
+	  margin-top:120px;
   }
   </style>
 <title>Title</title>
@@ -49,12 +58,12 @@
     <ul class="nav navbar-nav navbar-right">
 		<li class="dropdown">
        		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
-			<span class="badge">3</span>
+			<span class="badge"></span>
        		<span class="caret"></span></a>
        		<ul class="dropdown-menu">
-           		<li><a href="#">Notification 1</a></li>
-           		<li><a href="#">Notification 2</a></li>
-           		<li><a href="#">Notification 3</a></li> 
+           		{% for m in msg %}
+           		<li><a href="https://{{m.url}}">{{m.message}}</a></li>
+              {% endfor %} 
        		</ul>
     	</li>
         <li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
@@ -65,14 +74,14 @@
     </div>
 </nav>
 <div class="container-fluid" id="after-nav">
-	<div class="col-sm-3">
+	<div class="col-sm-2">
     	<ul class="content-nav">
-        <li id="profile"> <div class="icon"> <img src="{% static 'registration/image/profile-icon.png' %}"> </div> <a href="../dashboard"> Profile </a> </li>
+        <li id="profile"> <div class="icon">&#8592;</div> <a href="../dashboard">Back to Profile </a> </li>
         </ul>
     </div>
     <div class="col-sm-8 content" >
             <div class="row">
-            <h2 style="text-align:center;color:#000;">Add Past Experience</h2>
+            <h2 style="text-align:center;">Add Past Experience</h2>
            
 			
             <form method='POST' action='../addexp/' class="form-horizontal">
@@ -87,25 +96,25 @@
             <div class="form-group">
       			<label for="select111" class="col-md-2 control-label">Project Type</label>
 		        <div class="col-md-10">
-        			<select id="select111" class="form-control"  name='type'>
-          				<option>Feature Film</option>
-          				<option>Short Film</option>
-          				<option>Music Video</option>
-          				<option>TV Serial</option>
-          				<option>Advertisement</option>
-                        <option>Reality Show</option>
-                        <option>Any Other</option>
+        			<select id="select111" class="form-control"  name='type' style="color:#000">
+          				<option style="color:#000">Feature Film</option>
+          				<option style="color:#000">Short Film</option>
+          				<option style="color:#000">Music Video</option>
+          				<option style="color:#000">TV Serial</option>
+          				<option style="color:#000">Advertisement</option>
+                        <option style="color:#000">Reality Show</option>
+                        <option style="color:#000">Any Other</option>
         			</select>
       			</div>
     		</div>
             <div class="form-group">
       			<label for="select222" class="col-md-2 control-label">Current Project Status</label>
 		        <div class="col-md-10">
-        			<select id="select111" class="form-control"  name='status'>
-          				<option>On going</option>
-          				<option>Completed</option>
-          				<option>Shelved</option>
-          				<option>Live</option>
+        			<select id="select111" class="form-control"  name='status' style="color:#000">
+          				<option style="color:#000">On going</option>
+          				<option style="color:#000">Completed</option>
+          				<option style="color:#000">Shelved</option>
+          				<option style="color:#000">Live</option>
           			</select>
       			</div>
     		</div>
@@ -113,12 +122,12 @@
       			<label for="skills" class="col-md-2 control-label">Skills</label>
 		        <div class="col-md-10">
         			<select id="select333" class="form-control"  name='skills'>
-          				<option>Actor,Actress</option>
-          				<option>Script Writer</option>
-          				<option>Lyricist</option>
-          				<option>Singer</option>
-          				<option>Musician</option>
-                        <option>Any Other</option>
+          				<option style="color:#000">Actor,Actress</option>
+          				<option style="color:#000">Script Writer</option>
+          				<option style="color:#000">Lyricist</option>
+          				<option style="color:#000">Singer</option>
+          				<option style="color:#000">Musician</option>
+                        <option style="color:#000">Any Other</option>
         			</select>
       			</div>
     		</div>
@@ -127,12 +136,19 @@
                 	<input type='text' class="form-control" name='char_name' >
                 </div>
             </div>
-            
             <div class="form-group">
-            	<label for="rolePlayed" class="col-sm-2 control-label">Role Played</label> 	            	<div class="col-sm-10">
-                	<input type='text' class="form-control" name='role_played' >
-                </div>
+            <label for="rolePlayed" class="col-md-2 control-label">Role Played</label>
+            <div class="col-md-10">
+              <select id="select111" class="form-control"  name='role_played' style="color:#000">
+                  <option style="color:#000">Hero</option>
+                  <option style="color:#000">Heroine</option>
+                  <option style="color:#000">Villain</option>
+                  <option style="color:#000">Supporting</option>
+                  <option style="color:#000">Technician</option>
+                </select>
             </div>
+        </div>
+            
             <div class="form-group">
             	<label for="start" class="col-sm-2 control-label">Start Duration</label> 	            	<div class="col-sm-10">
                 	<input type='text' class="form-control" name='start' >
@@ -174,37 +190,14 @@
 //var cookie = document.cookie;
 //console.log(cookie+'null');
 $.material.init();
-$('#profile').click(function() {
-    console.log('click');
-	$('.active').removeClass('active');
-	$(this).addClass('active');
-	 $.ajax({
-  url: "http://localhost:8000/dashboard/",
-  method : "GET"
-}).done(function( html ) {
-    $( ".content" ).html( html );
-  }); });
-$('#login').click(function() {
-  console.log('click');
-  $('.active').removeClass('active');
-	$(this).addClass('active');
-  $.ajax({
-  url: "http://localhost:8000/login/",
-  method : "GET"
-}).done(function( html ) {
-    $( ".content" ).html( html );
-  }); });
-$('#register').click(function() {
-  console.log('click');
-  $('.active').removeClass('active');
-	$(this).addClass('active');
-  $.ajax({
-  url: "http://localhost:8000/register/",
-  method : "GET"
-}).done(function( html ) {
-    $( ".content" ).html( html );
-  }); });
-
+$('input[name=start]').datepicker({
+    format: "yyyy-mm-dd",
+	orientation: "bottom right"
+});
+$('input[name=end]').datepicker({
+    format: "yyyy-mm-dd",
+	orientation: "bottom right"
+});
 
 </script>
 {% endblock body %}

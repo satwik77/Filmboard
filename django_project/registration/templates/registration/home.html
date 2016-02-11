@@ -9,6 +9,11 @@
 <link rel="stylesheet" href="{% static 'registration/css/javascript.fullPage.css' %}" />
 <link rel="stylesheet" href="{% static 'registration/css/reset.css' %}" />
 <link rel="stylesheet" href="{% static 'registration/css/home.css' %}" />
+<style>
+* {
+	font-size:16px;
+}
+</style>
 </head>
 
 <body>
@@ -23,11 +28,12 @@
             <li><a href="#artists">Artists</a></li>
             <li><a href="#business">Business</a></li>
             <li style="display:none"><a target="_blank">Login</a></li>
-            <li id="login-lightbox-button"><a target="_blank" id="signup-button">Sign Up</a></li>
+            <li id="login-lightbox-button"><a target="_blank" id="signup-button">Login</a></li>
         </ul>
     </div>
 </div>
 <div id="lightbox" style="display:none"> </div>
+<div id="overlay"></div>
 <div id="fullpage">
 	<div class="section" id="section0">
     	<div class="slide"><div><span class="highlight-letter">D</span>ream of stardum? let’s make it true.</div></div>
@@ -92,18 +98,22 @@
 	});
 	$('#login-lightbox-button').click(function() {
 		 $.ajax({
-  url: "http://128.199.157.163/login/",
+  url: "http://filmboard.ml/login/",
   method : "GET"
 }).done(function( html ) {
 	
     $( "#lightbox" ).show().html( html );
+	$('#overlay').show();
+	
   }); });
-  $('#fullpage').click(function(e) {
-    if($('#lightbox').css('display') == 'block')
+  $('#overlay').click(function(e) {
+    if($('#lightbox').css('display') == 'block') {
 	  $('#lightbox').hide();
+	  $(this).hide(); }
+	  
 });
-		
-	// login
+	
+
 	
 
 </script>
