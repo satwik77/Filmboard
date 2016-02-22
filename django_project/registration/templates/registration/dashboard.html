@@ -1,78 +1,22 @@
+{% extends "registration/base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
- <link href="{% static 'registration/css/bootstrap-material-design.min.css' %}" rel="stylesheet">
- <link href="{% static 'registration/css/ripples.min.css' %}" rel="stylesheet">
-  <link href="{% static 'registration/css/rippler.min.css' %}" rel="stylesheet">
- <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
- <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <script src="{% static 'registration/js/jquery.rippler.min.js' %}"></script>
-  <script> $(document).ready(function() {
-  $(".rippler").rippler({
-    
-  });
-});</script>
- 
-  
-<title>Title</title>
-</head>
-
-<body style="background-color:#fafafa">
-{% block body %}
-<nav class="navbar navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>                        
-       </button>
-      <a class="navbar-brand" style="padding-top:5px;" href="#"><img src="{% static 'registration/image/logo.png' %}" /></a>
-	  <div class="col-sm-8 col-md-10 col-xs-6">
-      	<div class="searchbar">
-      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
-        </div>
-            <form action='../artist_search/' method='POST'>
-              {% csrf_token %}
-            <input class="large" type="textbox" name='search' id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
-            <button type='submit' style="display:none;"> Search </button>
-            <!-- <input class="small" type="text" id="focusedInput" placeholder="Search"> -->
-            </form>
-      </div>    
-    </div>
-      
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar"> 
-
-    <ul class="nav navbar-nav navbar-right">
-		<li class="dropdown">
-       		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
-			<span class="badge"></span>
-       		<span class="caret"></span></a>
-       		<ul class="dropdown-menu">
-            {% for m in msg %}
-           		<li><a href="https://{{m.url}}">{{m.message}}</a></li>
-              {% endfor %}
-       		</ul>
-    	</li>
-       	<li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{{artist.profile_pic.url}}"/></a></li>
-        	<ul class="dropdown-menu">
-           		<li><a href="../logout/">Logout</a></li>
-            </ul>
-    </ul>
-
-                
-    </div>
-    
-</nav>
+{% block logout %}
+        {% if user.is_authenticated %}
+	        {% if production %}	
+	        	<a href="#">{{production.name}} {% if production.profile_pic %}<img src={{production.profile_pic.url}} />{% else %}
+	            <img src="{% static 'registration/image/user-male.png'  %}" /> {% endif %}</a></li>
+	        {% elif allied %}
+	        	<a href="#">{{allied.name}} {% if allied.profile_pic %}<img src={{allied.profile_pic.url}} />{% else %}
+	            <img src="{% static 'registration/image/user-male.png'  %}" /> {% endif %}</a></li>
+			{% elif artist %}
+	        	<a href="#">{{artist.name}} {% if artist.profile_pic %}<img src={{artist.profile_pic.url}} />{% else %}
+	            <img src="{% static 'registration/image/user-male.png'  %}" /> {% endif %}</a></li>
+			{% endif %}
+        {% else %}
+    	    	<a href="#">Guest<img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+        {% endif %}
+{% endblock %}
+{% block content %}
 <div class="col-sm-12 sec-nav">
     	<ul class="col-xs-12">
         	<li class="sec-nav active"><a target="_blank" id="nav-about">About</a></li>
@@ -99,24 +43,26 @@
     	<div class="about sec">
            <div class="col-sm-4">
             	<h2 class="sec">My Story</h2>
-                <div class="detail">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam interdum semper elit, nec rhoncus lacus dictum in. Suspendisse ornare ullamcorper.</div>
+                <div class="detail">{{artist.my_story}}</div>
             </div>
             <div class="col-sm-8">
     	        <div class="col-sm-6 profile-pic"><img src={{artist.profile_pic.url}} alt="{% static 'registration/image/user-male-big.png'  %}" /></div>
     		    <div class="col-sm-6">
             		<h2 class="sec" style="margin-bottom:3px;">Personal Info</h2>
-            	    <div class="detail">
+            	    <div class="detail" id="personal-info">
             	    	<ul>
-            	    		<li class="col-sm-12"><label>Name</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.name}}</li>
-        		    		<li class="col-sm-12"><label>Height</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.height}}</li>
-           	    			<li class="col-sm-12"><label>Weight</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.weight}}</li>
-            				<li class="col-sm-12"><label>Phone</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.phone}}</li> 
-            				<li class="col-sm-12"><label>Address</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.location}}</li>
-            				<li class="col-sm-12"><label>Body Type</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.body_type}}</li>
-            			   	<li class="col-sm-12"><label>Email</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.email_id}}</li>
-                    	    <li class="col-sm-12"><label>Education</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.education_background}}</li>
-                    	    <li class="col-sm-12"><label>Skills</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.skills}}</li>
-                    	    <li class="col-sm-12"><label>Certifications</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.certifications}}</li>
+                                            {% if user.full_name %}
+                      <li class="col-sm-12"><label>User Name</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{user.full_name}}</span></li>
+                      {% endif %}
+                      <li class="col-sm-12"><label>Name</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.name}}</span></li>
+                      <li class="col-sm-12"><label>Type</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.ob_type}}</span></li>
+        		    		<li class="col-sm-12"><label>Height</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.height}}</span></li>
+           	    			<li class="col-sm-12"><label>Weight</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.weight}}</span></li>
+            				<li class="col-sm-12"><label>Phone</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.phone}}</span></li> 
+            				<li class="col-sm-12"><label>Location</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.location}}</span></li>
+            				<li class="col-sm-12"><label>Body Type</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.body_type}}</span></li>
+                    	    <li class="col-sm-12"><label>Education</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.education_background}}</span></li>
+                    	    <li class="col-sm-12"><label>Certifications</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.certifications}}</span></li>
    
   	    	      	 	</ul>
 					</div>
@@ -134,7 +80,6 @@
    	<div class="exp sec">
        	<div class="col-sm-12 sec">
            	<h2 class="sec">Experience</h2>
-            <p>shadjksahdkjsahdjkhsajdasjkhasjdasjkjashkdjhsajhdkjashdjkashdasjhdasjkhdas</p>
          </div>
          <div class="detail">
           {% for k in exp %} 	
@@ -142,7 +87,7 @@
                	 <ul class="list-group list-group-flush">
    					 	<li class="list-group-item"><span class="text left">{{k.duration_start}}-{{k.duration_end}}</span><span class="tag right">{{k.project_type}} {{k.project_status}}</span></li>
                   </ul>
- 				 <div class="card-img-top" data-src="..." style="height:225px;background-color:#ddd;" ></div>
+ 				 <div class="card-img-top" data-src="..." style="height:225px;" ><a href="../editexp/{{k.id}}"><span class="card-edit glyphicon glyphicon-pencil"></span></a></div>
  					 <div class="card-block rippler rippler-inverse">
                       	  <h4 class="card-title">{{k.project_name}}<span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
    						  <p class="card-text">{{k.character_name}}</p>
@@ -166,7 +111,6 @@
 <div class="rec sec">
        	<div class="col-sm-12 sec">
            	<h2 class="sec">Recommendations</h2>
-            <p>shadjksahdkjsahdjkhsajdasjkhasjdasjkjashkdjhsajhdkjashdjkashdasjhdasjkhdas</p>
          </div>
          <div class="detail">
            	{% for k in rec %}  
@@ -174,7 +118,7 @@
                  <ul class="list-group list-group-flush">
               <li class="list-group-item"><span class="text left">{{k.duration_start}}-{{k.duration_end}}</span><span class="tag right">{{k.project_type}} {{k.project_status}}</span></li>
                   </ul>
-         <div class="card-img-top" data-src="..." style="height:225px;background-color:#ddd;" ></div>
+         <div class="card-img-top" data-src="..." style="height:225px;" ></div>
            <div class="card-block rippler rippler-inverse">
                           <h4 class="card-title">{{k.project_name}}<span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
                 <p class="card-text">{{k.character_name}}</p>
@@ -194,94 +138,8 @@
 
 <script src="{% static 'registration/js/ripples.min.js' %}"></script>
 <script src="{% static 'registration/js/material.min.js' %}"></script>
-<script>
-//var cookie = document.cookie;
-//console.log(cookie+'null');
-    if(document.documentElement.scrollHeight - $(window).height() + 140 < $('#exp').offset().top)
-	$('#exp-fix-float div').css('display','block');
-	if(document.documentElement.scrollHeight - $(window).height() + 140 < $('#rec').offset().top)
-	$('#rec-fix-float div').css('display','block');
+<script src="{% static 'registration/js/dashboard.js' %}"></script>
 
-$.material.init();
-
-$('.card-block').click(function() {
-	if ($(this).css('top') == '0px')
-    	$(this).css('top','-285px');
-	else $(this).css('top','0px');
-});
-$(".sec-nav li a").click(function() {
-	$('.active').removeClass('active');
-	$(this).parent('li').addClass('active');
-	var aId = '';
-	aId = $(this).attr('id');
-	console.log($(this).attr('id'));
-	var res = aId.split('-');
-	var divId = res[1];
-	console.log(divId);
-    $('html, body').animate({
-        scrollTop: $("#"+divId).offset().top - 90
-    }, 500);
-});
-var expDist = $('#exp').offset().top,
-	inExp = false,
-	inRec = false,
-	inAbout = false,
-    recDist = $('#rec').offset().top,
-	$window = $(window);
-$(window).resize(function(){
-	expDist = $('#exp').offset().top;
-	recDist = $('#rec').offset().top;
-	if(document.documentElement.scrollHeight - $(window).height() + 140 < $('#exp').offset().top)
-	$('#exp-fix-float div').css('display','block');
-	else
-		$('#exp-fix-float div').css('display','none');
-	if(document.documentElement.scrollHeight - $(window).height() + 140 < $('#rec').offset().top)
-	$('#rec-fix-float div').css('display','block');
-	else
-		$('#rec-fix-float div').css('display','none');
-
-});
-$window.scroll(function() {
-	//console.log($window.scrollTop() + 90);
-	//console.log(expDist);
-	//console.log(recDist);
-    if ( $window.scrollTop() + 140 > expDist ) {
-		//console.log('in-exp');
-        $('.float-container div.wrapper').css('top','-55px');
-		if(inExp) {  }
-		if(!inExp) {
-		//	console.log('in-this');
-		$('.sec-nav li.active').removeClass('active');
-		$('#nav-exp').parent().addClass('active');
-		inExp = true; inRec = false; inAbout = false;
-		}
-    }
-	if ( $window.scrollTop() + 140 > recDist ) {
-        $('.float-container div.wrapper').css('top','-110px');
-		if(inRec) {  }
-		else {
-		$('.active').removeClass('active');
-		$('#nav-rec').parent('li').addClass('active');
-		inExp = false; inRec = true; inAbout = false;
-		}
-    }
-	if ( $window.scrollTop() + 140 < expDist )  {
-		$('.float-container div.wrapper').css('top','0px');
-		if(inAbout) {  }
-		else {
-		//		console.log('inthis');
-		$('.active').removeClass('active');
-		$('#nav-about').parent('li').addClass('active');
-		inExp = false; inDist = false; inAbout = true;
-		}
-	}
-});
-$(document).ready(function() {
-    var count  = $('.navbar-right ul.dropdown-menu li').length;
-	if(count-1 > 0)
-	$('.badge').html(count-1);
-});
-</script>
-{% endblock body %}
+{% endblock %}
 </body>
 </html>

@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^updateprofile/', views.update_profile, name='updateprofile'),
     url(r'^addexp/', views.add_exp, name='addexperience'),
     url(r'^viewexp/', views.view_experiences, name='viewexperience'),
+    url(r'^editexp/(?P<expid>[0-9]+)/', views.change_exp, name='editexperience'),    
     url(r'^seek_rec/', views.seek_rec, name='seekrecommendation'),
     url(r'^view_rec/', views.view_rec, name='viewrecommendation'),
     url(r'^home/', views.home, name='home'),
@@ -51,7 +52,8 @@ urlpatterns = [
 
     # url(r'^guest/allied/',views.guest_allied_dashboard, name='guest allied'),
     # url(r'^guest/production/',views.guest_production_dashboard, name='guest production'),
-    url(r'^register_gmail/', views.get_google_json, name='googlejson'),
+    url(r'^applyGoogle/', views.get_google_json, name='googlejson'),
+    url(r'^googlereg/', views.google_user_select_type, name='google_user_select_type'),
 
     url(r'^mailtest/', views.mail_test, name='login'),
     # url(r'^fblogin/', views.fb_login, name='fblogin'),

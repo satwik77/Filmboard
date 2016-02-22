@@ -153,7 +153,7 @@ class AlliedForm(forms.ModelForm):
     phone = forms.RegexField(regex=r'^\d{10}$', error_message = ("Enter a valid 10 digit mobile number!"))
     class Meta:
         model = Allied
-        fields = ('name','category', 'location', 'phone')
+        fields = ('name', 'location', 'phone')
         widgets = {
             'category': forms.Select(choices=CATEGORY),
             'location': forms.Select(choices=ct),

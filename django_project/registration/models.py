@@ -53,18 +53,22 @@ class Artist(models.Model):
 	name = models.CharField(max_length=200,blank=True, null=True)
 	gender = models.CharField(max_length=1, choices=GENDERS,blank=True, null=True)
 	dob = models.DateField(null=True)	
-	height = models.IntegerField(blank=True, null=True) #save the height in m and always show in both feet and meters
-	weight = models.IntegerField(blank=True, null=True) #Weight is in Kg
+	height = models.FloatField(blank=True, null=True) #save the height in m and always show in both feet and meters
+	weight = models.FloatField(blank=True, null=True) #Weight is in Kg
 	email_id = models.EmailField(blank=True, null=True)
 	body_type = models.CharField(max_length=200,blank=True, null=True)
 	location = models.CharField(max_length=150,blank=True, null=True)
-	skills = models.CharField(max_length=100,blank=True, null=True)
 	education_background = models.TextField()
 	certifications = models.TextField()
 	past_experiences = models.ManyToManyField(PastExperiences, blank=True, null=True)
 	recommendations = models.ManyToManyField(Recommendations, blank=True)
 	profile_pic= models.ImageField(blank=True, upload_to='pictures', null=True)
 	phone = models.BigIntegerField(blank=True, null=True)
+	ob_type= models.CharField(max_length=200, blank=True,null=True)
+	ethnicity= models.CharField(max_length=200, blank=True,null=True)
+	address = models.TextField(default=' ')
+
+	my_story = models.TextField(default=' ')
 
 	
 	class Meta:
@@ -81,9 +85,6 @@ class Allied(models.Model):
 	# )
 	name = models.CharField(max_length=200, blank=True, null=True)
 	# category = models.CharField(max_length=20, choices=GENDERS)
-	category = models.CharField(max_length=20, blank=True, null=True)
-	sub_category = models.CharField(max_length=20, null=True)
-
 	# dob = models.DateField()	
 	location = models.CharField(max_length=150, blank=True, null=True)
 	services = models.CharField(max_length=300, blank=True, null=True)
@@ -91,7 +92,9 @@ class Allied(models.Model):
 	past_experiences = models.ManyToManyField(PastExperiences, blank=True)
 	recommendations = models.ManyToManyField(Recommendations, blank=True)
 	phone = models.BigIntegerField(null=True)
-
+	ob_type= models.CharField(max_length=200, blank=True,null=True)
+	inventory_list= models.CharField(max_length=500, blank=True, null=True, default='')
+	profile_pic= models.ImageField(blank=True, upload_to='pictures', null=True)
 	
 	class Meta:
 		verbose_name_plural = 'Allied Services'
@@ -104,12 +107,13 @@ class Production(models.Model):
 	user = models.OneToOneField(User)
 	name = models.CharField(max_length=200, blank=True, null=True)
 	location = models.CharField(max_length=150, blank=True, null=True)
-	aboutus = models.TextField()
 	past_experiences = models.ManyToManyField(PastExperiences, blank=True)
 	recommendations = models.ManyToManyField(Recommendations, blank=True)
 	phone = models.BigIntegerField(null=True)
+	profile_pic= models.ImageField(blank=True, upload_to='pictures', null=True)
+	address = models.TextField(default=' ')
 
-	
+	aboutus = models.TextField(default=' ', null=True, blank=True)
 	class Meta:
 		verbose_name_plural = 'Productions'
 	def __unicode__(self):

@@ -125,7 +125,7 @@
       </div>
        <div class="social-wrap c" style="float:left">
     		<button class="facebook" onclick="initFbLogin()" disabled="disabled"><em>w/</em> Facebook</button>
-    		<button class="g-signin2" disabled="disabled" data-onsuccess="onSignIn" style="background: #000;padding: 0;width:120px;"></button>
+    		<span class="g-signin"><button class="g-signin2" disabled="disabled" data-onsuccess="onSignIn"  style="background: #000;padding: 0;width:120px;"></button></span>
             <div class="btn raised blue">
       		<div class="center"><a id="guest-link"  >Login as Guest</a></div>
             
@@ -164,8 +164,6 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script>
-
-
 var parentdiv = $('#login_form').parent().parent();
 var error = '';
 $('#login_form').submit(function(e) {
@@ -332,27 +330,38 @@ $.ajax({
 	
     $( ".reg-div" ).html( html );
   }); });   
-
+var sdata = {"":""};
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
   var profileId = profile.getId(),
   	  profileName = profile.getName(),
 	  profileMail = profile.getEmail();
-//  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-//  console.log('Name: ' + profile.getName());
-//  console.log('Image URL: ' + profile.getImageUrl());
-//  console.log('Email: ' + profile.getEmail());
-  $.ajax({
+ //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+ //console.log('Name: ' + profile.getName());
+ //console.log('Image URL: ' + profile.getImageUrl());
+ //console.log('Email: ' + profile.getEmail());
+ sdata= {"profileId": profileId,
+             "profileName": profileName, 
+             "profileMail": profileMail};
+ console.log(sdata);
+}
+$('.g-signin').click(function() {
+	console.log(sdata);
+	 $.ajax({
     	 url: "http://filmboard.ml/applyGoogle/",
     	 type: "POST",
-    	 data: {profileId: profileId, profileName: profileName, profileMail: profileMail},
-    	 dataType: "json",
-    	 contentType: "application/json"
-        })
-    	 .done(function (data) {
-    	 console.log("Response " +data.accountSelected);
-		 window.location.href = "http://filmboard.ml/applyGoogle/";
-		 });}
+    	 data: sdata,
+    	 // dataType: "json",
+    	 // contentType: "application/json",
+    	 success: function (data) {
+    	           console.log(data);
+                  if(data.status==1)
+				     window.location.href = "http://filmboard.ml/dashboard/";
+                 else if(data.status==2)
+                   window.location.href = "http://filmboard.ml/googlereg/";
+                },
+		
+  });});
 
 $('#guest-value input').click(function() {
 	$('.social-wrap button').removeAttr("disabled");

@@ -1,82 +1,19 @@
+{% extends "registration/base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link href="{% static 'registration/css/bootstrap-material-design.min.css' %}" rel="stylesheet">
- <link href="{% static 'registration/css/ripples.min.css' %}" rel="stylesheet">
- <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-<!-- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
- <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'registration/css/bootstrap-datepicker3.min.css' %}" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <script src="{% static 'registration/js/bootstrap-datepicker.min.js' %}"></script>
-  <style>
-  .form-group label.control-label {
-	  font-weight:900;
-  }
-  h2 {
-	  font-size:24px;
-	  color:#BDBDBD;
-  }
-  #after-nav {
-	  margin-top:120px;
-  }
-  </style>
-<title>Title</title>
-</head>
-
-<body style="background-color:#ECECEC">
-{% block body %}
-<nav class="navbar navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>                        
-       </button>
-      <a class="navbar-brand" style="padding-top:5px;" href="../dashboard/"><img src="{% static 'registration/image/logo.png' %}" /></a>
-	  <div class="col-sm-8 col-md-10 col-xs-6">
-      	<div class="searchbar">
-      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
-        </div>
-            <form>
-            <input class="large" type="text" id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
-            <input class="small" type="text" id="focusedInput" placeholder="Search">
-            </form>
-      </div>    
-    </div>
-      
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar"> 
-
-    <ul class="nav navbar-nav navbar-right">
-		<li class="dropdown">
-       		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
-			<span class="badge">3</span>
-       		<span class="caret"></span></a>
-       		<ul class="dropdown-menu">
-           		<li><a href="#">Notification 1</a></li>
-           		<li><a href="#">Notification 2</a></li>
-           		<li><a href="#">Notification 3</a></li> 
-       		</ul>
-    	</li>
-        <li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
-          <ul class="dropdown-menu">
-              <li><a href="../logout/">Logout</a></li>
-            </ul>
-        </ul>
-    </div>
-</nav>
+{% block extra_file %}<link rel="stylesheet" type="text/css" href="{% static 'registration/css/form.css' %}" />
+{% endblock %}
+        {% block logout %}
+        {% if user.is_authenticated %}
+	           	<a href="#"><img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+	    {% else %}
+    	    	<a href="#">Guest<img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+        {% endif %}
+        {% endblock %}
+{% block content %}
 <div class="container-fluid" id="after-nav">
 	<div class="col-sm-2">
     	<ul class="content-nav">
-        <li id="profile"> <div class="icon">&#8592;</div> <a href="../dashboard">Back to Profile </a> </li>
+        <li id="profile"> <div class="icon">&#8592;</div> <a href="../../addproject">Back to Add Project</a> </li>
         </ul>
     </div>
     <div class="col-sm-8 content" >
@@ -104,28 +41,26 @@
             <div class="col-md-10">
               <select id="select333" class="form-control"  name='skills'>
                   <option style="color:#000" value='Actor,Actress'>Actor,Actress</option>
-                  <option style="color:#000" value='Script Writer'>Script Writer</option>
-                  <option style="color:#000">Lyricist</option>
-                  <option style="color:#000">Singer</option>
-                  <option style="color:#000">Musician</option>
-                        <option style="color:#000">Any Other</option>
+                  <option style="color:#000" value='Director of Photography'>Director of Photography</option>
+                  <option style="color:#000" value='TMO'>The Making of</option>
+                  <option style="color:#000" value="artist-other">Any Other</option>
               </select>
       			</div>
     		</div>
             <div class="form-group">
             	<label for="cost" class="col-sm-2 control-label">Numbers</label> 	            	<div class="col-sm-10">
-                	<input type='text' class="form-control" name='numbers' >
+                	<input type='number' class="form-control" name='numbers' required >
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="character-wrapper">
             <label for="rolePlayed" class="col-md-2 control-label">Character</label>
             <div class="col-md-10">
-              <input type='text' class="form-control" name='character' >
+              <input type='text' class="form-control" name='character' required >
             </div>
         </div>
             
-            <div class="form-group">
-            	<label for="start" class="col-sm-2 control-label">Role Played</label> 	            	<div class="col-sm-10">
+            <div class="form-group" id="role-wrapper">
+            	<label for="start" class="col-sm-2 control-label">Role</label> 	            	<div class="col-sm-10">
                 	<select id="select111" class="form-control"  name='role' style="color:#000">
                   <option style="color:#000" value='Hero'>Hero</option>
                   <option style="color:#000" value='Heroine'>Heroine</option>
@@ -135,10 +70,30 @@
                 </select>
                 </div>
             </div>
+            
+       	    <div class="form-group" id="height-wrapper" style="display:none"><label class="col-md-2 control-label">Height (in m)</label><div class="col-sm-10">                	<select id="select111" class="form-control"  name='height' style="color:#000">
+                  <option style="color:#000">Below 1.4</option>
+                  <option style="color:#000">1.4-1.6</option>
+                  <option style="color:#000">1.6-1.8</option>
+                  <option style="color:#000">1.8-2</option>
+                  <option style="color:#000">Above 2</option>
+                </select>
+</div> </div>
+            <div class="form-group" id="body-wrapper" class="col-md-2 control-label" style="display:none"><label class="col-md-2 control-label">Body Type</label><div class="col-sm-10">        <select id="select111" class="form-control"  name='body_type' style="color:#000">
+              <option value='Slim' style="color:#000">Slim</option><option value='Atheletic' style="color:#000">Atheletic</option><option value='Regular' style="color:#000">Regular</option><option value='Over_weight' style="color:#000">Over weight</option></select></div> </div>
+			  <div class="form-group" id="ethnicity-wrapper"  style="display:none"><label class="col-md-2 control-label">Ethnicity</label><div class="col-sm-10"><select name="ethnicity" class="form-control" >
+                <option value="None" >None</option>
+                <option value="Asian" >Asian</option>
+                <option value="Black" >Black</option>
+                <option value="White" >White</option>
+                <option value="Any Other" >Any Other</option>
+              </select></div> </div>
+              
+
             <div class="form-group">
       			<label for="textArea" class="col-md-2 control-label">Description</label>
 		        <div class="col-md-10">
-      				<textarea name="desc" id="body" class="form-control" rows="3"></textarea>
+      				<textarea name="desc" id="body" class="form-control" rows="3" required></textarea>
                 </div>
            </div>
 		   <br>
@@ -161,17 +116,49 @@
 <script>
 //var cookie = document.cookie;
 //console.log(cookie+'null');
+
 $.material.init();
-$('input[name=dstart]').datepicker({
-    format: "yyyy-mm-dd",
-	orientation: "bottom right"
+$(document).ready(function(e) {
+    if($('select[name="rreq_type"] option:selected').val() == 'Artist') {
+				   $('#body-wrapper').css('display','block'); 
+				   $('#height-wrapper').css('display','block'); 
+				   $('#ethnicity-wrapper').css('display','block'); 
+	}
 });
-$('input[name=dend]').datepicker({
-    format: "yyyy-mm-dd",
-	orientation: "bottom right"
+$('select[name="rreq_type"]').click(function(e) {
+    if($('select[name="rreq_type"] option:selected').val() == 'Artist') {
+				   $('#body-wrapper').css('display','block'); 
+				   $('#height-wrapper').css('display','block'); 
+				   $('#ethnicity-wrapper').css('display','block'); 
+	}
+	else { 		   $('#body-wrapper').css('display','none'); 
+				   $('#height-wrapper').css('display','none'); 
+				   $('#ethnicity-wrapper').css('display','none'); } 
+
+});
+$('select[name="skills"]').click(function(e) {
+    if($('select[name="skills"] option:selected').val() == "Director of Photography" || $('select[name="skills"] option:selected').val() == "TMO")
+		{  $('#role-wrapper').css('display','none'); $('#character-wrapper label').html('Certification');$('#height-wrapper').css('display','none'); 
+		   $('#ethnicity-wrapper').css('display','none'); $('#body-wrapper').css('display','none');  } 
+ 	if($('select[name="skills"] option:selected').val() == "Camera Equipment")
+		{  $('#role-wrapper').css('display','none'); $('#character-wrapper label').html('Inventory'); }
+	if($('select[name="skills"] option:selected').val() == "Portfolio Maker")
+		{  $('#role-wrapper').css('display','none'); $('#character-wrapper label').html('Certification'); }
+   if($('select[name="skills"] option:selected').val() == "Actor,Actress") {  $('#role-wrapper').css('display','block'); $('#character-wrapper label').html('Character');$('#height-wrapper').css('display','block');$('#ethnicity-wrapper').css('display','block'); $('#body-wrapper').css('display','block'); }
+
+});
+
+$('select[name="rreq_type"]').click(function(e) {
+	if($('select[name="rreq_type"] option:selected').val() == 'Allied Services') {
+		$('select[name="skills"]').empty().append('<option style="color:#000" value="Camera Equipment">Camera Equipment</option><option style="color:#000" value="Portfolio Maker">Portfolio Maker</option>').css('display','block'); }
+		
+    if($('select[name="rreq_type"] option:selected').val() == 'Artist') {   $('select[name="skills"]').empty().append('<option style="color:#000" value="Actor,Actress">Actor,Actress</option><option style="color:#000" value="Director of Photography">Director of Photography</option><option style="color:#000" value="TMO">The Making of</option><option style="color:#000" value="artist-other">Any Other</option> ').css('display','block');
+	}
+	if($('select[name="rreq_type"] option:selected').val() == 'Producers') { $('select[name="skills"]').empty().parent().parent('div').css('display','none');$('#role-wrapper').css('display','none'); $('#character-wrapper label').html('Certification'); }
+	$( 'select[name="skills"]' ).trigger( "click" );
 });
 
 </script>
-{% endblock body %}
+{% endblock %}
 </body>
 </html>

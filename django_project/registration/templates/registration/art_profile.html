@@ -1,76 +1,13 @@
+{% extends "registration/base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
- <link href="{% static 'registration/css/bootstrap-material-design.min.css' %}" rel="stylesheet">
- <link href="{% static 'registration/css/ripples.min.css' %}" rel="stylesheet">
-  <link href="{% static 'registration/css/rippler.min.css' %}" rel="stylesheet">
- <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
- <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <script src="{% static 'registration/js/jquery.rippler.min.js' %}"></script>
-  <script> $(document).ready(function() {
-  $(".rippler").rippler({
-    
-  });
-});</script>
- 
-  
-<title>Title</title>
-</head>
-
-<body style="background-color:#fafafa">
-{% block body %}
-<nav class="navbar navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>                        
-       </button>
-      <a class="navbar-brand" style="padding-top:5px;" href="#"><img src="{% static 'registration/image/logo.png' %}" /></a>
-	  <div class="col-sm-8 col-md-10 col-xs-6">
-      	<div class="searchbar">
-      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
-        </div>
-            <form action='../artist_search/' method='POST'>
-              {% csrf_token %}
-            <input class="large" type="textbox" name='search' id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
-            <button type='submit' style="display:none;"> Search </button>
-            <!-- <input class="small" type="text" id="focusedInput" placeholder="Search"> -->
-            </form>
-      </div>    
-    </div>
-      
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar"> 
-
-    <ul class="nav navbar-nav navbar-right">
-		<li class="dropdown">
-       		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
-			<span class="badge"></span>
-       		<span class="caret"></span></a>
-       		<ul class="dropdown-menu">
-           		{% for m in msg %}
-           		<li><a href="https://{{m.url}}">{{m.message}}</a></li>
-              {% endfor %} 
-       		</ul>
-    	</li>
-       	<li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> <a href="#">{{myartist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
-        	<ul class="dropdown-menu">
-           		<li><a href="../../logout/">Logout</a></li>
-            </ul>
-    </ul>
-    </div>
-    
-</nav>
+        {% block logout %}
+        {% if user.is_authenticated %}
+	           	<a href="#"><img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+	    {% else %}
+    	    	<a href="#">Guest<img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+        {% endif %}
+        {% endblock %}
+{% block content %}
 <div class="col-sm-12 sec-nav">
     	<ul class="col-xs-12">
         	<li class="sec-nav active"><a target="_blank" id="nav-about">About</a></li>
@@ -79,7 +16,7 @@
             <li class="sec-nav"><a href="../projects" id="">Projects</a></li>
        	</ul>
 </div>
-<div class="right float-container">
+<!--<div class="right float-container">
 	<div class="wrapper">
 		<div class="updpro-button">
   	 	 	<a href="../updateprofile/"  class="rippler rippler-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
@@ -91,13 +28,13 @@
 	    	<a href="../seek_rec" class="rippler rippler-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 	    </div>
     </div>
-</div>   
+</div> -->  
 <div class="container-fluid" id="after-nav">
 	<div class="col-sm-12 about main" id="about" >
     	<div class="about sec">
            <div class="col-sm-4">
             	<h2 class="sec">My Story</h2>
-                <div class="detail">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam interdum semper elit, nec rhoncus lacus dictum in. Suspendisse ornare ullamcorper.</div>
+                <div class="detail">{{artist.my_story}}</div>
             </div>
             <div class="col-sm-8">
     	        <div class="col-sm-6 profile-pic"><img src="{% static 'registration/image/user-male-big.png'  %}" /></div>
@@ -124,11 +61,11 @@
 	</div>
 </div>
 <div class="col-sm-12 exp main" id="exp">
-	<div id="exp-fix-float" >
+<!--	<div id="exp-fix-float" >
 		<div class="addexp-button"   style="width:55px;height: 55px;padding: 16px;float: right;display:none">
   	 	 	<a href="../addexp/"  class="rippler rippler-default"><span class="glyphicon glyphicon-plus" aria-hidden="true" style="font-size: 25px;color: #fff;"></span></a>
   	    </div>
-    </div>
+    </div>-->
    	<div class="exp sec">
        	<div class="col-sm-12 sec">
            	<h2 class="sec">Experience</h2>
@@ -156,11 +93,11 @@
     </div>
 </div>
 <div class="col-sm-12 rec main" id="rec">
-<div id="rec-fix-float">
+<!--<div id="rec-fix-float">
 		<div class="addrec-button"   style="width:55px;height: 55px;padding: 16px;float: right;display:none">
   	 	 	<a href="../seek_rec/"  class="rippler rippler-default"><span class="glyphicon glyphicon-plus" aria-hidden="true" style="font-size: 25px;color: #fff;"></span></a>
   	    </div>
-</div>
+</div> -->
 <div class="rec sec">
        	<div class="col-sm-12 sec">
            	<h2 class="sec">Recommendations</h2>
@@ -195,11 +132,6 @@
 <script>
 //var cookie = document.cookie;
 //console.log(cookie+'null');
-    if(document.documentElement.scrollHeight - $(window).height() + 140 < $('#exp').offset().top)
-	$('#exp-fix-float div').css('display','block');
-	if(document.documentElement.scrollHeight - $(window).height() + 140 < $('#rec').offset().top)
-	$('#rec-fix-float div').css('display','block');
-
 $.material.init();
 $('.card-block').click(function() {
 	if ($(this).css('top') == '0px')
@@ -219,61 +151,7 @@ $(".sec-nav li a").click(function() {
         scrollTop: $("#"+divId).offset().top - 90
     }, 500);
 });
-var expDist = $('#exp').offset().top,
-	inExp = false,
-	inRec = false,
-	inAbout = false,
-    recDist = $('#rec').offset().top,
-	$window = $(window);
-$(window).resize(function(){
-	expDist = $('#exp').offset().top;
-	recDist = $('#rec').offset().top;
-	if(document.documentElement.scrollHeight - $(window).height() + 140 < $('#exp').offset().top)
-	$('#exp-fix-float div').css('display','block');
-	else
-		$('#exp-fix-float div').css('display','none');
-	if(document.documentElement.scrollHeight - $(window).height() + 140 < $('#rec').offset().top)
-	$('#rec-fix-float div').css('display','block');
-	else
-		$('#rec-fix-float div').css('display','none');
-
-});
-$window.scroll(function() {
-	//console.log($window.scrollTop() + 90);
-	//console.log(expDist);
-	//console.log(recDist);
-    if ( $window.scrollTop() + 140 > expDist ) {
-		//console.log('in-exp');
-        $('.float-container div.wrapper').css('top','-55px');
-		if(inExp) {  }
-		if(!inExp) {
-		//	console.log('in-this');
-		$('.sec-nav li.active').removeClass('active');
-		$('#nav-exp').parent().addClass('active');
-		inExp = true; inRec = false; inAbout = false;
-		}
-    }
-	if ( $window.scrollTop() + 140 > recDist ) {
-        $('.float-container div.wrapper').css('top','-110px');
-		if(inRec) {  }
-		else {
-		$('.active').removeClass('active');
-		$('#nav-rec').parent('li').addClass('active');
-		inExp = false; inRec = true; inAbout = false;
-		}
-    }
-	if ( $window.scrollTop() + 140 < expDist )  {
-		$('.float-container div.wrapper').css('top','0px');
-		if(inAbout) {  }
-		else {
-		//		console.log('inthis');
-		$('.active').removeClass('active');
-		$('#nav-about').parent('li').addClass('active');
-		inExp = false; inDist = false; inAbout = true;
-		}
-	}
-});
 </script>
-{% endblock body %}
+{% endblock %}
 </body>
 </html>

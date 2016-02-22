@@ -1,27 +1,6 @@
+{% extends "registration/base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
- <link href="{% static 'registration/css/bootstrap-material-design.min.css' %}" rel="stylesheet">
- <link href="{% static 'registration/css/ripples.min.css' %}" rel="stylesheet">
-  <link href="{% static 'registration/css/rippler.min.css' %}" rel="stylesheet">
- <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
- <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <script src="{% static 'registration/js/jquery.rippler.min.js' %}"></script>
-  <script> $(document).ready(function() {
-  $(".rippler").rippler({
-    
-  });
-});</script>
- 
-<style>
+{% block extra_file %}<style>
 .card {
 	height:400px;
 }
@@ -30,53 +9,15 @@
 	top:-290px;
 }
 </style>
-<title>Title</title>
-</head>
-
-<body style="background-color:#fafafa">
-{% block body %}
-<nav class="navbar navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>                        
-       </button>
-      <a class="navbar-brand" style="padding-top:5px;" href="#"><img src="{% static 'registration/image/logo.png' %}" /></a>
-	  <div class="col-sm-8 col-md-10 col-xs-6">
-      	<div class="searchbar">
-      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
-        </div>
-            <form>
-            <input class="large" type="text" id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
-            <input class="small" type="text" id="focusedInput" placeholder="Search">
-            </form>
-      </div>    
-    </div>
-      
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar"> 
-
-    <ul class="nav navbar-nav navbar-right">
-		<li class="dropdown">
-       		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
-			<span class="badge">3</span>
-       		<span class="caret"></span></a>
-       		<ul class="dropdown-menu">
-           		<li><a href="#">Notification 1</a></li>
-           		<li><a href="#">Notification 2</a></li>
-           		<li><a href="#">Notification 3</a></li> 
-       		</ul>
-    	</li>
-       	<li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> <a href="#">{{artist.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
-        	<ul class="dropdown-menu">
-           		<li><a href="../../logout/">Logout</a></li>
-            </ul>
-    </ul>
-    </div>
-    
-</nav>
+{% endblock %}
+        {% block logout %}
+        {% if user.is_authenticated %}
+	           	<a href="#"><img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+	    {% else %}
+    	    	<a href="#">Guest<img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+        {% endif %}
+        {% endblock %}
+{% block content %}
 <div class="container-fluid" id="after-nav">
      <div class="col-sm-12 main">
             <h1 style="margin-bottom:20px;font-size:24px;color:#BDBDBD;text-align:center;">{{p.project_name}}</h1><br>
@@ -101,9 +42,9 @@
             {% for r in requirements %}
            	<div class="card">
                	 <ul class="list-group list-group-flush">
-   					 	<li class="list-group-item"><span class="text left" style="font-size:18px">{{r.skills}}</span><span class="tag right">{{r.numbers}}</span></li>
+   					 	<li class="list-group-item"><span class="text left" style="font-size:18px">{{r.skills}}</span><span class="tag right" style="min-width:50px">{{r.numbers}}</span></li>
                   </ul>
- 				 <div class="card-img-top" data-src="..." style="height:225px;background-color:#ddd;" ></div>
+ 				 <div class="card-img-top" data-src="..." style="height:225px;" ></div>
  					 <div class="card-block desc rippler rippler-inverse">
                       	  <h4 class="card-title">{{r.req_type}}<span class="tag right">{{r.role}}</span></h4>
    						  <p class="card-text">{{r.character}}</p>
@@ -112,9 +53,10 @@
                      <div class="card-block last">
                      	<a target="_blank" class="card-link"></a>
                         {% if choice = 'myproj' %}
-                        <a href="../../../my-projects-requirements/{{r.id}}/" class="card-link btn btn-primary">See Applicants</a>
+                        <a target="_blank"  class="card-link btn btn-primary" onClick= "getApplicants({{r.id}})">See Applicants</a>
                         {% elif user.is_authenticated %}
-                        <a href="../../../apply/{{r.id}}/" class="card-link btn btn-primary">Apply</a>
+                    
+                            <a href="../../../apply/{{r.id}}/" class="card-link btn btn-primary">Apply</a>   
                         {% else %}
                         <a href="../../home/" class="card-link btn btn-primary">Login to apply</a>
                         {% endif %}
@@ -124,16 +66,19 @@
                 
                               
            </div>
-
         {% endfor %}                
  <br><br>
 {% if choice == 1 %}
- <h3 color='green' align = 'center'>You have applied for {{req.req_type}}, {{p.project_name}}</h4>
+ <h3 color='green' align = 'center'>You have applied for {{req.req_type}}, {{p.project_name}}</h3>
 {% elif choice == 2 %}
- <h3 color='red' align = 'center'>{{error}}</h4>
+ <h3 color='red' align = 'center'>{{error}}</h3>
 {% endif %}
-        </div>
     </div>
+    
+
+</div>
+</div>
+<div class="col-sm-12 exp main applicants" style="min-height:0px;opacity:0;transition:all 0.5s ease-in-out;"><div class="col-sm-12 sec exp"></div></div>
 <script src="{% static 'registration/js/ripples.min.js' %}"></script>
 <script src="{% static 'registration/js/material.min.js' %}"></script>
 <script>
@@ -145,5 +90,17 @@ $('.card-block.desc').click(function() {
     	$(this).css('top','-285px');
 	else $(this).css('top','0px');
 });
+function getApplicants(id)
+{				$.ajax({
+				url: "../../../my-projects-requirements/" + id,
+  				method : "GET"
+			    }).done(function( html ) {
+					$('.main.applicants').css('opacity',1);
+	   				$( ".main.applicants" ).html(html);
+ 			}); 
+			settimeout($('html, body').animate({
+        scrollTop: $('.main').offset().top + 90
+    }, 500),1000);
+}
 </script>
-{% endblock body %}
+{% endblock %}

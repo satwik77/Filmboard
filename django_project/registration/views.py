@@ -18,6 +18,7 @@ import difflib
 from registration.forms import *
 import json
 from django.http import JsonResponse
+import requests
 
 @csrf_exempt
 def home(request):
@@ -94,6 +95,15 @@ def user_logout(request):
 
 ###########     REGISTRATION FUNCTIONS     ############
 
+def send_simple_message(email):
+    return requests.post(
+        "https://api.mailgun.net/v3/sandbox60649047307e4399b2ecf1bbbbf61b0b.mailgun.org/messages",
+        auth=("api", "key-49efd1210e545d83bff19b6455afc6a9"),
+        data={"from": "Filmboard Admin <postmaster@sandbox60649047307e4399b2ecf1bbbbf61b0b.mailgun.org>",
+              "to": str(email),
+              "subject": "Filmboard",
+              "text": "Thank You for registering"})
+
 @csrf_exempt
 def initial_registration(request):
     # Like before, get the request's context.
@@ -127,16 +137,17 @@ def initial_registration(request):
             username =user.username
             user_ob = user
             user = authenticate(username=username, password=password)
+            send_simple_message(user.email)
             login(request, user)                
             registered = False
             if choice == '1':
-                artist_ob= Artist(user=user_ob,name='', gender='')
+                artist_ob= Artist(user=user_ob,name='', location='')
                 artist_ob.save()
                 return HttpResponseRedirect('../updateprofile/')
                 # return render(request, 'registration/.html',{'a_form': artist_form, 'registered': registered, 'choice' : '1' })
                 # artist_registration(request)
             elif choice == '2':
-                allied_ob= Allied(user=user_ob,name='', category='', sub_category='',location='')
+                allied_ob= Allied(user=user_ob,name='',location='')
                 allied_ob.save()
                 return HttpResponseRedirect('../updateprofile/')
             elif choice == '3':
@@ -172,11 +183,33 @@ def register_profile(request):
         registered = True
         return render(request, 'registration/register.html',
                 { 'registered': registered}) 
-    
+
+@csrf_exempt   
 def get_google_json(request):
     if request.method == 'POST':
-        json_ob= json.loads(data)
-        return JsonResponse(json_ob)         
+        uid = str(request.POST['profileId'])
+        uname = str(request.POST['profileName'])
+        uemail = str(request.POST['profileMail'])
+        # usernm = 'g' + uid
+        fname,lname = uname.split(' ')
+        try:
+            user = authenticate(username=uid, password=uid)
+            user.first_name = fname
+            user.last_name = lname
+            user.save()
+            login(request, user)
+            response={'status':1}
+            return JsonResponse(response)         
+        except:
+            user = User.objects.create_user(uid, uemail, uid)
+            user.is_active = True
+            user.first_name = fname
+            user.last_name = lname
+            user.save()
+            user = authenticate(username=uid, password=uid)
+            login(request, user)    
+            response={'status':2}
+            return JsonResponse(response)         
 
 
 
@@ -374,9 +407,10 @@ def production_registration(request):
 
 # THIS IS FOR ARTISTS
 # CODE FOR MAIN DASHBOARD PAGE
+@csrf_exempt
 @login_required
 def dashboard(request):
-    if request.user.is_authenticated():
+    if request.user:
         user= request.user
         artist_ob = Artist.objects.filter(user = user)
         allied_ob = Allied.objects.filter(user = user)
@@ -394,6 +428,7 @@ def dashboard(request):
                 'exp' : exp,
                 'rec' : rec,
                 'msg' : messages,
+                'user' : user,
             }
             return render(request, 'registration/dashboard.html', context)    
         elif allied_ob:
@@ -404,6 +439,7 @@ def dashboard(request):
                 'allied' : allied_ob,
                 'exp' : exp,
                 'rec' : rec,
+                'user' : user,
             }
             return render(request, 'registration/dashboard_allied.html', context)
         elif prod_ob:
@@ -419,6 +455,7 @@ def dashboard(request):
                 'exp' : exp,
                 'rec' : rec,
                 'msg' : messages,
+                'user' : user,
             }
             return render(request, 'registration/dashboard_production.html', context)
     else:
@@ -494,45 +531,76 @@ def update_profile(request):
             artist_ob= artist_ob[0]
             artist_ob.name = request.POST['name']
             artist_ob.gender = request.POST['gender']
-            # arti_obst.dob = request.POST['dob']
-            artist_ob.profile_pic= request.FILES['0']
-            artist_ob.height = request.POST['height']
-            artist_ob.weight = request.POST['weight']
+            artist_ob.ob_type= request.POST['ob_type']
+            artist_ob.ethnicity= request.POST['ethnicity']
+
+            artist_ob.dob = request.POST.get('dob','')
+            try:
+                artist_ob.profile_pic= request.FILES['0']
+            except:
+                dumpvar=0
+            if request.POST['phone']:
+                artist_ob.phone= request.POST['phone']
+            else:
+                yyy=0
+            if request.POST['height']:
+                artist_ob.height = request.POST['height']
+            else:
+                artist_ob.height = 0
+            if request.POST['weight']:
+                artist_ob.weight = request.POST['weight']
+            else:
+                artist_ob.weight =0
             artist_ob.email_id = request.POST['email_id']
             artist_ob.body_type = request.POST['body_type']
             artist_ob.location = request.POST['location']
-            artist_ob.skills = request.POST['skills']
             artist_ob.education_background = request.POST['ed_back']
             artist_ob.certifications = request.POST['certifications']
+            artist_ob.my_story = request.POST['my_story']
             artist_ob.save()
+            return HttpResponse('done')
         elif allied_ob:
             allied_ob= allied_ob[0]
+            try:
+                allied_ob.profile_pic= request.FILES['0']
+            except:
+                dumpvar=0            
             allied_ob.name = request.POST['name']
-            allied_ob.category = request.POST['category']
+            allied_ob.ob_type= request.POST['ob_type']
+            allied_ob.inventory_list= request.POST['inv_list']
             # arti_obst.dob = request.POST['dob']
-            allied_ob.sub_category = request.POST['sub_category']
-            allied_ob.services = request.POST['services']
+            allied_ob.services = request.POST['address']
             allied_ob.phone = request.POST['phone']
             allied_ob.location = request.POST['location']
             allied_ob.certifications = request.POST['certifications']
             allied_ob.save()
+            return HttpResponse('done')            
         elif prod_ob:
             prod_ob= prod_ob[0]
+            try:
+                prod_ob.profile_pic= request.FILES['0']
+            except:
+                dumpvar=0            
             prod_ob.name = request.POST['name']
             prod_ob.location= request.POST['location']
-            prod_ob.aboutus= request.POST['aboutus']
-            prod_ob.phone = request.POST['phone']         
+            prod_ob.aboutus = request.POST['about']
+            prod_ob.phone = request.POST['phone']
+            prod_ob.address = request.POST['address']         
             prod_ob.save()
+            return HttpResponse('done')            
 
-        return HttpResponse('done')
+        return HttpResponseRedirect('../dashboard/')
     
 
     else:
         if artist_ob:
+            artist_ob=artist_ob[0]
             return render(request,'registration/update_profile.html', {'user':user, 'artist' : artist_ob, 'loc':ct})
         elif allied_ob:
+            allied_ob=allied_ob[0]
             return render(request,'registration/update_profile_allied.html', {'user':user, 'allied' : allied_ob, 'loc': ct})
         elif prod_ob:
+            prod_ob=prod_ob[0]
             return render(request,'registration/update_profile_prod.html', {'user':user, 'prod' : prod_ob, 'loc' : ct})
 #FUNCTIONALITIES FOR ADDING EXPERIENCE
 @login_required
@@ -567,7 +635,6 @@ def add_exp(request):
             proj_name = request.POST['name']
             proj_status = request.POST['status']
             skills = request.POST['skills']
-            skills = request.POST['skills']
             char_name = request.POST['char_name']
             role_played = request.POST['role_played']
             duration_start= request.POST['start']
@@ -585,7 +652,50 @@ def add_exp(request):
             proj_type = request.POST['type']
             proj_name = request.POST['name']
             proj_status = request.POST['status']
-            skills = request.POST['skills']
+            duration_start= request.POST['start']
+            duration_end= request.POST['end']
+            remarks = request.POST['remarks']
+            special_mention = request.POST['mention']
+            exp_ob =PastExperiences(project_type=proj_type, project_name=proj_name, project_status= proj_status, duration_start= duration_start, duration_end= duration_end, remarks=remarks,special_mention=special_mention)
+            exp_ob.save()
+            # proj_type = request.POST['name']
+            prod_ob.past_experiences.add(exp_ob)
+            return HttpResponseRedirect('../dashboard/')
+
+    else:
+        user = request.user
+        artist_ob = Artist.objects.filter(user = user)
+        allied_ob = Allied.objects.filter(user = user)
+        prod_ob = Production.objects.filter(user = user)
+        if artist_ob:        
+            check = 1
+            context = {'artist_ob':artist_ob}
+            return render(request,'registration/add_exp_artist.html')     
+
+        elif allied_ob:        
+            check = 2
+            context = {'check':check}
+            return render(request,'registration/add_exp_allied.html')     
+    
+        elif prod_ob:        
+            check = 3
+            context = {'check':check}
+            return render(request,'registration/add_exp_prod.html')     
+
+@login_required
+def change_exp(request, expid):
+    if request.method == 'POST':
+        user = request.user
+        artist_ob = Artist.objects.filter(user = user)
+        allied_ob = Allied.objects.filter(user = user)
+        prod_ob = Production.objects.filter(user = user)
+        if artist_ob:
+            artist_ob = artist_ob[0]
+            exp = PastExperiences.objects.get(id=expid)
+            # if exp in artist_ob.past_experiences:    
+            proj_type = request.POST['type']
+            proj_name = request.POST['name']
+            proj_status = request.POST['status']
             skills = request.POST['skills']
             char_name = request.POST['char_name']
             role_played = request.POST['role_played']
@@ -593,52 +703,93 @@ def add_exp(request):
             duration_end= request.POST['end']
             remarks = request.POST['remarks']
             special_mention = request.POST['mention']
-            exp_ob =PastExperiences(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, remarks=remarks,special_mention=special_mention)
-            exp_ob.save()
-            # proj_type = request.POST['name']
-            prod_ob.past_experiences.add(exp_ob)
-            return HttpResponseRedirect('../dashboard/')
-            
-        # elif allied_ob:
-        #     proj_type = request.POST['type']
-        #     proj_name = request.POST['name']
-        #     proj_status = request.POST['status']
-        #     skills = request.POST['skills']
-        #     char_name = request.POST['char_name']
-        #     role_played = request.POST['role_played']
-        #     duration_start= request.POST['start']
-        #     duration_end= request.POST['end']
-        #     remarks = request.POST['remarks']
-        #     special_mention = request.POST['mention']
-        #     exp_ob =PastExperiences(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, remarks=remarks,special_mention=special_mention)
-        #     exp_ob.save()
-        #     # proj_type = request.POST['name']
-        #     allied_ob.past_experiences.add(exp_ob)
-
-        #     allied_ob.save()
-        #     return HttpResponseRedirect('../dashboard/')
-        # elif prod_ob:
-        #     proj_type = request.POST['type']
-        #     proj_name = request.POST['name']
-        #     proj_status = request.POST['status']
-        #     skills = request.POST['skills']
-        #     char_name = request.POST['char_name']
-        #     role_played = request.POST['role_played']
-        #     duration_start= request.POST['start']
-        #     duration_end= request.POST['end']
-        #     remarks = request.POST['remarks']
-        #     special_mention = request.POST['mention']
-        #     exp_ob =PastExperiences(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, remarks=remarks,special_mention=special_mention)
-        #     exp_ob.save()
-        #     # proj_type = request.POST['name']
-        #     prod_ob.past_experiences.add(exp_ob)
-
-        #     prod_ob.save()
-        #     return HttpResponseRedirect('../dashboard/')
+            exp.project_type=proj_type 
+            exp.project_name=proj_name 
+            exp.project_status= proj_status     
+            exp.skills= skills 
+            exp.character_name=char_name 
+            exp.role_played=role_played 
+            exp.duration_start= duration_start
+            exp.duration_end= duration_end
+            exp.remarks=remarks
+            exp.special_mention=special_mention
+            exp.save()
+        # proj_type = request.POST['name']
+            artist_ob.save()
+            return HttpResponseRedirect('../../dashboard/')
+        elif allied_ob:
+            allied_ob=allied_ob[0]
+            exp = PastExperiences.objects.get(id=expid)
+            # if exp in artist_ob.past_experiences:
+            proj_type = request.POST['type']
+            proj_name = request.POST['name']
+            proj_status = request.POST['status']
+            skills = request.POST['skills']
+            char_name = request.POST['char_name']
+            role_played = request.POST['role_played']
+            duration_start= request.POST['start']
+            duration_end= request.POST['end']
+            remarks = request.POST['remarks']
+            special_mention = request.POST['mention']
+            exp.project_type=proj_type 
+            exp.project_name=proj_name 
+            exp.project_status= proj_status 
+            exp.skills= skills 
+            exp.character_name=char_name 
+            exp.role_played=role_played 
+            exp.duration_start= duration_start 
+            exp.duration_end= duration_end 
+            exp.remarks=remarks
+            exp.special_mention=special_mention
+            exp.save()
+        # proj_type = request.POST['name']
+            allied_ob.save()
+            return HttpResponseRedirect('../../dashboard/')
+        elif prod_ob:
+            prod_ob=prod_ob[0]
+            exp = PastExperiences.objects.get(id=expid)
+            # if exp in prod_pb.past_experiences: 
+            proj_type = request.POST['type']
+            proj_name = request.POST['name']
+            proj_status = request.POST['status']
+            duration_start= request.POST['start']
+            duration_end= request.POST['end']
+            remarks = request.POST['remarks']
+            special_mention = request.POST['mention']
+            exp.project_type=proj_type 
+            exp.project_name=proj_name 
+            exp.project_status= proj_status 
+            exp.duration_start= duration_start 
+            exp.duration_end= duration_end 
+            exp.remarks=remarks
+            exp.special_mention=special_mention
+            exp.save()
+        # proj_type = request.POST['name']
+            prod_ob.save()
+            return HttpResponseRedirect('../../dashboard/')
 
     else:
-        return render(request,'registration/add_exp.html')      
+        user = request.user
+        artist_ob = Artist.objects.filter(user = user)
+        allied_ob = Allied.objects.filter(user = user)
+        prod_ob = Production.objects.filter(user = user)
+        if artist_ob:        
+            check = 1
+            artist_ob = artist_ob[0]
+            context = {'artist_ob':artist_ob}
+            return render(request,'registration/change_exp_artist.html')     
 
+        elif allied_ob:        
+            check = 2
+            allied_ob = allied_ob[0]
+            context = {'allied_ob':allied_ob}
+            return render(request,'registration/change_exp_allied.html')     
+    
+        elif prod_ob:        
+            check = 3
+            prod_ob = prod_ob[0]
+            context = {'prod_ob':prod_ob}
+            return render(request,'registration/change_exp_prod.html')     
 
 #FUNC FOR VIEW EXPERIENCE
 @login_required
@@ -678,27 +829,72 @@ def view_experiences(request):
 def seek_rec(request):
     if request.method == 'POST':
         user = request.user
-        artist_ob=request.user.artist
-        proj_type = request.POST['type']
-        proj_name = request.POST['name']
-        proj_status = request.POST['status']
-        skills = request.POST['skills']
-        char_name = request.POST['char_name']
-        role_played = request.POST['role_played']
-        duration_start= request.POST['start']
-        duration_end= request.POST['end']
-        seek_from_type = request.POST['seek_type']
-        seek_from_name = request.POST['seek_name']
-        message = request.POST['message']
-        email_id = request.POST['email']
-        rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
-        rec_ob.save()
-        # proj_type = request.POST['name']
-        artist_ob.recommendations.add(rec_ob)
+        artist_ob = Artist.objects.filter(user = user)
+        allied_ob = Allied.objects.filter(user = user)
+        prod_ob = Production.objects.filter(user = user)
+        if artist_ob:
+            artist_ob = artist_ob[0]
+            proj_type = request.POST['type']
+            proj_name = request.POST['name']
+            proj_status = request.POST['status']
+            skills = request.POST['skills']
+            char_name = request.POST['char_name']
+            role_played = request.POST['role_played']
+            duration_start= request.POST['start']
+            duration_end= request.POST['end']
+            seek_from_type = request.POST['seek_type']
+            seek_from_name = request.POST['seek_name']
+            message = request.POST['message']
+            email_id = request.POST['email']
+            rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
+            rec_ob.save()
+            # proj_type = request.POST['name']
+            artist_ob.recommendations.add(rec_ob)
 
-        artist_ob.save()
-        return HttpResponseRedirect('../dashboard/')
+            artist_ob.save()
+            return HttpResponseRedirect('../dashboard/')
+        elif allied_ob:
+            allied_ob=allied_ob[0]
+            proj_type = request.POST['type']
+            proj_name = request.POST['name']
+            proj_status = request.POST['status']
+            skills = request.POST['skills']
+            char_name = request.POST['char_name']
+            role_played = request.POST['role_played']
+            duration_start= request.POST['start']
+            duration_end= request.POST['end']
+            seek_from_type = request.POST['seek_type']
+            seek_from_name = request.POST['seek_name']
+            message = request.POST['message']
+            email_id = request.POST['email']
+            rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
+            rec_ob.save()
+            # proj_type = request.POST['name']
+            allied_ob.recommendations.add(rec_ob)
 
+            allied_ob.save()
+            return HttpResponseRedirect('../dashboard/')
+        elif prod_ob:
+            prod_ob=prod_ob[0]
+            proj_type = request.POST['type']
+            proj_name = request.POST['name']
+            proj_status = request.POST['status']
+            skills = request.POST['skills']
+            char_name = request.POST['char_name']
+            role_played = request.POST['role_played']
+            duration_start= request.POST['start']
+            duration_end= request.POST['end']
+            seek_from_type = request.POST['seek_type']
+            seek_from_name = request.POST['seek_name']
+            message = request.POST['message']
+            email_id = request.POST['email']
+            rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
+            rec_ob.save()
+            # proj_type = request.POST['name']
+            prod_ob.recommendations.add(rec_ob)
+
+            prod_ob.save()
+            return HttpResponseRedirect('../dashboard/')
     else:
         return render(request,'registration/seek_rec.html')     
 
@@ -717,7 +913,7 @@ def view_rec(request):
 
 
 
-# THIS IS FOR ALLIED SERVICES
+# ThisIS IS FOR ALLIED SERVICES
 # CODE FOR MAIN DASHBOARD PAGE
 
 
@@ -734,6 +930,8 @@ def mail_test(request):
 
 def show_projects(request):
     projectlist = Projects.objects.all()
+    # for x in reqlist:
+    #     x.
     context = {
         'projectlist':projectlist
     }
@@ -779,7 +977,7 @@ def apply_for_project(request,requirement_id):
             notify_ob.save()
 
     elif allied_ob:
-        if req.req_type == 'Allied Service':
+        if req.req_type == 'Allied Services':
             req.user.add(user)
             req.save()
             choice=1
@@ -789,7 +987,7 @@ def apply_for_project(request,requirement_id):
         if prod_ob_list:
             prod_ob = prod_ob_list[0]
             user_ob = prod_ob.user
-            message= str(artist_ob[0].name) + ' Applied For ' + str(proj.project_name)
+            message= str(allied_ob[0].name) + ' Applied For ' + str(proj.project_name)
             notify_ob= Notifications(user=user_ob, message=message,url='', sent=False)
             notify_ob.save()
 
@@ -837,7 +1035,8 @@ def add_project(request):
             pid = str(proj.id)
             return HttpResponseRedirect('../addrequirements/'+pid+'/')
     else:
-        return render(request,'registration/add_project.html')
+        context={'loc':ct,}
+        return render(request,'registration/add_project.html',context)
 
 
 @login_required
@@ -1024,7 +1223,30 @@ def show_profile_prod(request,prod_id):
         # 'rec' : rec,
         # 'myartist' : myartist,
     }
-    return render(request, 'registration/prod_profile.html', context)    
+    return render(request, 'registration/prod_profile.html', context)
+
+@csrf_exempt
+@login_required
+def google_user_select_type(request):
+    if request.method == 'POST':
+        choice = request.POST['choice']
+        user_ob = request.user
+        if choice == '1':
+            artist_ob= Artist(user=user_ob,name='', gender='')
+            artist_ob.save()
+            return HttpResponseRedirect('../updateprofile/')
+                # return render(request, 'registration/.html',{'a_form': artist_form, 'registered': registered, 'choice' : '1' })
+                # artist_registration(request)
+        elif choice == '2':
+            allied_ob= Allied(user=user_ob,name='', category='', sub_category='',location='')
+            allied_ob.save()
+            return HttpResponseRedirect('../updateprofile/')
+        elif choice == '3':
+            prod_ob= Production(user=user_ob,name='', location='')
+            prod_ob.save()
+            return HttpResponseRedirect('../updateprofile/')
+    else:
+        return render(request,'registration/select_user_type_googleuser.html')        
 # #FUNCTIONALITIES FOR ADDING EXPERIENCE
 # @login_required
 # def add_exp(request):

@@ -1,19 +1,7 @@
+{% extends "registration/base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-   <link href="{% static 'registration/css/bootstrap-material-design.min.css' %}" rel="stylesheet">
- <link href="{% static 'registration/css/ripples.min.css' %}" rel="stylesheet">
- <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-<!-- <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
- <link rel="stylesheet" type="text/css" href="{% static 'registration/css/reset.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'registration/css/profile.css' %}" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <style>
+{% block extra_file %}
+  <style>
   .row h2 {
 	  font-size:24px;
 	  color:#BDBDBD;
@@ -21,54 +9,18 @@
   #after-nav {
 	  margin-top:120px;
   }
+  label.control-label {
+	  padding:0;
+  }
+  input[name="name"] {
+	  position: relative;
+    top: 32px;
+  }
   </style>
-
-<title>Title</title>
-</head>
-
-<body style="background-color:#ECECEC">
-{% block body %}
-<nav class="navbar navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>                        
-       </button>
-      <a class="navbar-brand" style="padding-top:5px;" href="../dashboard/"><img src="{% static 'registration/image/logo.png' %}" /></a>
-	  <div class="col-sm-8 col-md-10 col-xs-6">
-      	<div class="searchbar">
-      		<div class="search-icon"> <img src="{% static 'registration/image/search-logo.png' %}" />
-        </div>
-            <form>
-            <input class="large" type="text" id="focusedInput" placeholder="Search for artists, producers, allied services and video categories">
-            <input class="small" type="text" id="focusedInput" placeholder="Search">
-            </form>
-      </div>    
-    </div>
-      
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar"> 
-
-    <ul class="nav navbar-nav navbar-right">
-		<li class="dropdown">
-       		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
-			<span class="badge">3</span>
-       		<span class="caret"></span></a>
-       		<ul class="dropdown-menu">
-           		{% for m in msg %}
-           		<li><a href="https://{{m.url}}">{{m.message}}</a></li>
-              {% endfor %} 
-       		</ul>
-    	</li>
-        <li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> <a href="#">{{allied.name}} <img class="avatar-icon" src="{% static 'registration/image/user-male.png' %}"/></a></li>
-          <ul class="dropdown-menu">
-              <li><a href="../logout/">Logout</a></li>
-            </ul>
-    </ul>
-    </div>
-</nav>
+<link href="{% static 'registration/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet">
+<script src="{% static 'registration/js/bootstrap-datepicker.min.js' %}"></script>
+{% endblock %}
+{% block content %}
 <div class="container-fluid" id="after-nav">
 	<div class="col-sm-2">
     	<ul class="content-nav">
@@ -81,15 +33,31 @@
             <h2 style="align:center">Update Profile</h2>
            
 
-            <form method='POST' action='../updateprofile/'>
+            <form id='profile_update'>
                 {% csrf_token %}
             <fieldset>
-              <div class="form-group col-sm-8">
-             	<input type='text' class="form-control col-sm-12" name='name' value='{{allied.name}}' placeholder="Name">
-             </div> 
-             <ul> 
-                <li class="col-sm-3"><img src="{% static 'registration/image/user-male-big.png'  %}" style="width:188px;float:right"/></li>
-    	        <li class="col-sm-3"><label>Category</label><span>  
+              <ul>
+              <li class="form-group col-sm-8">
+               	<input type='text' class="form-control col-sm-12" name='name' value='{{allied.name}}' placeholder="Name" required>
+              </li>
+              <li class="col-sm-4">{% if allied.profile_pic %}<img src={{allied.profile_pic.url}} width="150px"/>{% else %}
+                <img src="{% static 'registration/image/user-male-big.png'  %}" width="150px"/> {% endif %}</li>
+              <li class="col-sm-8"></li>
+              <li class="form-group col-sm-4">
+      			 <div class="col-md-12">
+        			<input type="text" readonly class="form-control" placeholder="Display Picture...">
+      				<input type="file" id="dp" value="">
+        	  </li> 
+
+     		  <li class="col-sm-4 form-group"><label class="control-label">Type</label><span>
+                <select name="ob_type" class="form-control" >
+                	<option value="Camera Equipment Seller" >Camera Equipment Sellers</option>
+                	<option value="Portfolio Makers" >Portfolio Makers</option>
+                </select>  
+              </li>
+                                       
+
+    	   <!--     <li class="col-sm-3"><label>Category</label><span>  
               <select id="select111" class="form-control"  name='category'>
                   <option>Legal</option>
                   <option>Catering</option>
@@ -102,17 +70,25 @@
                   <option>Location</option>
                   <option>Studios</option>
                   <option>Tax Consultants</option>
-                </select></span> </li>
-            	<li class="col-sm-3"><label>Phone</label><span><input type='number' name='phone' class="form-control" value='{{allied.phone}}'></span> </li> 
-            	 <li class="col-sm-3"><label>Location</label><span>  <div class="col-md-10">
+                </select></span> </li> -->
+            	<li class="col-sm-4 form-group"><label class="control-label">Phone*</label><span><input type='number' name='phone' class="form-control" value='{{allied.phone}}' max="9999999999" required></span> </li> 
+            	 <li class="col-sm-4 form-group"><label class="control-label">Services provided at*</label><span>
                  <select name="location" class="form-control" >
+                 <option value="None">None</option>
                  {% for l in loc %}
                 <option value="{{l.0}}" >{{l.0}}</option>
                  {% endfor %}
-              </select>  
+              </select> </span> 
                </li>
-              <li class="col-sm-3"><label>Services provided at</label><span><textarea name="services" id="body" class="form-control" rows="3"></textarea></span> </li>
-            	<li class="col-sm-3"><label>Certifications</label><span><textarea name="certifications" id="body" class="form-control" rows="3"></textarea></span> </li> 
+              <li class="col-sm-12 form-group" id="inventory-wrapper"><label class="control-label col-sm-2">Inventory List*</label><div class="widget col-md-10">
+					<input type="text" class="fakeInput form-control" />
+    				<ul >
+   					</ul>
+			</div>
+			<div class="col-sm-12 inv-tags-cover"><ul></ul></div></li>
+              <li class="col-sm-12 form-group"><label class="control-label col-sm-2">Address*</label><div class="col-md-10"><textarea name="address"  class="form-control" rows="3" required></textarea></div> </li>
+            	<li class="col-sm-12 form-group"><label class="control-label col-sm-2">Certifications*</label><div class="col-md-10"><textarea name="certifications" class="form-control" rows="3" required></textarea></div> </li>
+                <li class="col-sm-12 form-group"><label class="control-label col-sm-2">My Story*</label><div class="col-md-10"><textarea name="my_story" class="form-control" rows="3" required></textarea></div> </li> 
                 </ul> 
             <br>
             <button type='submit' class='btn btn-raised btn-primary' style="float:right;margin-right:30px;" name='save'>Add</button>
@@ -133,7 +109,138 @@
 //console.log(cookie+'null');
 $.material.init();
 
+  var prof_flag=0
+  $("input#dp").on('change', function(e) {
+        dp = e.target.files;
+        prof_flag=1;
+    });
+$(document).ready(function(e) {
+	var str = '{{allied.inventory_list}}'.toString().replace(/&quot;/g,'"');
+    var invList = JSON.parse(str);
+	console.log(invList);
+	for(var i=0; i < invList.length;i++) {
+		$('.inv-tags-cover ul').append('<li class="inv-tags"><span>'+ invList[i].name + '</span><input type="number" value="'+invList[i].number+'" required/><span class="glyphicon glyphicon-remove" onclick="cross($(this))"></span></li>');
+	}
+});
+  function collect_data() {
+        var data = new FormData() ;
+        data.append('name', $('input[name="name"]').val());
+        data.append('phone', $('input[name="phone"]').val());
+        data.append('inv_list', inventory);
+        data.append('certifications', $('textarea[name="certifications"]').text());
+        data.append('address', $('textarea[name="address"]').text());
+        data.append('ob_type', $('select[name="ob_type"] option:selected').val());
+        data.append('location', $('select[name="location"] option:selected').val());
+        data.append('my_story', $('textarea[name="my_story"] option:selected').text());
+
+        if(prof_flag==1){
+          $.each(dp, function(key, value)
+                {
+                    data.append(key, value);
+                });
+        }
+        return data;
+    }
+    $("form#profile_update").submit(function(e) {
+        e.preventDefault();
+		var position = 1;
+		var objString = '';
+		$('div.inv-tags-cover ul li').each(function(index, element) {
+			if(index == 0)
+        		objString = '{"name":"' + $(this).children('span').html() + '","number":"' + $(this).children('input').val() + '"}';
+			else 
+    	    	objString = ',{"name":"' + $(this).children('span').html() + '","number":"' + $(this).children('input').val() + '"}';
+		//	console.log(objString);
+			if( inventory.indexOf(objString) == -1) {
+			inventory = inventory.substr(0, position) + objString + inventory.substr(position);
+			//console.log(objString);console.log(inventory);console.log(objString.length);console.log(position);
+			position = position + objString.length; }
+	});
+
+        var dat = collect_data();
+		if($('select[name="location"] option:selected').val() == "None") {
+        $('select[name="location"]').parent().parent('li').addClass('has-error'); }
+    else {
+        $.ajax({
+            url: '../updateprofile/',
+            type: 'POST',
+            data: dat,
+            cache: false,
+            // dataType: 'html',
+            processData: false,
+            contentType: false,
+
+            success: function(data)
+            {
+                if(data=='done')
+                  window.location.href="../dashboard";
+            }
+        }); }
+        
+    });
+
+$('select[name="ob_type"]').click(function() {
+if( $('select[name="ob_type"] option:selected').val() == "Portfolio Makers") 
+$('#inventory-wrapper').css('display','none');
+else $('#inventory-wrapper').css('display','block'); });
+	$(document).ready(function() {
+           var loc_val = '{{allied.location}}';
+		$('select[name="location"] option[value="'+loc_val+'"]').attr('selected','selected');
+	});
+// Inventory 
+var availableTags = [
+        "ActionScript",
+        "AppleScript",
+        "Asp",
+        "BASIC",
+        "C",
+        "C++",
+        "Clojure",
+        "COBOL",
+        "ColdFusion",
+        "Erlang",
+        "Fortran",
+        "Groovy",
+        "Haskell",
+        "Java",
+        "JavaScript",
+        "Lisp",
+        "Perl",
+        "PHP",
+        "Python",
+        "Ruby",
+        "Scala",
+        "Scheme"
+    ];
+var inventory = '[]';
+$('.widget input.fakeInput').bind("keyup",function() {
+	$('.widget ul').html('');
+    var key = $(this).val().toLowerCase();
+	console.log(key);
+	if( key.length > 2) {
+		for(var i=0; i < availableTags.length;i++) {
+			if( availableTags[i].toLowerCase().indexOf(key) >= 0) {
+				$('.widget ul').append('<li onclick="addTag($(this).html())">' + availableTags[i] + '</li>').show();
+			}
+
+		}
+	}
+});
+function addTag(data) {
+	console.log(data);
+	$('.widget ul').hide();
+	if($('div.inv-tags-cover').html().toString().indexOf(data) >= 0);
+	else
+ 		 $('div.inv-tags-cover ul').append('<li class="inv-tags"><span>' + data + '</span><input type="number"  required/><span class="glyphicon glyphicon-remove" onclick="cross($(this))"></span></li>'); 
+}
+function cross(elem) {
+	elem.parent('li').remove();
+}
+$('#submit').click(function() {
+});
+	
+
 </script>
-{% endblock body %}
+{% endblock %}
 </body>
 </html>
