@@ -1,0 +1,39 @@
+{% extends "registration/base.html" %}
+{% block body %} 
+
+
+<div>
+    <div class="container">
+    <div class="row">
+        <div class="twelve columns textcenter">
+
+            <br>
+                <h3>You are logged in as guest artist.</h3><br>
+            <table class= "u-full-width">
+            <tbody>
+                
+            
+            
+            <tr>
+
+
+                <td><form method='POST' action='./choice_list/'> 
+                    <input type = 'hidden' name='choice' value='actor' />
+                     <input class="button-primary" type="submit" value="Actors"/> </form></td>
+                
+                <td><form method='POST' action='./choice_list/'> 
+                    <input type = 'hidden' name='choice' value='dopy' />
+                     <input class="button-primary" type="submit" value="Director of Photography"/> </form></td>
+                     <td><form method='POST' action='./choice_list/'> 
+                    <input type = 'hidden' name='choice' value='makingof' />
+                     <input class="button-primary" type="submit" value="Making Of"/> </form></td>
+
+            </tbody>
+            </table>
+    
+            
+
+    </div>
+    </div>
+</div>
+{% endblock body %}

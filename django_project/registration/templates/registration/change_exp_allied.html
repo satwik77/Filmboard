@@ -30,7 +30,7 @@
             <fieldset>
             <div class="form-group">
             	<label for="projectName" class="col-sm-2 control-label">Project Name</label> 	            	<div class="col-sm-10">
-                	<input type='text' class="form-control" name='name' value="{{allied_ob.name}}" >
+                	<input type='text' class="form-control" name='name' value="{{exp.project_name}}" required>
                 </div>
             </div>
             <div class="form-group">
@@ -47,6 +47,13 @@
         			</select>
       			</div>
     		</div>
+            <div class="form-group">
+              <label for="select111" class="col-md-2 control-label">Project Picture</label>
+              <div class="col-md-10">
+          		<input type="text" readonly class="form-control" placeholder="{{exp.profile_pic.url}}">
+                <input type="file" id="dp" value="{{exp.profile_pic.url}}">
+              </div>
+            </div>
             <div class="form-group">
       			<label for="select222" class="col-md-2 control-label">Current Project Status</label>
 		        <div class="col-md-10">
@@ -74,24 +81,24 @@
             
             <div class="form-group">
             	<label for="start" class="col-sm-2 control-label">Start Duration</label> 	            	<div class="col-sm-10">
-                	<input type='text' class="form-control" name='start' value="{{allied_ob.duration_start}}">
+                	<input type='text' class="form-control" name='start' value="{{exp.duration_start}}" required>
                 </div>
             </div>
             <div class="form-group">
             	<label for="end" class="col-sm-2 control-label">End Duration</label> 	            	<div class="col-sm-10">
-                	<input type='text' class="form-control" name='end' value="{{allied_ob.duration_end}}">
+                	<input type='text' class="form-control" name='end' value="{{exp.duration_end}}" required>
                 </div>
             </div>
             <div class="form-group">
       			<label for="textArea" class="col-md-2 control-label">Remarks</label>
 		        <div class="col-md-10">
-      				<textarea name="remarks" id="body" class="form-control" rows="3" value="{{allied_ob.remarks}}"></textarea>
+      				<textarea name="remarks" id="body" class="form-control" rows="3" >{{exp.remarks}}</textarea>
                 </div>
            </div>
 			<div class="form-group">
       			<label for="textArea" class="col-md-2 control-label">Special Mention</label>
 		        <div class="col-md-10">
-      				<textarea name="mention" id="body" class="form-control" rows="3" value="{{allied_ob.special_mention}}"></textarea>
+      				<textarea name="mention" id="body" class="form-control" rows="3" >{{exp.special_mention}}</textarea>
                 </div>
            </div>
             <br>
@@ -132,9 +139,11 @@ $('select[name="skills"]').click(function() {
 	else { $('#role-wrapper').css('display','none'); $('#role-wrapper').css('display','none'); }
 });
 	$(document).ready(function() {
-		var type_val = '{{allied_ob.project_type}}',
-			status_val = '{{allied_ob.project_status}}',
-			skill_val = '{{allied_ob.skills}}';
+		var type_val = '{{exp.project_type}}',
+			status_val = '{{exp.project_status}}',
+			skill_val = '{{exp.skills}}';
+		$('input[name="start"]').val(changeDateFormat($('input[name="start"]').val()));
+		$('input[name="end"]').val(changeDateFormat($('input[name="end"]').val()));
 		$('select[name="type"] option[value="'+type_val+'"]').attr('selected','selected');
 		$('select[name="status"] option[value="'+status_val+'"]').attr('selected','selected');
 		$('select[name="skills"] option[value="'+skill_val+'"]').attr('selected','selected');

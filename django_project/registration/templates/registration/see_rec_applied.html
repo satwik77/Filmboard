@@ -1,0 +1,16 @@
+<h2 class="sec" style="margin-bottom:3px;"> Recommendations Applied: </h2>
+<table class="table table-fixed">
+	<tbody>
+    	<thead>
+        	<th class="col-xs-1">#</th><th class="col-xs-4">Recommendation applied to:</th><th class="col-xs-3">Accepted</th>
+		{% for x in applied_list %}
+		<tr>
+        	<td class="col-xs-1">{{ forloop.counter }}</td>
+			<td class="col-xs-4">{{x.reco_from_email}}</td>
+			<td class="col-xs-3">{{x.accepted}}</td>
+
+		</tr>
+		{% endfor %}
+	
+	</tbody>
+</table>

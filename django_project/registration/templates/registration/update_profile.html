@@ -54,7 +54,8 @@
       				<input type="file" id="dp" value="">
         		  </li> 
                   <li class="col-sm-8 form-group"><label class="control-label">Type</label><span>        <select name="ob_type" class="form-control" >
-                <option value="Artist" >Artist/Models</option>
+                <option value="Actor" >Actor</option>
+                <option value="Model" >Model</option>
                 <option value="Director of Photography" >Director of Photography</option>
                 <option value="TMO Director" >TMO Director</option>
               </select></span>  
@@ -205,16 +206,25 @@ $.material.init();
 		if(value.search(" ") == -1) 
 		return(value);
 		else {
-		var month = value.split("."),
-		    d = Date.parse(month[0] + "1, 2012"),
-			monthNumber = new Date(d).getMonth() + 1,
-			dateformat = month[1].split(","),
-			monthInteger = "",
-			dateNumber = "",
-			dateInteger = parseInt(dateformat[0]);
-			if(monthNumber < 10) monthInteger = "0" + monthNumber;
-			if(dateInteger < 10) dateNumber = "0" + dateInteger.toString();
-		return(parseInt(dateformat[1]) + "-" + monthInteger + "-"+ dateNumber); }
+			if(value.search(".") > 0) {
+				var month = value.split(".");
+			}
+			else var month = value.split(/ (.+)?/);
+			console.log(month);
+		    var	d = Date.parse(month[0] + "1, 2012"),
+				monthNumber = new Date(d).getMonth() + 1,
+				dateformat = month[1].split(","),
+				monthInteger = "",
+				dateNumber = "",
+				dateInteger = parseInt(dateformat[0]);
+				
+				if(monthNumber < 10) monthInteger = "0" + monthNumber;
+				else monthInteger = monthNumber;
+				if(dateInteger < 10) dateNumber = "0" + dateInteger.toString();
+				else dateNumber = dateInteger;
+				console.log(dateNumber);
+				return(parseInt(dateformat[1]) + "-" + monthInteger + "-"+ dateNumber); 
+			}
 		
 	}
 	$(document).ready(function() {

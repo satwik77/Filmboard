@@ -1,0 +1,25 @@
+{% block title %}
+	WireFrame Login
+{% endblock title %}
+{% block body %}
+
+		<h1 class="title">Log into FutureArtist</h1>
+
+			<form action='../login/' method='POST' id="login_form">
+				{% csrf_token %}
+                <div class="input">
+					<label for="username">Username</label>
+					<input type="text" maxlength="254" name="username" />
+                    <span class="spin"></span>
+                </div>
+                <div class="input">
+         			<label for="password">Password:</label>
+					<input type="password" name="password" ><br/>
+                	<span class="spin"></span>
+                </div>
+				<a id="register-link" class="button" href="../register/">Register</a>
+				<div class="button login">
+                <button class="button button-primary" type="submit" name="submit" value="Login" id='login-submit'> <span>GO</span><i class="fa fa-check"></i> </button>
+			</form>			
+
+{% endblock body %}

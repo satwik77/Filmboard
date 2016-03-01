@@ -54,15 +54,23 @@
             </div>
             <div class="form-group" id="character-wrapper">
             <label for="rolePlayed" class="col-md-2 control-label">Character</label>
-            <div class="col-md-10">
-              <input type='text' class="form-control" name='character' required >
+            <div class="col-md-10"><input type='text' class="form-control" name='character' >
+
             </div>
-        </div>
+            </div>
+            <div class="col-sm-12 form-group" id="inventory-wrapper" style="display:none;z-index:1000;"><label class="control-label col-sm-2">Inventory List</label><div class="widget col-md-10">
+					<input type="text" class="fakeInput form-control" />
+    				<ul >
+   					</ul>
+			</div>
+			<div class="col-sm-12 inv-tags-cover"><ul></ul></div></div>
+
             
             <div class="form-group" id="role-wrapper">
             	<label for="start" class="col-sm-2 control-label">Role</label> 	            	<div class="col-sm-10">
                 	<select id="select111" class="form-control"  name='role' style="color:#000">
-                  <option style="color:#000" value='Hero'>Hero</option>
+                  <option value="None" >None</option>
+                   <option style="color:#000" value='Hero'>Hero</option>
                   <option style="color:#000" value='Heroine'>Heroine</option>
                   <option style="color:#000">Villain</option>
                   <option style="color:#000">Supporting</option>
@@ -71,13 +79,8 @@
                 </div>
             </div>
             
-       	    <div class="form-group" id="height-wrapper" style="display:none"><label class="col-md-2 control-label">Height (in m)</label><div class="col-sm-10">                	<select id="select111" class="form-control"  name='height' style="color:#000">
-                  <option style="color:#000">Below 1.4</option>
-                  <option style="color:#000">1.4-1.6</option>
-                  <option style="color:#000">1.6-1.8</option>
-                  <option style="color:#000">1.8-2</option>
-                  <option style="color:#000">Above 2</option>
-                </select>
+       	    <div class="form-group" id="height-wrapper" style="display:none"><label class="col-md-2 control-label">Height (in m)</label><div class="col-sm-10"><input id="height1" type="number" class="form-control" style="display:inline-block;width:20%;" /> -  <input id="height2" type="number"  class="form-control" style="display:inline-block;width:20%;"/>  
+            
 </div> </div>
             <div class="form-group" id="body-wrapper" class="col-md-2 control-label" style="display:none"><label class="col-md-2 control-label">Body Type</label><div class="col-sm-10">        <select id="select111" class="form-control"  name='body_type' style="color:#000">
               <option value='Slim' style="color:#000">Slim</option><option value='Atheletic' style="color:#000">Atheletic</option><option value='Regular' style="color:#000">Regular</option><option value='Over_weight' style="color:#000">Over weight</option></select></div> </div>
@@ -131,33 +134,126 @@ $('select[name="rreq_type"]').click(function(e) {
 				   $('#height-wrapper').css('display','block'); 
 				   $('#ethnicity-wrapper').css('display','block'); 
 	}
-	else { 		   $('#body-wrapper').css('display','none'); 
-				   $('#height-wrapper').css('display','none'); 
-				   $('#ethnicity-wrapper').css('display','none'); } 
+	else { 		   $('#body-wrapper').css('display','none');$('select[name="body_type"] option[value="None"]').attr('selected','selected'); 
+				   $('#height-wrapper').css('display','none');$('select[name="height"] option[value="None"]').attr('selected','selected');
+				   $('#ethnicity-wrapper').css('display','none');$('select[name="ethnicity"] option[value="None"]').attr('selected','selected');}
 
 });
 $('select[name="skills"]').click(function(e) {
     if($('select[name="skills"] option:selected').val() == "Director of Photography" || $('select[name="skills"] option:selected').val() == "TMO")
-		{  $('#role-wrapper').css('display','none'); $('#character-wrapper label').html('Certification');$('#height-wrapper').css('display','none'); 
+		{  $('#role-wrapper').css('display','none');$('select[name="role"] option[value="None"]').attr('selected','selected'); $('#character-wrapper label').html('Certification').parent().css('display','block');$('#inventory-wrapper').css('display','none');$('#height-wrapper').css('display','none'); $('select[name="height"]').val('None');
 		   $('#ethnicity-wrapper').css('display','none'); $('#body-wrapper').css('display','none');  } 
  	if($('select[name="skills"] option:selected').val() == "Camera Equipment")
-		{  $('#role-wrapper').css('display','none'); $('#character-wrapper label').html('Inventory'); }
+		{  $('#role-wrapper').css('display','none');$('select[name="role"] option[value="None"]').attr('selected','selected'); $('#character-wrapper label').parent().css('display','none');$('#inventory-wrapper').css('display','block'); }
 	if($('select[name="skills"] option:selected').val() == "Portfolio Maker")
-		{  $('#role-wrapper').css('display','none'); $('#character-wrapper label').html('Certification'); }
-   if($('select[name="skills"] option:selected').val() == "Actor,Actress") {  $('#role-wrapper').css('display','block'); $('#character-wrapper label').html('Character');$('#height-wrapper').css('display','block');$('#ethnicity-wrapper').css('display','block'); $('#body-wrapper').css('display','block'); }
+		{  $('#role-wrapper').css('display','none');$('select[name="role"]').val('None');$('#inventory-wrapper').css('display','none'); $('#character-wrapper label').html('Certification').parent().css('display','block'); }
+   if($('select[name="skills"] option:selected').val() == "Actor,Actress") {  $('#role-wrapper').css('display','block'); $('#character-wrapper label').html('Character').parent().css('display','block');$('#height-wrapper').css('display','block');$('#ethnicity-wrapper').css('display','block');$('#inventory-wrapper').css('display','none'); $('#body-wrapper').css('display','block'); }
 
 });
 
 $('select[name="rreq_type"]').click(function(e) {
 	if($('select[name="rreq_type"] option:selected').val() == 'Allied Services') {
-		$('select[name="skills"]').empty().append('<option style="color:#000" value="Camera Equipment">Camera Equipment</option><option style="color:#000" value="Portfolio Maker">Portfolio Maker</option>').css('display','block'); }
+		$('select[name="skills"]').empty().append('<option style="color:#000" value="Camera Equipment">Camera Equipment</option><option style="color:#000" value="Portfolio Maker">Portfolio Maker</option>').parent().parent('div').css('display','block'); }
 		
-    if($('select[name="rreq_type"] option:selected').val() == 'Artist') {   $('select[name="skills"]').empty().append('<option style="color:#000" value="Actor,Actress">Actor,Actress</option><option style="color:#000" value="Director of Photography">Director of Photography</option><option style="color:#000" value="TMO">The Making of</option><option style="color:#000" value="artist-other">Any Other</option> ').css('display','block');
+    if($('select[name="rreq_type"] option:selected').val() == 'Artist') {   $('select[name="skills"]').empty().append('<option style="color:#000" value="Actor,Actress">Actor,Actress</option><option style="color:#000" value="Director of Photography">Director of Photography</option><option style="color:#000" value="TMO">The Making of</option><option style="color:#000" value="artist-other">Any Other</option> ').parent().parent('div').css('display','block');
 	}
 	if($('select[name="rreq_type"] option:selected').val() == 'Producers') { $('select[name="skills"]').empty().parent().parent('div').css('display','none');$('#role-wrapper').css('display','none'); $('#character-wrapper label').html('Certification'); }
 	$( 'select[name="skills"]' ).trigger( "click" );
 });
 
+
+var inventory = '[]';
+var objString = '',
+	position = 1;
+$('.widget input.fakeInput').bind("keyup",function() {
+	$('.widget ul').html('');
+    var key = $(this).val().toLowerCase();
+	console.log(key);
+	if( key.length > 2) {
+		for(var i=0; i < availableTags.length;i++) {
+			if( availableTags[i].toLowerCase().indexOf(key) >= 0) {
+				$('.widget ul').append('<li onclick="addTag($(this).html())">' + availableTags[i] + '</li>').show();
+			}
+
+		}
+	}
+});
+function addTag(data) {
+	console.log(data);
+	$('.widget ul').hide();
+	if($('div.inv-tags-cover').html().toString().indexOf(data) >= 0);
+	else
+ 		 $('div.inv-tags-cover ul').append('<li class="inv-tags"><span>' + data + '</span><input type="number"  required/><span class="glyphicon glyphicon-remove" onclick="cross($(this))"></span></li>'); 
+}
+function cross(elem) {
+	elem.parent('li').remove();
+}
+  function collect_data() {
+        var data = new FormData() ;
+        data.append('numbers', $('input[name="numbers"]').val());
+        data.append('character', $('input[name="character"]').val());
+        data.append('height', $('#height1').val() + " - " + $('#height2').val());
+        data.append('inv_list', inventory);
+        data.append('address', $('textarea[name="address"]').text());
+        data.append('rreq_type', $('select[name="rreq_type"] option:selected').val());
+        data.append('role', $('select[name="role"] option:selected').val());
+        data.append('body_type', $('select[name="body_type"] option:selected').val());
+        data.append('skills', $('select[name="skills"] option:selected').val());
+        data.append('ethnicity', $('select[name="ethnicity"] option:selected').val());
+        data.append('desc', $('textarea[name="desc"]').text());
+
+        if(prof_flag==1){
+          $.each(dp, function(key, value)
+                {
+                    data.append(key, value);
+                });
+        }
+        return data;
+    }
+    $("form#profile_update").submit(function(e) {
+        e.preventDefault();
+		var position = 1;
+		var objString = '';
+		$('div.inv-tags-cover ul li').each(function(index, element) {
+			if(index == 0)
+        		objString = '{"name":"' + $(this).children('span').html() + '","number":"' + $(this).children('input').val() + '"}';
+			else 
+    	    	objString = ',{"name":"' + $(this).children('span').html() + '","number":"' + $(this).children('input').val() + '"}';
+		//	console.log(objString);
+			if( inventory.indexOf(objString) == -1) {
+			inventory = inventory.substr(0, position) + objString + inventory.substr(position);
+			//console.log(objString);console.log(inventory);console.log(objString.length);console.log(position);
+			position = position + objString.length; }
+	});
+
+        var dat = collect_data();
+		if($('select[name="location"] option:selected').val() == "None") {
+        $('select[name="location"]').parent().parent('li').addClass('has-error'); }
+    else {
+        $.ajax({
+            url: '../updateprofile/',
+            type: 'POST',
+            data: dat,
+            cache: false,
+            // dataType: 'html',
+            processData: false,
+            contentType: false,
+
+            success: function(data)
+            {
+                if(data=='done')
+                  window.location.href="../dashboard";
+            }
+        }); }
+        
+    });
+
+$('select[name="ob_type"]').click(function() {
+if( $('select[name="ob_type"] option:selected').val() == "Portfolio Makers") {
+$('#inventory-wrapper').css('display','none'); 
+$('.inv-tags').each(function(index) {
+  cross($(this).children('.glyphicon'));  
+}); }});
 </script>
 {% endblock %}
 </body>

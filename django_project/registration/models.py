@@ -12,6 +12,9 @@ class PastExperiences(models.Model):
 	duration_end = models.DateField()
 	remarks = models.TextField()
 	special_mention = models.TextField()
+	profile_pic= models.ImageField(blank=True, upload_to='pictures', null=True)
+
+	
 	# photo = models.ImageField(blank=True, upload_to='pictures')
 
 	class Meta:
@@ -22,20 +25,19 @@ class PastExperiences(models.Model):
 
 
 class Recommendations(models.Model):
-	project_type = models.CharField(max_length=100)
-	project_name = models.CharField(max_length=200)
-	project_status = models.CharField(max_length=100)
-	skills = models.CharField(max_length=300)
+	accepted = models.BooleanField(default=False)
+	reco_from = models.CharField(max_length=200, null=True)
+	reco_from_email = models.EmailField(blank=True, null=True)
+	project_type = models.CharField(max_length=100, null=True)
+	project_name = models.CharField(max_length=200, null=True)
+	project_status = models.CharField(max_length=100, null=True)
+	skills = models.CharField(max_length=300, null=True)
 	character_name = models.CharField(max_length=200, default = "Not Applicable")
 	role_played = models.CharField(max_length = 200, default = "Not Applicable")
-	duration_start = models.DateField()
-	duration_end = models.DateField()
-	seek_from_type = models.CharField(max_length=200)
-	seek_from_name = models.CharField(max_length=200)
-	email_id= models.EmailField()
-	add_msg = models.TextField()
-
-
+	duration_start = models.DateField(null=True)
+	duration_end = models.DateField(null=True)
+	remarks = models.TextField(null=True)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	class Meta:
 		verbose_name_plural = 'Recommendations'
 	def __unicode__(self):
@@ -48,7 +50,6 @@ class Artist(models.Model):
 	GENDERS = (
 		('M', 'Male'),
 		('F', 'Female'),
-        # ('O', 'Other'),
 	)
 	name = models.CharField(max_length=200,blank=True, null=True)
 	gender = models.CharField(max_length=1, choices=GENDERS,blank=True, null=True)
@@ -61,16 +62,14 @@ class Artist(models.Model):
 	education_background = models.TextField()
 	certifications = models.TextField()
 	past_experiences = models.ManyToManyField(PastExperiences, blank=True, null=True)
-	recommendations = models.ManyToManyField(Recommendations, blank=True)
 	profile_pic= models.ImageField(blank=True, upload_to='pictures', null=True)
 	phone = models.BigIntegerField(blank=True, null=True)
 	ob_type= models.CharField(max_length=200, blank=True,null=True)
 	ethnicity= models.CharField(max_length=200, blank=True,null=True)
 	address = models.TextField(default=' ')
-
+	email_verified= models.BooleanField(default=False)
 	my_story = models.TextField(default=' ')
 
-	
 	class Meta:
 		verbose_name_plural = 'Artists'
 	def __unicode__(self):
@@ -90,17 +89,26 @@ class Allied(models.Model):
 	services = models.CharField(max_length=300, blank=True, null=True)
 	certifications = models.TextField()
 	past_experiences = models.ManyToManyField(PastExperiences, blank=True)
-	recommendations = models.ManyToManyField(Recommendations, blank=True)
 	phone = models.BigIntegerField(null=True)
 	ob_type= models.CharField(max_length=200, blank=True,null=True)
 	inventory_list= models.CharField(max_length=500, blank=True, null=True, default='')
 	profile_pic= models.ImageField(blank=True, upload_to='pictures', null=True)
+	email_verified= models.BooleanField(default=False)
+	my_story = models.TextField(default=' ')
 	
 	class Meta:
 		verbose_name_plural = 'Allied Services'
 	def __unicode__(self):
 		return str(self.name)
 
+class locations(models.Model):
+	name = models.CharField(max_length=100)
+	allied = models.ForeignKey(Allied, null=True,blank=True,default=None)
+	# photo = models.ImageField(blank=True, upload_to='pictures')
+	class Meta:
+		verbose_name_plural = 'Locations'
+	def __unicode__(self):
+		return str(self.name)
 
 
 class Production(models.Model):
@@ -108,10 +116,10 @@ class Production(models.Model):
 	name = models.CharField(max_length=200, blank=True, null=True)
 	location = models.CharField(max_length=150, blank=True, null=True)
 	past_experiences = models.ManyToManyField(PastExperiences, blank=True)
-	recommendations = models.ManyToManyField(Recommendations, blank=True)
 	phone = models.BigIntegerField(null=True)
 	profile_pic= models.ImageField(blank=True, upload_to='pictures', null=True)
 	address = models.TextField(default=' ')
+	email_verified= models.BooleanField(default=False)
 
 	aboutus = models.TextField(default=' ', null=True, blank=True)
 	class Meta:
@@ -133,7 +141,7 @@ class Projects(models.Model):
 	duration_start = models.DateField()
 	duration_end = models.DateField()
 	description = models.TextField()
-
+	profile_pic= models.ImageField(blank=True, upload_to='pictures', null=True)
 
 	class Meta:
 		verbose_name_plural = 'Projects'

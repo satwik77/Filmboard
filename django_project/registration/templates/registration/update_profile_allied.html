@@ -74,7 +74,7 @@
             	<li class="col-sm-4 form-group"><label class="control-label">Phone*</label><span><input type='number' name='phone' class="form-control" value='{{allied.phone}}' max="9999999999" required></span> </li> 
             	 <li class="col-sm-4 form-group"><label class="control-label">Services provided at*</label><span>
                  <select name="location" class="form-control" >
-                 <option value="None">None</option>
+                 <option value="0">None</option>
                  {% for l in loc %}
                 <option value="{{l.0}}" >{{l.0}}</option>
                  {% endfor %}
@@ -86,9 +86,9 @@
    					</ul>
 			</div>
 			<div class="col-sm-12 inv-tags-cover"><ul></ul></div></li>
-              <li class="col-sm-12 form-group"><label class="control-label col-sm-2">Address*</label><div class="col-md-10"><textarea name="address"  class="form-control" rows="3" required></textarea></div> </li>
-            	<li class="col-sm-12 form-group"><label class="control-label col-sm-2">Certifications*</label><div class="col-md-10"><textarea name="certifications" class="form-control" rows="3" required></textarea></div> </li>
-                <li class="col-sm-12 form-group"><label class="control-label col-sm-2">My Story*</label><div class="col-md-10"><textarea name="my_story" class="form-control" rows="3" required></textarea></div> </li> 
+              <li class="col-sm-12 form-group"><label class="control-label col-sm-2">Address*</label><div class="col-md-10"><textarea name="address"  class="form-control" rows="3" required>{{allied.services}}</textarea></div> </li>
+            	<li class="col-sm-12 form-group"><label class="control-label col-sm-2">Certifications*</label><div class="col-md-10"><textarea name="certifications" class="form-control" rows="3" required>{{allied.certifications}}</textarea></div> </li>
+                <li class="col-sm-12 form-group"><label class="control-label col-sm-2">My Story*</label><div class="col-md-10"><textarea name="my_story" class="form-control" rows="3" required>{{allied.my_story}}</textarea></div> </li> 
                 </ul> 
             <br>
             <button type='submit' class='btn btn-raised btn-primary' style="float:right;margin-right:30px;" name='save'>Add</button>
@@ -126,12 +126,12 @@ $(document).ready(function(e) {
         var data = new FormData() ;
         data.append('name', $('input[name="name"]').val());
         data.append('phone', $('input[name="phone"]').val());
-        data.append('inv_list', inventory);
-        data.append('certifications', $('textarea[name="certifications"]').text());
-        data.append('address', $('textarea[name="address"]').text());
+        data.append('certifications', $('textarea[name="certifications"]').val());
+        data.append('address', $('textarea[name="address"]').val());
         data.append('ob_type', $('select[name="ob_type"] option:selected').val());
         data.append('location', $('select[name="location"] option:selected').val());
-        data.append('my_story', $('textarea[name="my_story"] option:selected').text());
+        data.append('my_story', $('textarea[name="my_story"]').val());
+        data.append('inv_list', inventory);
 
         if(prof_flag==1){
           $.each(dp, function(key, value)
@@ -180,8 +180,11 @@ $(document).ready(function(e) {
     });
 
 $('select[name="ob_type"]').click(function() {
-if( $('select[name="ob_type"] option:selected').val() == "Portfolio Makers") 
-$('#inventory-wrapper').css('display','none');
+if( $('select[name="ob_type"] option:selected').val() == "Portfolio Makers") {
+$('#inventory-wrapper').css('display','none'); 
+$('.inv-tags').each(function(index) {
+  cross($(this).children('.glyphicon'));  
+}); }
 else $('#inventory-wrapper').css('display','block'); });
 	$(document).ready(function() {
            var loc_val = '{{allied.location}}';
@@ -189,28 +192,23 @@ else $('#inventory-wrapper').css('display','block'); });
 	});
 // Inventory 
 var availableTags = [
-        "ActionScript",
-        "AppleScript",
-        "Asp",
-        "BASIC",
-        "C",
-        "C++",
-        "Clojure",
-        "COBOL",
-        "ColdFusion",
-        "Erlang",
-        "Fortran",
-        "Groovy",
-        "Haskell",
-        "Java",
-        "JavaScript",
-        "Lisp",
-        "Perl",
-        "PHP",
-        "Python",
-        "Ruby",
-        "Scala",
-        "Scheme"
+        "CANON 5DS R",
+        "CANON 5DS",
+        "CANON EOS 5D MARK II",
+        "CANON EOS 5D MARK III",
+        "CANON EOS 6D",
+        "CANON EOS 7D",
+        "CANON EOS 50D",
+        "CANON EOS 60D",
+        "CANON EOS M DIGITAL CAMERA",
+        "CANON EOS REBEL SL1 DSLR",
+        "CANON EOS REBEL T2I",
+        "NIKON COOLPIX P7000",
+        "NIKON COOLPIX S80",
+        "NIKON COOLPIX S1100PJ",
+        "NIKON COOLPIX S5100",
+        "SONY ALPHA 900",
+        "SONY ALPHA NEX-3"
     ];
 var inventory = '[]';
 $('.widget input.fakeInput').bind("keyup",function() {

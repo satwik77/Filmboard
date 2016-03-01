@@ -7,7 +7,7 @@ from registration.models import *
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponseRedirect,Http404,HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect,Http404,HttpResponse, JsonResponse
 from django.template.loader import get_template
 from django.template import Context
 from django.core.mail import send_mail, EmailMessage
@@ -68,7 +68,7 @@ def user_login(request):
                     return HttpResponseRedirect('../dashboard/')
                 else:
                     login(request, user)
-                    return HttpResponseRedirect('../dashboard/')
+                    return HttpResponsePermanentRedirect('../dashboard/')
             else:
                 context = {'error_heading' : "Account Inactive", 'error_message' :  'Your account is currently INACTIVE. To activate it, call the following members of the Department of Publications and Correspondence depending on the region of your college.<br> <strong> North India :- Ankit Dube | +91 9983083610 </strong> <br> <strong>Delhi/NCR :- Aditya Shetty :- +91 7240105157 </strong><br><strong>Central India :- Poonam Brar | +91 7240105158 </strong><br><strong>Rajasthan, Gujarat & Maharashtra :- Karthik Maddipoti | +91 8003193680 </strong><br><strong>East India :- Tanhya Chitle | +91 7240105155 </strong><br><strong>South India :- Archana Tatavarti |+91 7240105150 </strong><br />Return back <a href="/">home</a>'}
                 return render(request, 'registration/error.html', context)
@@ -95,14 +95,30 @@ def user_logout(request):
 
 ###########     REGISTRATION FUNCTIONS     ############
 
-def send_simple_message(email):
+def send_simple_message(email,body):
     return requests.post(
         "https://api.mailgun.net/v3/sandbox60649047307e4399b2ecf1bbbbf61b0b.mailgun.org/messages",
         auth=("api", "key-49efd1210e545d83bff19b6455afc6a9"),
         data={"from": "Filmboard Admin <postmaster@sandbox60649047307e4399b2ecf1bbbbf61b0b.mailgun.org>",
               "to": str(email),
               "subject": "Filmboard",
-              "text": "Thank You for registering"})
+              "text": body})
+
+def email_verify(request,uid):
+    u_ob= User.objects.get(id=int(uid))
+    if Artist.objects.filter(user=u_ob):
+        k= Artist.objects.filter(user=u_ob)[0]
+        k.email_verified=True
+        k.save()
+    elif Allied.objects.filter(user=u_ob):
+        k= Allied.objects.filter(user=u_ob)[0]
+        k.email_verified=True
+        k.save()
+    elif Production.objects.filter(user=u_ob):
+        k= Production.objects.filter(user=u_ob)[0]
+        k.email_verified=True
+        k.save()
+    return HttpResponse('Your Email Has Been Verified')
 
 @csrf_exempt
 def initial_registration(request):
@@ -134,10 +150,12 @@ def initial_registration(request):
             user.set_password(user.password)
             user.is_active = True
             user.save()
+            uid= user.id
+            body = "Thank You for Registering. Please Confirm your email:http://filmboard.ml/email_verify/"+ str(uid)+"/"
             username =user.username
             user_ob = user
             user = authenticate(username=username, password=password)
-            send_simple_message(user.email)
+            send_simple_message(user.email,body)
             login(request, user)                
             registered = False
             if choice == '1':
@@ -412,6 +430,7 @@ def production_registration(request):
 def dashboard(request):
     if request.user:
         user= request.user
+        mages=Notifications.objects.filter(user=user,sent=False)       
         artist_ob = Artist.objects.filter(user = user)
         allied_ob = Allied.objects.filter(user = user)
         prod_ob = Production.objects.filter(user = user)
@@ -419,7 +438,7 @@ def dashboard(request):
             artist_ob=artist_ob[0]
             messages=user.notifications_set.filter(sent=False)
             exp = artist_ob.past_experiences.all()
-            rec= artist_ob.recommendations.all()
+            rec= Recommendations.objects.filter(user=user, accepted=True)
             for msg in messages:
                 msg.sent=True
                 msg.save()
@@ -434,29 +453,28 @@ def dashboard(request):
         elif allied_ob:
             allied_ob = allied_ob[0]
             exp= allied_ob.past_experiences.all()
-            rec= allied_ob.recommendations.all()
+            rec= Recommendations.objects.filter(user=user, accepted=True)
+            l_list= locations.objects.filter(allied=allied_ob)
             context = {
                 'allied' : allied_ob,
                 'exp' : exp,
                 'rec' : rec,
                 'user' : user,
+                'l_list':l_list,
             }
             return render(request, 'registration/dashboard_allied.html', context)
         elif prod_ob:
             prod_ob = prod_ob[0]
             exp= prod_ob.past_experiences.all()
-            rec= prod_ob.recommendations.all()
-            messages=user.notifications_set.filter(sent=False)
-            for msg in messages:
-                msg.sent=True
-                msg.save()
+            rec= Recommendations.objects.filter(user=user, accepted=True)
             context = {
                 'production' : prod_ob,
                 'exp' : exp,
                 'rec' : rec,
-                'msg' : messages,
+                'msg' : mages,
                 'user' : user,
             }
+          
             return render(request, 'registration/dashboard_production.html', context)
     else:
         pass
@@ -569,10 +587,16 @@ def update_profile(request):
             allied_ob.ob_type= request.POST['ob_type']
             allied_ob.inventory_list= request.POST['inv_list']
             # arti_obst.dob = request.POST['dob']
+            l_list = str(request.POST['location']).split(',')
+            for k in l_list:
+                if k:
+                    loc = locations(name=str(k),allied=allied_ob)
+                    loc.save()
             allied_ob.services = request.POST['address']
             allied_ob.phone = request.POST['phone']
             allied_ob.location = request.POST['location']
             allied_ob.certifications = request.POST['certifications']
+            allied_ob.my_story=request.POST['my_story']
             allied_ob.save()
             return HttpResponse('done')            
         elif prod_ob:
@@ -603,6 +627,7 @@ def update_profile(request):
             prod_ob=prod_ob[0]
             return render(request,'registration/update_profile_prod.html', {'user':user, 'prod' : prod_ob, 'loc' : ct})
 #FUNCTIONALITIES FOR ADDING EXPERIENCE
+@csrf_exempt
 @login_required
 def add_exp(request):
     if request.method == 'POST':
@@ -624,29 +649,38 @@ def add_exp(request):
             special_mention = request.POST['mention']
             exp_ob =PastExperiences(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, remarks=remarks,special_mention=special_mention)
             exp_ob.save()
+            try:
+                exp_ob.profile_pic= request.FILES['0']
+                exp_ob.save()
+            except:
+                dumpvar=0
+
             # proj_type = request.POST['name']
             artist_ob.past_experiences.add(exp_ob)
 
             artist_ob.save()
-            return HttpResponseRedirect('../dashboard/')
+            return HttpResponse('done')
         elif allied_ob:
             allied_ob=allied_ob[0]
             proj_type = request.POST['type']
             proj_name = request.POST['name']
             proj_status = request.POST['status']
             skills = request.POST['skills']
-            char_name = request.POST['char_name']
-            role_played = request.POST['role_played']
             duration_start= request.POST['start']
             duration_end= request.POST['end']
             remarks = request.POST['remarks']
             special_mention = request.POST['mention']
-            exp_ob =PastExperiences(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, remarks=remarks,special_mention=special_mention)
+            exp_ob =PastExperiences(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, duration_start= duration_start, duration_end= duration_end, remarks=remarks,special_mention=special_mention)
             exp_ob.save()
+            try:
+                exp_ob.profile_pic= request.FILES['0']
+                exp_ob.save()
+            except:
+                dumpvar=0            
             # proj_type = request.POST['name']
             allied_ob.past_experiences.add(exp_ob)
             allied_ob.save()
-            return HttpResponseRedirect('../dashboard/')
+            return HttpResponse('done')
         elif prod_ob:
             prod_ob=prod_ob[0]
             proj_type = request.POST['type']
@@ -658,9 +692,14 @@ def add_exp(request):
             special_mention = request.POST['mention']
             exp_ob =PastExperiences(project_type=proj_type, project_name=proj_name, project_status= proj_status, duration_start= duration_start, duration_end= duration_end, remarks=remarks,special_mention=special_mention)
             exp_ob.save()
+            try:
+                exp_ob.profile_pic= request.FILES['0']
+                exp_ob.save()
+            except:
+                dumpvar=0            
             # proj_type = request.POST['name']
             prod_ob.past_experiences.add(exp_ob)
-            return HttpResponseRedirect('../dashboard/')
+            return HttpResponse('done')
 
     else:
         user = request.user
@@ -707,7 +746,7 @@ def change_exp(request, expid):
             exp.project_name=proj_name 
             exp.project_status= proj_status     
             exp.skills= skills 
-            exp.character_name=char_name 
+            exp.character_name = char_name 
             exp.role_played=role_played 
             exp.duration_start= duration_start
             exp.duration_end= duration_end
@@ -716,6 +755,7 @@ def change_exp(request, expid):
             exp.save()
         # proj_type = request.POST['name']
             artist_ob.save()
+            # return HttpResponse(char_name)
             return HttpResponseRedirect('../../dashboard/')
         elif allied_ob:
             allied_ob=allied_ob[0]
@@ -725,8 +765,6 @@ def change_exp(request, expid):
             proj_name = request.POST['name']
             proj_status = request.POST['status']
             skills = request.POST['skills']
-            char_name = request.POST['char_name']
-            role_played = request.POST['role_played']
             duration_start= request.POST['start']
             duration_end= request.POST['end']
             remarks = request.POST['remarks']
@@ -735,8 +773,6 @@ def change_exp(request, expid):
             exp.project_name=proj_name 
             exp.project_status= proj_status 
             exp.skills= skills 
-            exp.character_name=char_name 
-            exp.role_played=role_played 
             exp.duration_start= duration_start 
             exp.duration_end= duration_end 
             exp.remarks=remarks
@@ -774,22 +810,22 @@ def change_exp(request, expid):
         allied_ob = Allied.objects.filter(user = user)
         prod_ob = Production.objects.filter(user = user)
         if artist_ob:        
-            check = 1
             artist_ob = artist_ob[0]
-            context = {'artist_ob':artist_ob}
-            return render(request,'registration/change_exp_artist.html')     
+            exp = PastExperiences.objects.get(id = expid)
+            context = {'artist_ob':artist_ob,'exp':exp}
+            return render(request,'registration/change_exp_artist.html', context)     
 
         elif allied_ob:        
-            check = 2
             allied_ob = allied_ob[0]
-            context = {'allied_ob':allied_ob}
-            return render(request,'registration/change_exp_allied.html')     
+            exp = PastExperiences.objects.get(id = expid)
+            context = {'allied_ob':allied_ob, 'exp':exp}
+            return render(request,'registration/change_exp_allied.html', context)     
     
         elif prod_ob:        
-            check = 3
             prod_ob = prod_ob[0]
-            context = {'prod_ob':prod_ob}
-            return render(request,'registration/change_exp_prod.html')     
+            exp = PastExperiences.objects.get(id = expid)
+            context = {'prod_ob':prod_ob, 'exp':exp}
+            return render(request,'registration/change_exp_prod.html', context)     
 
 #FUNC FOR VIEW EXPERIENCE
 @login_required
@@ -825,78 +861,78 @@ def view_experiences(request):
 
 #Functionalities for recommendations below. Will be applied accordingly as frontend develops for the previous one 
 
-@login_required
-def seek_rec(request):
-    if request.method == 'POST':
-        user = request.user
-        artist_ob = Artist.objects.filter(user = user)
-        allied_ob = Allied.objects.filter(user = user)
-        prod_ob = Production.objects.filter(user = user)
-        if artist_ob:
-            artist_ob = artist_ob[0]
-            proj_type = request.POST['type']
-            proj_name = request.POST['name']
-            proj_status = request.POST['status']
-            skills = request.POST['skills']
-            char_name = request.POST['char_name']
-            role_played = request.POST['role_played']
-            duration_start= request.POST['start']
-            duration_end= request.POST['end']
-            seek_from_type = request.POST['seek_type']
-            seek_from_name = request.POST['seek_name']
-            message = request.POST['message']
-            email_id = request.POST['email']
-            rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
-            rec_ob.save()
-            # proj_type = request.POST['name']
-            artist_ob.recommendations.add(rec_ob)
+# @login_required
+# def seek_rec(request):
+#     if request.method == 'POST':
+#         user = request.user
+#         artist_ob = Artist.objects.filter(user = user)
+#         allied_ob = Allied.objects.filter(user = user)
+#         prod_ob = Production.objects.filter(user = user)
+#         if artist_ob:
+#             artist_ob = artist_ob[0]
+#             proj_type = request.POST['type']
+#             proj_name = request.POST['name']
+#             proj_status = request.POST['status']
+#             skills = request.POST['skills']
+#             char_name = request.POST['char_name']
+#             role_played = request.POST['role_played']
+#             duration_start= request.POST['start']
+#             duration_end= request.POST['end']
+#             seek_from_type = request.POST['seek_type']
+#             seek_from_name = request.POST['seek_name']
+#             message = request.POST['message']
+#             email_id = request.POST['email']
+#             rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
+#             rec_ob.save()
+#             # proj_type = request.POST['name']
+#             artist_ob.recommendations.add(rec_ob)
 
-            artist_ob.save()
-            return HttpResponseRedirect('../dashboard/')
-        elif allied_ob:
-            allied_ob=allied_ob[0]
-            proj_type = request.POST['type']
-            proj_name = request.POST['name']
-            proj_status = request.POST['status']
-            skills = request.POST['skills']
-            char_name = request.POST['char_name']
-            role_played = request.POST['role_played']
-            duration_start= request.POST['start']
-            duration_end= request.POST['end']
-            seek_from_type = request.POST['seek_type']
-            seek_from_name = request.POST['seek_name']
-            message = request.POST['message']
-            email_id = request.POST['email']
-            rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
-            rec_ob.save()
-            # proj_type = request.POST['name']
-            allied_ob.recommendations.add(rec_ob)
+#             artist_ob.save()
+#             return HttpResponseRedirect('../dashboard/')
+#         elif allied_ob:
+#             allied_ob=allied_ob[0]
+#             proj_type = request.POST['type']
+#             proj_name = request.POST['name']
+#             proj_status = request.POST['status']
+#             skills = request.POST['skills']
+#             char_name = request.POST['char_name']
+#             role_played = request.POST['role_played']
+#             duration_start= request.POST['start']
+#             duration_end= request.POST['end']
+#             seek_from_type = request.POST['seek_type']
+#             seek_from_name = request.POST['seek_name']
+#             message = request.POST['message']
+#             email_id = request.POST['email']
+#             rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
+#             rec_ob.save()
+#             # proj_type = request.POST['name']
+#             allied_ob.recommendations.add(rec_ob)
 
-            allied_ob.save()
-            return HttpResponseRedirect('../dashboard/')
-        elif prod_ob:
-            prod_ob=prod_ob[0]
-            proj_type = request.POST['type']
-            proj_name = request.POST['name']
-            proj_status = request.POST['status']
-            skills = request.POST['skills']
-            char_name = request.POST['char_name']
-            role_played = request.POST['role_played']
-            duration_start= request.POST['start']
-            duration_end= request.POST['end']
-            seek_from_type = request.POST['seek_type']
-            seek_from_name = request.POST['seek_name']
-            message = request.POST['message']
-            email_id = request.POST['email']
-            rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
-            rec_ob.save()
-            # proj_type = request.POST['name']
-            prod_ob.recommendations.add(rec_ob)
+#             allied_ob.save()
+#             return HttpResponseRedirect('../dashboard/')
+#         elif prod_ob:
+#             prod_ob=prod_ob[0]
+#             proj_type = request.POST['type']
+#             proj_name = request.POST['name']
+#             proj_status = request.POST['status']
+#             skills = request.POST['skills']
+#             char_name = request.POST['char_name']
+#             role_played = request.POST['role_played']
+#             duration_start= request.POST['start']
+#             duration_end= request.POST['end']
+#             seek_from_type = request.POST['seek_type']
+#             seek_from_name = request.POST['seek_name']
+#             message = request.POST['message']
+#             email_id = request.POST['email']
+#             rec_ob =Recommendations(project_type=proj_type, project_name=proj_name, project_status= proj_status, skills= skills, character_name=char_name, role_played=role_played, duration_start= duration_start, duration_end= duration_end, seek_from_name=seek_from_name, seek_from_type=seek_from_type , add_msg=message ,email_id=email_id)
+#             rec_ob.save()
+#             # proj_type = request.POST['name']
+#             prod_ob.recommendations.add(rec_ob)
 
-            prod_ob.save()
-            return HttpResponseRedirect('../dashboard/')
-    else:
-        return render(request,'registration/seek_rec.html')     
+#             prod_ob.save()
+#             return HttpResponseRedirect('../dashboard/')
+#     else:
+#         return render(request,'registration/seek_rec.html')     
 
 @login_required
 def view_rec(request):
@@ -1002,22 +1038,25 @@ def apply_for_project(request,requirement_id):
     else:
         choice=2
         error = 'Error'
+
+    prod = Production.objects.filter(projects = proj)
     context={
     'error':error,
     'choice':choice,
     'req':req,
     'p':proj,
-    'requirements':requirements
+    'requirements':requirements,
+    'prod':prod,
     }
     return render(request,'registration/project_details.html',context)
 
-
+@csrf_exempt
 @login_required
 def add_project(request):
     user = request.user
     prod_ob = Production.objects.filter(user = user)    
     if request.method == 'POST':
-        if prod_ob:
+        if prod_ob:           
             pname = request.POST['name']
             ptype = request.POST['type']
             cost = request.POST['cost']
@@ -1030,10 +1069,14 @@ def add_project(request):
             producer = prod_ob[0]
             proj = Projects(project_type = ptype, project_name = pname, project_status = status, project_cost = cost, location = location, languages = language, duration_start = duration_start,  duration_end = duration_end, description = description)
             proj.save()
+            try:
+                proj.profile_pic= request.FILES['0']
+            except:
+                dumpvar=0
             proj.producer.add(producer)
             proj.save()
             pid = str(proj.id)
-            return HttpResponseRedirect('../addrequirements/'+pid+'/')
+            return HttpResponse(pid)
     else:
         context={'loc':ct,}
         return render(request,'registration/add_project.html',context)
@@ -1184,11 +1227,22 @@ def artist_search(request):
             if i not in artlist:
                 artlist.append(i)
 
+        alllistx= []
+        all_list= Allied.objects.filter(name__icontains=inp).order_by('name')
+        all_list2 = Allied.objects.filter(location__icontains=inp).order_by('location')
+        alllistx+= all_list 
+        alllistx+= all_list2
+        alllist= [] 
+        for i in alllistx:
+            if i not in alllist:
+                alllist.append(i)
+
         context={
         'artist': artist,
         'proj_resp' : proj_resp,
         'prod_resp' : prod_resp,
-        'artlist' :artlist, 
+        'artlist' :artlist,
+        'allied_list': alllist, 
         }
         return render(request,'registration/artist_search.html',context)
     else:
@@ -1203,7 +1257,7 @@ def show_profile(request,art_id):
             myartist=myartist[0]
     artist = Artist.objects.get(id=int(art_id))
     exp = artist.past_experiences.all()
-    rec= artist.recommendations.all()
+    rec= Recommendations.objects.filter(user=user, accepted=True)
     context = {
         'artist' : artist,
         'exp' : exp,
@@ -1211,6 +1265,24 @@ def show_profile(request,art_id):
         'myartist' : myartist,
     }
     return render(request, 'registration/art_profile.html', context)
+
+@login_required
+def show_profile_allied(request,allied_id):
+    user= request.user
+    if request.user.is_authenticated():
+        myallied= Allied.objects.filter(user=user)
+        if myallied:
+            myallied=myallied[0]
+    allied = Allied.objects.get(id=int(allied_id))
+    exp = allied.past_experiences.all()
+    rec= Recommendations.objects.filter(user=user, accepted=True)
+    context = {
+        'allied' : allied,
+        'exp' : exp,
+        'rec' : rec,
+        'myallied' : myallied,
+    }
+    return render(request, 'registration/allied_profile.html', context)
 
 @login_required
 def show_profile_prod(request,prod_id):
@@ -1285,3 +1357,203 @@ def google_user_select_type(request):
 #FB login tests
 # def fb_login(request):
 #     return render_to_response('registration/fblogin.html') 
+#################### THIS IS THE RECOS VIEWS###########################
+def send_reco_mail(email, subject, body):
+    return requests.post(
+        "https://api.mailgun.net/v3/sandbox60649047307e4399b2ecf1bbbbf61b0b.mailgun.org/messages",
+        auth=("api", "key-49efd1210e545d83bff19b6455afc6a9"),
+        data={"from": "Filmboard Recommendation <postmaster@sandbox60649047307e4399b2ecf1bbbbf61b0b.mailgun.org>",
+              "to": str(email),
+              "subject": subject,
+              "text": body})
+
+@login_required
+def accept_reco(request, rid):
+    rec = Recommendations.objects.get(id = rid)
+    user_ob = rec.user
+    artist_ob = Artist.objects.filter(user=user_ob)
+    allied_ob = Allied.objects.filter(user=user_ob)
+    prod_ob = Production.objects.filter(user=user_ob)
+    if request.method == 'POST':
+        accepted = int(request.POST['accepted'])
+        reco_from = request.POST['reco_from']
+        if artist_ob:
+            artist_ob = artist_ob[0]
+            if accepted == 1:
+                rec.accepted = True
+                rec.reco_from = reco_from
+                rec.save()
+                return HttpResponseRedirect('../../home/')
+            elif accepted == 2:
+                rec.accepted = False
+                body = 'Sorry, your recommendation has been denied by'+str(rec.reco_from_email)
+                subject = 'Recommendation Denied'            
+                email = user.email
+                send_reco_mail(email, subject, body)
+                return HttpResponseRedirect('../../home/')
+        elif allied_ob:
+            allied_ob = allied_ob[0]
+            if accepted == 1:
+                rec.accepted = True
+                rec.reco_from = reco_from
+                rec.save()
+                return HttpResponseRedirect('../../home/')            
+            elif accepted == 2:
+                rec.accepted = False
+                body = 'Sorry, your recommendation has been denied by'+str(rec.reco_from_email)
+                subject = 'Recommendation Denied'            
+                email = user.email
+                send_reco_mail(email, subject, body)
+                return HttpResponseRedirect('../../home/')        
+        elif prod_ob:
+            allied_ob = allied_ob[0]
+            if accepted == 1:
+                rec.accepted = True
+                rec.reco_from = reco_from
+                rec.save()
+                return HttpResponseRedirect('../../home/')
+            elif accepted == 2:
+                rec.accepted = False
+                body = 'Sorry, your recommendation has been denied by'+str(rec.reco_from_email)
+                subject = 'Recommendation Denied'            
+                email = user.email
+                send_reco_mail(email, subject, body)
+                return HttpResponseRedirect('../../home/')
+    else:
+        if artist_ob:        
+            artist_ob = artist_ob[0]
+            context = {'artist_ob':artist_ob, 'rec_ob':rec}
+            return render(request,'registration/reco_artist_accept.html',context)     
+        elif allied_ob:        
+            allied_ob = allied_ob[0]
+            context = {'allied_ob':allied_ob, 'rec_ob':rec}
+            return render(request,'registration/reco_allied_accept.html',context)     
+        elif prod_ob:        
+            prod_ob = prod_ob[0]
+            context = {'prod_ob':prod_ob, 'rec_ob':rec}
+            return render(request,'registration/reco_prod_accept.html',context)     
+
+
+def add_reco(request):
+    if request.method == 'POST':
+        user = request.user
+        artist_ob = Artist.objects.filter(user = user)
+        allied_ob = Allied.objects.filter(user = user)
+        prod_ob = Production.objects.filter(user = user)
+        if artist_ob:
+            artist_ob = artist_ob[0]
+            reco_from_email = request.POST['reco_from_email']
+            proj_type = request.POST['type']
+            proj_name = request.POST['name']
+            proj_status = request.POST['status']
+            skills = request.POST['skills']
+            char_name = request.POST['char_name']
+            role_played = request.POST['role_played']
+            duration_start= request.POST['start']
+            duration_end= request.POST['end']
+            remarks = request.POST['remarks']
+            reco_from_email = request.POST['reco_from_email']
+            rec = Recommendations(reco_from_email=reco_from_email, project_type=proj_type, project_name=proj_name, project_status=proj_status, skills=skills, character_name=char_name, role_played=role_played, duration_start=duration_start, duration_end=duration_end, remarks=remarks, user=user)
+            rec.save()
+            body = str(str(artist_ob.name)+' has asked you for a recommendation. Take on the course of action by clicking on the following link. You can either accept or reject to give a recommendation. Please fill out the form by clicking on the following link: http://filmboard.ml/accept_reco/'+str(rec.id)+'/')
+            subject = 'Recommendation Applied'            
+            email = reco_from_email
+            send_reco_mail(email, subject, body)
+            return HttpResponseRedirect('../dashboard/')
+            # elif accepted == 2:
+            #     subject = 'Recommendation Failed'
+            #     body = str('Sorry, but your recommendation has been denied by'+rec.reco_from_email+'.')
+            #     email = user.email
+            #     send_reco_mail(subject, email, body)    
+            #     return HttpResponseRedirect('../../home/')
+
+        elif allied_ob:
+            allied_ob = allied_ob[0]
+            reco_from_email = request.POST['reco_from_email']
+            proj_type = request.POST['type']
+            proj_name = request.POST['name']
+            proj_status = request.POST['status']
+            skills = request.POST['skills']
+            duration_start= request.POST['start']
+            duration_end= request.POST['end']
+            remarks = request.POST['remarks']
+            reco_from_email = request.POST['reco_from_email']
+            rec = Recommendations(reco_from_email=reco_from_email, project_type=proj_type, project_name=proj_name, project_status=proj_status, skills=skills, duration_start=duration_start, duration_end=duration_end, remarks=remarks, user=user)
+            rec.save()
+            body = str(str(allied_ob.name)+' has asked you for a recommendation. Take on the course of action by clicking on the following link. You can either accept or reject to give a recommendation. Please fill out the form by clicking on the following link: http://filmboard.ml/accept_reco/'+str(rec.id)+'/')
+            subject = 'Recommendation Applied'            
+            email = reco_from_email
+            send_reco_mail(email, subject, body)
+            return HttpResponseRedirect('../dashboard/')
+            
+        elif prod_ob:
+            prod_ob = prod_ob[0]
+            reco_from_email = request.POST['reco_from_email']
+            proj_type = request.POST['type']
+            proj_name = request.POST['name']
+            proj_status = request.POST['status']
+            duration_start= request.POST['start']
+            duration_end= request.POST['end']
+            remarks = request.POST['remarks']
+            reco_from_email = request.POST['reco_from_email']
+            rec = Recommendations(reco_from_email=reco_from_email, project_type=proj_type, project_name=proj_name, project_status=proj_status,  duration_start=duration_start, duration_end=duration_end, remarks=remarks, user=user)
+            rec.save()
+            body = str(str(prod_ob.name)+' has asked you for a recommendation. Take on the course of action by clicking on the following link. You can either accept or reject to give a recommendation. Please fill out the form by clicking on the following link: http://filmboard.ml/accept_reco/'+str(rec.id)+'/')
+            subject = 'Recommendation Applied'            
+            email = reco_from_email            
+            send_reco_mail(email, subject, body)
+            return HttpResponseRedirect('../dashboard/')
+    else:
+        user = request.user
+        artist_ob = Artist.objects.filter(user = user)
+        allied_ob = Allied.objects.filter(user = user)
+        prod_ob = Production.objects.filter(user = user)
+        if artist_ob:        
+            artist_ob = artist_ob[0]
+            context = {'artist_ob':artist_ob}
+            return render(request,'registration/add_rec_artist.html',context)     
+
+        elif allied_ob:        
+            allied_ob = allied_ob[0]
+            context = {'allied_ob':allied_ob}
+            return render(request,'registration/add_rec_allied.html',context)     
+    
+        elif prod_ob:        
+            prod_ob = prod_ob[0]
+            context = {'prod_ob':prod_ob}
+            return render(request,'registration/add_rec_prod.html',context)     
+
+@csrf_exempt
+@login_required
+def see_applied(request):
+    if request.method == 'POST':
+        user = request.user
+        rid = int(request.POST['rid'])
+        req = ProjectRequirements.objects.get(id = rid)
+        req.user.remove(user)
+        req.save()
+        user.save()
+        req_list = user.projectrequirements_set.all()
+        context={'req_list':req_list}
+        return render(request,'registration/see_applied.html',context)
+    else:
+        user= request.user
+        req_list = user.projectrequirements_set.all()
+        context={'req_list':req_list}
+        return render(request,'registration/see_applied.html',context)
+
+@csrf_exempt
+@login_required
+def see_rec_applied(request):
+        user= request.user
+        applied_list = user.recommendations_set.all()
+        context={'applied_list':applied_list}
+        return render(request,'registration/see_rec_applied.html',context)
+
+
+
+@login_required
+def view_inventory(request):
+    user= request.user
+    allied_ob= Allied.objects.get(user=user)
+    return render(request, 'registration/inventory.html', {'allied' : allied_ob})

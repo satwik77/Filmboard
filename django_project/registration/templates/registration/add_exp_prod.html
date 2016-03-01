@@ -24,7 +24,7 @@
             <h2 style="text-align:center;">Add Past Experience</h2>
            
 			
-            <form method='POST' action='../addexp/' class="form-horizontal">
+            <form id="add_project">
                 {% csrf_token %}
             <strong>
             <fieldset>
@@ -33,6 +33,15 @@
                 	<input type='text' class="form-control" name='name' >
                 </div>
             </div>
+
+            <div class="form-group">
+              <label for="select111" class="col-md-2 control-label">Project Picture</label>
+            <div class="col-md-10">
+          <input type="text" readonly class="form-control" placeholder="Display Picture...">
+              <input type="file" id="dp" value="">
+                </div>
+          </div>
+            
             <div class="form-group">
       			<label for="select111" class="col-md-2 control-label">Project Type</label>
 		        <div class="col-md-10">
@@ -102,6 +111,49 @@
 <script>
 //var cookie = document.cookie;
 //console.log(cookie+'null');
+ var prof_flag=0
+  $("input#dp").on('change', function(e) {
+        dp = e.target.files;
+        prof_flag=1;
+    });
+  function collect_data() {
+        var data = new FormData() ;
+        data.append('name', $('input[name="name"]').val());
+        data.append('start', $('input[name="start"]').val());
+        data.append('end', $('input[name="end"]').val());
+        data.append('mention', $('textarea[name="mention"]').val());
+        data.append('remarks', $('textarea[name="remarks"]').val());
+        data.append('status', $('select[name="status"] option:selected').val());
+        data.append('skills', $('select[name="skills"] option:selected').val());
+        data.append('type', $('select[name="type"] option:selected').val());
+        if(prof_flag==1){
+          $.each(dp, function(key, value)
+                {
+                    data.append(key, value);
+                });
+        }
+        return data;
+    }
+    $("form#add_project").submit(function(e) {
+        e.preventDefault();
+        var dat = collect_data();
+        $.ajax({
+            url: '../addexp/',
+            type: 'POST',
+            data: dat,
+            cache: false,
+            // dataType: 'html',
+            processData: false,
+            contentType: false,
+
+            success: function(data)
+            {
+                if(data=='done')
+                   window.location.href="../dashboard/";
+      }
+        }); 
+        
+    });
 $.material.init();
 $('input[name=end]').datepicker({
     format: "yyyy-mm-dd",

@@ -13,7 +13,6 @@
         	<li class="sec-nav active"><a target="_blank" id="nav-about">About</a></li>
             <li class="sec-nav"><a target="_blank" id="nav-exp">Experience</a></li>
             <li class="sec-nav"><a target="_blank" id="nav-rec">Recommendations</a></li>
-            <li class="sec-nav"><a href="../projects" id="">Projects</a></li>
        	</ul>
 </div>
 <!--<div class="right float-container">
@@ -40,18 +39,18 @@
     	        <div class="col-sm-6 profile-pic"><img src="{% static 'registration/image/user-male-big.png'  %}" /></div>
     		    <div class="col-sm-6">
             		<h2 class="sec" style="margin-bottom:3px;">Personal Info</h2>
-            	    <div class="detail">
+            	    <div class="detail" id="personal-info">
             	    	<ul>
-            	    		<li class="col-sm-12"><label>Name</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.name}}</li>
-        		    		<li class="col-sm-12"><label>Height</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.height}}</li>
-           	    			<li class="col-sm-12"><label>Weight</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.weight}}</li>
-            				<li class="col-sm-12"><label>Phone</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.phone}}</li> 
-            				<li class="col-sm-12"><label>Address</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.location}}</li>
-            				<li class="col-sm-12"><label>Body Type</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.body_type}}</li>
-            			   	<li class="col-sm-12"><label>Email</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.email_id}}</li>
-                    	    <li class="col-sm-12"><label>Education</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.education_background}}</li>
-                    	    <li class="col-sm-12"><label>Skills</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.skills}}</li>
-                    	    <li class="col-sm-12"><label>Certifications</label>&nbsp;&nbsp;&nbsp;&nbsp;{{artist.certifications}}</li>
+            	    		<li class="col-sm-12"><label>Name</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.name}}</span></li>
+        		    		<li class="col-sm-12"><label>Height</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.height}}</span></li>
+           	    			<li class="col-sm-12"><label>Weight</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.weight}}</span></li>
+            				<li class="col-sm-12"><label>Phone</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.phone}}</span></li> 
+            				<li class="col-sm-12"><label>Address</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.location}}</span></li>
+            				<li class="col-sm-12"><label>Body Type</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.body_type}}</span></li>
+            			   	<li class="col-sm-12"><label>Ethnicity</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.ethnicity}}</span></li>
+                    	    <li class="col-sm-12"><label>Education</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.education_background}}</span></li>
+                    	    <li class="col-sm-12"><label>Skills</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.skills}}</span></li>
+                    	    <li class="col-sm-12"><label>Certifications</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.certifications}}</span></li>
    
   	    	      	 	</ul>
 					</div>
@@ -69,17 +68,17 @@
    	<div class="exp sec">
        	<div class="col-sm-12 sec">
            	<h2 class="sec">Experience</h2>
-            <p>shadjksahdkjsahdjkhsajdasjkhasjdasjkjashkdjhsajhdkjashdjkashdasjhdasjkhdas</p>
          </div>
          <div class="detail">
           {% for k in exp %} 	
             <div class="card">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
                	 <ul class="list-group list-group-flush">
    					 	<li class="list-group-item"><span class="text left">{{k.duration_start}}-{{k.duration_end}}</span><span class="tag right">{{k.project_type}} {{k.project_status}}</span></li>
                   </ul>
- 				 <div class="card-img-top" data-src="..." style="height:225px;background-color:#ddd;" ></div>
+ 				 <div class="card-img-top" data-src="..." style="height:225px;" ></div>
  					 <div class="card-block rippler rippler-inverse">
-                      	  <h4 class="card-title">{{k.project_name}}<span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
+                      	  <h4 class="card-title"><span class="card-title">{{k.project_name}}</span><span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
    						  <p class="card-text">{{k.character_name}}</p>
                           <div class="card-reveal"><span class="label right">Remarks</span>{{k.remarks}}<br> 
 <span class="label right">Special Mention</span> {{k.special_mention}} 
@@ -101,17 +100,17 @@
 <div class="rec sec">
        	<div class="col-sm-12 sec">
            	<h2 class="sec">Recommendations</h2>
-            <p>shadjksahdkjsahdjkhsajdasjkhasjdasjkjashkdjhsajhdkjashdjkashdasjhdasjkhdas</p>
          </div>
          <div class="detail">
            	{% for k in rec %}  
             <div class="card">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
                  <ul class="list-group list-group-flush">
               <li class="list-group-item"><span class="text left">{{k.duration_start}}-{{k.duration_end}}</span><span class="tag right">{{k.project_type}} {{k.project_status}}</span></li>
                   </ul>
-         <div class="card-img-top" data-src="..." style="height:225px;background-color:#ddd;" ></div>
+         <div class="card-img-top" data-src="..." style="height:225px;" ></div>
            <div class="card-block rippler rippler-inverse">
-                          <h4 class="card-title">{{k.project_name}}<span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
+                          <h4 class="card-title"><span class="card-title">{{k.project_name}}</span><span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
                 <p class="card-text">{{k.character_name}}</p>
                           <div class="card-reveal">
 <span class="label right">Recieved from</span> {{k.seek_from_name}}, {{k.seek_from_type}} 
@@ -129,6 +128,7 @@
 
 <script src="{% static 'registration/js/ripples.min.js' %}"></script>
 <script src="{% static 'registration/js/material.min.js' %}"></script>
+<script src="{% static 'registration/js/dashboard.js' %}"></script>
 <script>
 //var cookie = document.cookie;
 //console.log(cookie+'null');

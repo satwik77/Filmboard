@@ -1,0 +1,249 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+{% block extra_file %}
+  <style>
+  .row h2 {
+	  font-size:24px;
+	  color:#BDBDBD;
+  }
+  #after-nav {
+	  margin-top:120px;
+  }
+  label.control-label {
+	  padding:0;
+  }
+  input[name="name"] {
+	  position: relative;
+    top: 32px;
+  }
+  </style>
+<link href="{% static 'registration/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet">
+<script src="{% static 'registration/js/bootstrap-datepicker.min.js' %}"></script>
+{% endblock %}
+{% block content %}
+<div class="container-fluid" id="after-nav">
+	<div class="col-sm-2">
+    	<ul class="content-nav">
+        <li id="profile"> <div class="icon">&#8592;</div> <a href="../dashboard">Back to Profile</a> </li>
+        </ul>
+        
+    </div>
+    <div class="col-sm-8 content" >
+            <div class="row">
+            <h2 style="text-align:center">Update Profile</h2>
+           
+
+            <form id="profile_update">
+                {% csrf_token %}
+            <fieldset>
+             <ul>
+             
+              <li class="form-group col-sm-8">
+             	<input type='text' class="form-control col-sm-8" name='name' value='{{artist.name}}' placeholder="Name" required>
+             </li>  
+             <li class="col-sm-4">
+                {% if artist.profile_pic %}<img src={{artist.profile_pic.url}} width="150px"/ >{% else %}
+                <img src="{% static 'registration/image/user-male-big.png'  %}" width="150px"/> {% endif %}
+                </li>
+    	                                     
+               
+				<li class="col-sm-8"></li>
+               <li class="form-group col-sm-4">
+      			 <div class="col-md-12">
+        			<input type="text" readonly class="form-control" placeholder="Display Picture...">
+      				<input type="file" id="dp" value="">
+        		  </li> 
+                  <li class="col-sm-8 form-group"><label class="control-label">Type</label><span>        <select name="ob_type" class="form-control" >
+                <option value="Actor" >Actor</option>
+                <option value="Model" >Model</option>
+                <option value="Director of Photography" >Director of Photography</option>
+                <option value="TMO Director" >TMO Director</option>
+              </select></span>  
+               </li> 
+                <li class="col-sm-4 form-group" ><label class="control-label">Gender*</label><span> <select id="select111" class="form-control"  name='gender'><option value='M'>M</option><option value='F'>F</option></select></span> </li>
+                <li class="col-sm-4 form-group"><label class="control-label">Phone</label><span><input type='number' name='phone' class="form-control" value='{{artist.phone}}' max="9999999999"="10"></span> </li> 
+            	
+
+<!--               <li class="col-sm-3"><label>location</label><span><input type='text' name='location' class="form-control" value='{{artist.location}}'></span> </li> -->
+				 <li class="col-sm-4 form-group"><label class="control-label">Location*</label>
+                 <select name="location" value='{{artist.location}}' class="form-control" required>
+                 <option style="color:#000">None</option>
+                 {% for l in loc %}
+                <option value="{{l.0}}" >{{l.0}}</option>
+                 {% endfor %}
+              </select>  
+               </li>
+
+        	    <li class="col-sm-4 form-group" id="height-wrapper"><label class="control-label">Height (in m)</label><span><input type='number' step="any" name='height' class="form-control" value='{{artist.height}}'> </li></span> </li>
+           	    <li class="col-sm-4 form-group" id="weight-wrapper"><label class="control-label">Weight (in KGs)</label><span><input type='number' step="any" name='weight' class="form-control" value='{{artist.weight}}'>  </li></span> </li>
+                <li class="col-sm-4 form-group" id="body-wrapper" class="control-label"><label class="control-label">Body Type</label><span>  <div class="col-md-10">
+              <select id="select111" class="form-control"  name='body_type' style="color:#000">
+              <option value='None' style="color:#000">None</option><option value='Slim' style="color:#000">Slim</option><option value='Atheletic' style="color:#000">Atheletic</option><option value='Regular' style="color:#000">Regular</option><option value='Over_weight' style="color:#000">Over weight</option></div></select></li></span> </li>
+			  <li class="col-sm-12 form-group" id="ethnicity-wrapper" ><label class="col-md-2 control-label">Ethnicity</label><div class="col-md-10"> <select name="ethnicity" class="form-control" >
+                <option value="None" >None</option>
+                <option value="Asian" >Asian</option>
+                <option value="Black" >Black</option>
+                <option value="White" >White</option>
+                <option value="Any Other" >Any Other</option>
+              </select></div> </li>
+              <li class="col-sm-12 form-group" ><label class="col-md-2 control-label">Date of Birth*</label><div class="col-md-10"><input type="text" name='dob' class="form-control" value='{{artist.dob}}' required></div> </li>
+              	<li class="col-sm-12 form-group"><label class="col-md-2 control-label">Certifications :</label><div class="col-md-10"><textarea name="certifications" id="body" class="form-control" rows="3">{{artist.certifications}}</textarea></div> </li>  
+              	<li class="col-sm-12 form-group" id="address-wrapper" style="display:none"><label class="col-md-2 control-label">Address :</label><div class="col-md-10"><textarea name="address" id="body" class="form-control" rows="3">{{artist.address}}</textarea></div> </li>  
+            	<li class="col-sm-12 form-group"><label class="col-md-2 control-label">Education :</label><div class="col-md-10"><textarea name="ed_back" id="body" class="form-control" rows="3">{{artist.education_background}}</textarea></div> </li>
+              <li class="col-sm-12 form-group"><label class="col-md-2 control-label">My Story :</label><div class="col-md-10"><textarea name="my_story" id="body" class="form-control" rows="3">{{artist.my_story}}</textarea></div> </li>              
+                </ul>
+            <br>
+
+
+            <button type='submit' class='btn btn-raised btn-primary' style="float:right;margin-right:30px;" name='save'>Add</button>
+        </form>
+
+        </div>
+        </div>
+
+        </div>
+    </div>
+    
+</div>
+<script src="{% static 'registration/js/ripples.min.js' %}"></script>
+<script src="{% static 'registration/js/material.min.js' %}"></script>
+<script>
+//var cookie = document.cookie;
+//console.log(cookie+'null');
+$.material.init();
+
+</script>
+<script type="text/javascript">
+  
+  var prof_flag=0
+  $("input#dp").on('change', function(e) {
+        dp = e.target.files;
+        prof_flag=1;
+    });
+  function collect_data() {
+        var data = new FormData() ;
+        data.append('name', $('input[name="name"]').val());
+        data.append('phone', $('input[name="phone"]').val());
+        data.append('height', $('input[name="height"]').val());
+        data.append('weight', $('input[name="weight"]').val());
+        data.append('email_id', $('input[name="email_id"]').val());
+        data.append('dob', $('input[name="dob"]').val());
+        data.append('ethnicity', $('select[name="ethnicity"]').val());
+        data.append('certifications', $('textarea[name="certifications"]').val());
+        data.append('address', $('textarea[name="address"]').val());
+        data.append('ed_back', $('textarea[name="ed_back"]').val());
+        data.append('my_story', $('textarea[name="my_story"]').val());
+
+        data.append('gender', $('select[name="gender"] option:selected').val());
+        data.append('ob_type', $('select[name="ob_type"] option:selected').val());
+        data.append('body_type', $('select[name="body_type"] option:selected').val());
+        data.append('location', $('select[name="location"] option:selected').val());
+        if(prof_flag==1){
+          $.each(dp, function(key, value)
+                {
+                    data.append(key, value);
+                });
+        }
+        return data;
+    }
+    $("form#profile_update").submit(function(e) {
+        e.preventDefault();
+		$('input[name="dob"]').val(changeDateFormat($('input[name="dob"]').val()));
+        var dat = collect_data();
+		if($('input[name=dob]').val() == 'None' || $('select[name="location"] option:selected').val() == 'None') {
+			if($('input[name=dob]').val() == 'None') {
+				$('input[name="dob"]').parent().parent('li').addClass('has-error'); }
+			if($('select[name="location"] option:selected').val() == "None") {
+				$('select[name="location"]').parent('li').addClass('has-error'); }}
+		else {
+        $.ajax({
+            url: '../updateprofile/',
+            type: 'POST',
+            data: dat,
+            cache: false,
+            // dataType: 'html',
+            processData: false,
+            contentType: false,
+
+            success: function(data)
+            {
+                if(data=='done')
+                  window.location.href="../dashboard";
+            }
+        }); }
+        
+    });
+	$('select[name="ob_type"]').click(function() {
+	if( $('select[name="ob_type"] option:selected').val() == "Director of Photography" || $('select[name="ob_type"] option:selected').val() == "TMO Director")
+	{
+		console.log('1');
+		$('textarea[name="certifications"]').attr('required',true);
+		$('input[name="dob"]').attr('required',false);
+		$('input[name="dob"]').parent().parent('li').children('label').html('Date of Birth');
+		$('input[name="height"]').val(0.0);
+		$('input[name="weight"]').val(0.0);
+		$('select[name="body_type"]').val('None');
+		$('select[name="ethnicity"]').val('None');
+		$('#height-wrapper').css('display','none');		
+		$('#body-wrapper').css('display','none');
+		$('#weight-wrapper').css('display','none');
+		$('#ethnicity-wrapper').css('display','none');		
+		$('#address-wrapper').css('display','block');
+	}
+
+	else {   		$('textarea[name="certifications"]').attr('required',false);
+					$('input[name="dob"]').attr('required',true);
+					$('#height-wrapper').css('display','block');		
+					$('#body-wrapper').css('display','block');
+					$('#weight-wrapper').css('display','block');   }
+
+	});
+	$('input[name=dob]').datepicker({
+    format: "yyyy-mm-dd",
+	orientation: "bottom right"
+});
+		function changeDateFormat(value) {
+		if(value.search(" ") == -1) 
+		return(value);
+		else {
+			if(value.search(".") > 0) {
+				var month = value.split(".");
+			}
+			else var month = value.split(/ (.+)?/);
+			console.log(month);
+		    var	d = Date.parse(month[0] + "1, 2012"),
+				monthNumber = new Date(d).getMonth() + 1,
+				dateformat = month[1].split(","),
+				monthInteger = "",
+				dateNumber = "",
+				dateInteger = parseInt(dateformat[0]);
+				
+				if(monthNumber < 10) monthInteger = "0" + monthNumber;
+				else monthInteger = monthNumber;
+				if(dateInteger < 10) dateNumber = "0" + dateInteger.toString();
+				else dateNumber = dateInteger;
+				console.log(dateNumber);
+				return(parseInt(dateformat[1]) + "-" + monthInteger + "-"+ dateNumber); 
+			}
+		
+	}
+	$(document).ready(function() {
+		var ob_val = '{{artist.ob_type}}',
+			gender_val = '{{artist.gender}}',
+			loc_val = '{{artist.location}}',
+			bo_val = '{{artist.body_type}}',
+			eth_val = '{{artist.ethnicity}}';
+		$('select[name="ob_type"] option[value="'+ob_val+'"]').attr('selected','selected');
+		$('select[name="gender"] option[value="'+gender_val+'"]').attr('selected','selected');
+		$('select[name="location"] option[value="'+loc_val+'"]').attr('selected','selected');
+		$('select[name="body_type"] option[value="'+bo_val+'"]').attr('selected','selected');
+		$('select[name="ethnicity"] option[value="'+eth_val+'"]').attr('selected','selected');
+	});
+	$(document).ready(function(e) {
+        $('select[name="ob_type"]').trigger('click');
+    });
+</script>
+
+{% endblock %}
+</body>
+</html>

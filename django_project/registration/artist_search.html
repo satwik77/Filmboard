@@ -1,0 +1,144 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+{% block extra_file %}<style>
+.card-title a {
+	    padding: 8px;
+    font-size: 22px;
+    color: #1A86bb;
+    
+}
+</style>
+{% endblock %}
+        {% block logout %}
+        {% if user.is_authenticated %}
+	           	<a href="#"><img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+	    {% else %}
+    	    	<a href="#">Guest<img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+        {% endif %}
+        {% endblock %}
+{% block content %}
+<div class="container-fluid" id="after-nav">
+    <div class="col-sm-12 about main" id="about" >
+
+{{inp}}<br>
+{{proj_list}}
+            
+<br>
+                
+            <div class="sec">
+            	<h2 class="sec">Projects </h2><br>
+  			      {% if proj_resp %}	
+   			      {% for p in proj_resp reversed %}
+      <div class="card">
+                 <ul class="list-group list-group-flush">
+              <li class="list-group-item"><span class="text left">{{p.duration_start}}-{{p.duration_end}}</span><span class="tag right">{{p.project_type}} {{p.project_status}}</span></li>
+                  </ul>
+            				 {% if p.profile_pic %}<div class="card-img-top" data-src="..." style="height:245px;background: url({{p.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %}<div class="card-img-top" data-src="..." style="height:245px;" ></div> {% endif %}
+
+           <div class="card-block desc">
+                 <h4 class="card-title">
+                  {% if choice == 'myproj' %}
+                	<a href="../my-projects-details/{{p.id}}/">{{p.project_name}}</a>
+                  {% else %}
+                  	<a href="../projects-details/{{p.id}}/">{{p.project_name}}</a>
+                  {% endif %}</h4>
+                <p class="card-text">{{p.date_posted}}</p>													                          <div class="card-reveal"><span class="label right">Description</span>{{p.description}}</div>
+                     </div>
+                     
+                    <!--    <a href="#" class="btn btn-primary">Apply</a> -->
+              
+                     
+                
+                              
+           </div>
+                     
+            {% endfor %}
+            {% else %}
+            No results found
+            {% endif %}
+           </div>
+           <div class="sec">
+  			   <h2 class="sec">Production Houses.. </h2><br>
+                    {% if prod_resp %}
+                    {% for prod in prod_resp reversed %}
+            			<div class="card profile">
+      		         	 <ul class="list-group list-group-flush">
+   		 				 	<li class="list-group-item"></li>
+           		         </ul>
+ 						 {% if prod.profile_pic %}<div class="card-img-top" data-src="..." style="height:245px;background: url({{prod.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %}<div class="card-img-top" data-src="..." style="height:245px;background: url({% static 'registration/image/user-male-big.png'  %}) center no-repeat; background-size:cover;" ></div> {% endif %}
+	 					 <div class="card-block">
+    	                  	  <h4 class="card-title"><a href="../prod_profile/{{prod.id}}/">{{prod.name}}</a></h4>
+   							  <p class="card-text">{{prod.location}}</p>
+                              <div class="card-reveal"><span class="label right">About Us</span>{{production.aboutus}}</div>
+                         </div>
+                         </div>
+                     
+            {% endfor %}
+            {% else %}
+            No results found
+            {% endif %}
+		   </div>
+           <div class="sec">
+  			  <h2 class="sec">Artists </h2><br>
+                 {% if artlist %}
+                 {% for art in artlist reversed %}
+              			<div class="card profile">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
+      		         	 <ul class="list-group list-group-flush">
+                <li class="list-group-item"><span class="text left">Height : {{art.height}}</span><span class="tag right">{{art.body_type}}</span></li>
+           		         </ul>
+				 {% if art.profile_pic %}<div class="card-img-top" data-src="..." style="height:225px;background: url({{art.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %}<div class="card-img-top" data-src="..." style="height:225px;background: url({% static 'registration/image/user-male-big.png'  %}) center no-repeat; background-size:cover;" ></div> {% endif %}
+
+	 					 <div class="card-block">
+    	                  	  <h4 class="card-title"><a href="../artist_search/{{art.id}}/">{{art.name}}</a></h4>
+   							  <p class="card-text">{{art.skills}}</p>
+                              <div class="card-reveal"><span class="label right">My story</span>{{art.my_story}}</div>
+                           </div>
+                         
+       		             </div>
+                     
+            {% endfor %}
+            {% else %}
+            No results found
+            {% endif %}
+        </div>
+           <div class="sec">
+          <h2 class="sec">Allied Services </h2><br>
+                 {% if allied_list %}
+                 {% for art in allied_list reversed %}
+                    <div class="card profile">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
+                     <ul class="list-group list-group-flush">
+                <li class="list-group-item"></li>
+                       </ul>
+         {% if art.profile_pic %}<div class="card-img-top" data-src="..." style="height:225px;background: url({{art.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %}<div class="card-img-top" data-src="..." style="height:225px;background: url({% static 'registration/image/user-male-big.png'  %}) center no-repeat; background-size:cover;" ></div> {% endif %}
+
+             <div class="card-block">
+                            <h4 class="card-title"><a href="../allied_profile/{{art.id}}/">{{art.name}}</a></h4>
+                  <p class="card-text">{{art.skills}}</p>
+                              <div class="card-reveal"><span class="label right">My story</span>{{art.my_story}}</div>
+                           </div>
+                         
+                       </div>
+                     
+            {% endfor %}
+            {% else %}
+            No results found
+            {% endif %}
+        </div>
+
+
+
+    </div>
+    </div>
+</div>
+<script>
+$('.card-block.desc').click(function() {
+	if ($(this).css('top') == '0px')
+    	$(this).css('top','-285px');
+	else $(this).css('top','0px');
+});
+
+</script>
+
+{% endblock %}

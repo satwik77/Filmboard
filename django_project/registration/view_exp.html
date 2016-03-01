@@ -1,0 +1,30 @@
+{% extends "registration/base.html" %}
+{% block title %}
+    Future Artist
+{% endblock title %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <h2 style="align:center"> <strong>Past Experiences </strong></h2><br>
+            <a href='../dashboard/' class='button'>Dashboard </a>
+
+            {% for k in exp %}
+            <ul>
+            <strong><li>Project Name : {{k.project_name}} </li><strong> </strong>
+            <strong><li>Project Type : {{k.project_type}} </li><strong> </strong>
+            <strong><li>Project Status : {{k.project_status}} </li><strong> </strong>
+            <strong><li>Skills : {{k.skills}} </li><strong> </strong>
+            <strong><li>Role Played: {{k.role_played}} </li><strong> </strong>
+            <strong><li>Character Name: {{k.character_name}} </li><strong> </strong>
+            <strong><li>Duration Start: {{k.duration_start}} </li><strong> </strong>
+            <strong><li>Duration End: {{k.duration_end}} </li><strong> </strong>
+            <strong><li>Remarks: {{k.remarks}} </li><strong> </strong>
+            <strong><li>Special Mention: {{k.special_mention}} </li><strong> </strong>
+
+        </ul>
+        <br>
+        
+        {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

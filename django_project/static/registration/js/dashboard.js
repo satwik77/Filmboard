@@ -80,5 +80,17 @@ $(document).ready(function() {
 $('#personal-info ul li').each(function(index) {
     if($(this).children('span').text() == "" || $(this).children('span').text() == "None" || $(this).children('span').text() == "0.0")
 		$(this).not('#inventory-li').css('display','none');
+	if($(this).children('span').text() == "Portfolio Makers") $('#inventory-li').css('display','none');
 });
+$(document).ready(function(e) {
+    			$.ajax({
+				url: "../see_applied/",
+  				method : "GET"
+			    }).done(function( html ) {
+					$('.main.applied').css('opacity',1);
+	   				$( ".main.applied" ).html(html);
+ 			}); 
+			
+});
+
 

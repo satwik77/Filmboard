@@ -75,7 +75,7 @@ color: #fff !important;
 }
 #avatar-wrapper img {
 	height:40px;
-	max-width:80px;
+	max-width:65px;
 	margin-left:20px;
 }
 .navbar-toggle .icon-bar {
@@ -104,12 +104,12 @@ div.sec-nav {
 	width:100%;
 }
 .sec-nav ul {
-	margin:0 calc(50% - 425px);
-	max-width:850px;
+	margin:0 calc(50% - 300px);
+	max-width:600px;
 }
 .sec-nav ul li {
 	display:inline-block;
-	margin:5px 40px;
+	margin:5px 30px;
 	transition: all 0.3s ease-out;
 }
 .sec-nav ul li.active {
@@ -196,9 +196,21 @@ p.sec {
 	transition:all 0.3s ease-out;
 	background:#fff;
 }
+.card-arrow {
+	position: absolute;
+    top: 273px;
+    left: calc(50% - 16px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.19), 0 2px 6px rgba(0,0,0,0.23);
+    border-radius: 16px;
+	transform: rotate(0deg) translateY(0px);
+	z-index:1000;
+	transition:all 0.5s ease-in-out }
+.card-arrow.up {
+	transform: rotate(180deg) translateY(-289px);
+}
 .card-edit {
-	float:right;
-	padding:0px 5px;
+	position:absolute;
+	padding:10px 5px;
 }
 .text, .tag, .card-text {
 	color:#000;

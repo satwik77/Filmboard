@@ -1,0 +1,180 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+{% block extra_file %}
+<link rel="stylesheet" type="text/css" href="{% static 'registration/css/form.css' %}" />
+<link href="{% static 'registration/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet">
+<script src="{% static 'registration/js/bootstrap-datepicker.min.js' %}"></script>
+{% endblock %}
+        {% block logout %}
+        {% if user.is_authenticated %}
+	           	<a href="#"><img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+	    {% else %}
+    	    	<a href="#">Guest<img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+        {% endif %}
+        {% endblock %}
+{% block content %}
+<div class="container-fluid" id="after-nav">
+	<div class="col-sm-2">
+    	<ul class="content-nav">
+        <li id="profile"> <div class="icon">&#8592;</div> <a href="../dashboard">Back to Profile </a> </li>
+        </ul>
+    </div>
+    <div class="col-sm-8 content" >
+            <div class="row">
+            <h2 style="text-align:center;">Add Past Experience</h2>
+           
+			
+            <form id="add_project">
+                {% csrf_token %}
+            <strong>
+            <fieldset>
+            <div class="form-group">
+            	<label for="projectName" class="col-sm-2 control-label">Project Name</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='name' >
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label for="select111" class="col-md-2 control-label">Project Picture</label>
+            <div class="col-md-10">
+          <input type="text" readonly class="form-control" placeholder="Display Picture...">
+              <input type="file" id="dp" value="">
+                </div>
+          </div>
+            
+            <div class="form-group">
+      			<label for="select111" class="col-md-2 control-label">Project Type</label>
+		        <div class="col-md-10">
+        			<select id="select111" class="form-control"  name='type' style="color:#000">
+          				<option style="color:#000">Feature Film</option>
+          				<option style="color:#000">Short Film</option>
+          				<option style="color:#000">Music Video</option>
+          				<option style="color:#000">TV Serial</option>
+          				<option style="color:#000">Advertisement</option>
+                        <option style="color:#000">Reality Show</option>
+                        <option style="color:#000">Any Other</option>
+        			</select>
+      			</div>
+    		</div>
+            <div class="form-group">
+      			<label for="select222" class="col-md-2 control-label">Current Project Status</label>
+		        <div class="col-md-10">
+        			<select id="select111" class="form-control"  name='status' style="color:#000">
+          				<option style="color:#000">On going</option>
+          				<option style="color:#000">Completed</option>
+          				<option style="color:#000">Shelved</option>
+          				<option style="color:#000">Live</option>
+          			</select>
+
+
+      			</div>
+    	
+            
+
+            
+            <div class="form-group">
+            	<label for="start" class="col-sm-2 control-label">Start Duration</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='start' >
+                </div>
+            </div>
+            <div class="form-group">
+            	<label for="end" class="col-sm-2 control-label">End Duration</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='end' >
+                </div>
+            </div>
+            <div class="form-group">
+      			<label for="textArea" class="col-md-2 control-label">Remarks</label>
+		        <div class="col-md-10">
+      				<textarea name="remarks" id="body" class="form-control" rows="3"></textarea>
+                </div>
+           </div>
+			<div class="form-group">
+      			<label for="textArea" class="col-md-2 control-label">Special Mention</label>
+		        <div class="col-md-10">
+      				<textarea name="mention" id="body" class="form-control" rows="3"></textarea>
+                </div>
+           </div>
+            <br>
+            <button type='submit' class="btn btn-raised btn-primary" name='save' style="float:right;margin-right:30px;">Save</button>
+        </form>
+        </fieldset>
+        </strong>
+        </div>
+    </div>
+        </div>
+    </div>
+    <div class="col-sm-1">
+    </div>
+</div>
+<script src="{% static 'registration/js/ripples.min.js' %}"></script>
+<script src="{% static 'registration/js/material.min.js' %}"></script>
+<script>
+//var cookie = document.cookie;
+//console.log(cookie+'null');
+ var prof_flag=0
+  $("input#dp").on('change', function(e) {
+        dp = e.target.files;
+        prof_flag=1;
+    });
+  function collect_data() {
+        var data = new FormData() ;
+        data.append('name', $('input[name="name"]').val());
+        data.append('start', $('input[name="start"]').val());
+        data.append('end', $('input[name="end"]').val());
+        data.append('mention', $('textarea[name="mention"]').val());
+        data.append('remarks', $('textarea[name="remarks"]').val());
+        data.append('status', $('select[name="status"] option:selected').val());
+        data.append('skills', $('select[name="skills"] option:selected').val());
+        data.append('type', $('select[name="type"] option:selected').val());
+        if(prof_flag==1){
+          $.each(dp, function(key, value)
+                {
+                    data.append(key, value);
+                });
+        }
+        return data;
+    }
+    $("form#add_project").submit(function(e) {
+        e.preventDefault();
+        var dat = collect_data();
+        $.ajax({
+            url: '../addexp/',
+            type: 'POST',
+            data: dat,
+            cache: false,
+            // dataType: 'html',
+            processData: false,
+            contentType: false,
+
+            success: function(data)
+            {
+                if(data=='done')
+                   window.location.href="../dashboard/";
+      }
+        }); 
+        
+    });
+$.material.init();
+$('input[name=end]').datepicker({
+    format: "yyyy-mm-dd",
+	orientation: "bottom right",
+	autoclose: true
+});
+$('input[name=start]').datepicker({
+    format: "yyyy-mm-dd",
+	orientation: "bottom right",
+	autoclose: true
+}).on('changeDate',function(e) {
+	$('input[name=end]').datepicker('setStartDate',e.date);
+	});
+$('select[name="skills"]').click(function() {
+	if( $('select[name="skills"] option:selected').val() == "Artist, Model") {
+		$('#role-wrapper').css('display','block');
+		$('#role-wrapper').css('display','block');
+	}
+	else { $('#role-wrapper').css('display','none'); $('#role-wrapper').css('display','none'); }
+});
+</script>
+{% endblock %}
+</body>
+</html>

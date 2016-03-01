@@ -1,0 +1,244 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+{% block extra_file %}
+  <style>
+  .row h2 {
+	  font-size:24px;
+	  color:#BDBDBD;
+  }
+  #after-nav {
+	  margin-top:120px;
+  }
+  label.control-label {
+	  padding:0;
+  }
+  input[name="name"] {
+	  position: relative;
+    top: 32px;
+  }
+  </style>
+<link href="{% static 'registration/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet">
+<script src="{% static 'registration/js/bootstrap-datepicker.min.js' %}"></script>
+{% endblock %}
+{% block content %}
+<div class="container-fluid" id="after-nav">
+	<div class="col-sm-2">
+    	<ul class="content-nav">
+		<li id="profile"> <div class="icon">&#8592;</div> <a href="../dashboard">Back to Profile</a> </li>
+        </ul>
+        
+    </div>
+    <div class="col-sm-8 content" >
+            <div class="row">
+            <h2 style="align:center">Update Profile</h2>
+           
+
+            <form id='profile_update'>
+                {% csrf_token %}
+            <fieldset>
+              <ul>
+              <li class="form-group col-sm-8">
+               	<input type='text' class="form-control col-sm-12" name='name' value='{{allied.name}}' placeholder="Name" required>
+              </li>
+              <li class="col-sm-4">{% if allied.profile_pic %}<img src={{allied.profile_pic.url}} width="150px"/>{% else %}
+                <img src="{% static 'registration/image/user-male-big.png'  %}" width="150px"/> {% endif %}</li>
+              <li class="col-sm-8"></li>
+              <li class="form-group col-sm-4">
+      			 <div class="col-md-12">
+        			<input type="text" readonly class="form-control" placeholder="Display Picture...">
+      				<input type="file" id="dp" value="">
+        	  </li> 
+
+     		  <li class="col-sm-4 form-group"><label class="control-label">Type</label><span>
+                <select name="ob_type" class="form-control" >
+                	<option value="Camera Equipment Seller" >Camera Equipment Sellers</option>
+                	<option value="Portfolio Makers" >Portfolio Makers</option>
+                </select>  
+              </li>
+                                       
+
+    	   <!--     <li class="col-sm-3"><label>Category</label><span>  
+              <select id="select111" class="form-control"  name='category'>
+                  <option>Legal</option>
+                  <option>Catering</option>
+                  <option>Travel</option>
+                  <option>Coordination</option>
+                  </select></span> </li>
+        	    <li class="col-sm-3"><label>Sub-category</label><span><select id="select111" class="form-control"  name='sub_category'>
+                  <option>Legal Consultant</option>
+                  <option>Licences</option>
+                  <option>Location</option>
+                  <option>Studios</option>
+                  <option>Tax Consultants</option>
+                </select></span> </li> -->
+            	<li class="col-sm-4 form-group"><label class="control-label">Phone*</label><span><input type='number' name='phone' class="form-control" value='{{allied.phone}}' max="9999999999" required></span> </li> 
+            	 <li class="col-sm-4 form-group"><label class="control-label">Services provided at*</label><span>
+                 <select name="location" class="form-control" >
+                 <option value="0">None</option>
+                 {% for l in loc %}
+                <option value="{{l.0}}" >{{l.0}}</option>
+                 {% endfor %}
+              </select> </span> 
+               </li>
+              <li class="col-sm-12 form-group" id="inventory-wrapper"><label class="control-label col-sm-2">Inventory List*</label><div class="widget col-md-10">
+					<input type="text" class="fakeInput form-control" />
+    				<ul >
+   					</ul>
+			</div>
+			<div class="col-sm-12 inv-tags-cover"><ul></ul></div></li>
+              <li class="col-sm-12 form-group"><label class="control-label col-sm-2">Address*</label><div class="col-md-10"><textarea name="address"  class="form-control" rows="3" required>{{allied.services}}</textarea></div> </li>
+            	<li class="col-sm-12 form-group"><label class="control-label col-sm-2">Certifications*</label><div class="col-md-10"><textarea name="certifications" class="form-control" rows="3" required>{{allied.certifications}}</textarea></div> </li>
+                <li class="col-sm-12 form-group"><label class="control-label col-sm-2">My Story*</label><div class="col-md-10"><textarea name="my_story" class="form-control" rows="3" required>{{allied.my_story}}</textarea></div> </li> 
+                </ul> 
+            <br>
+            <button type='submit' class='btn btn-raised btn-primary' style="float:right;margin-right:30px;" name='save'>Add</button>
+        </form>
+
+        </div>
+        </div>
+
+        </div>
+    </div>
+    <div class="col-sm-1">
+    </div>
+</div>
+<script src="{% static 'registration/js/ripples.min.js' %}"></script>
+<script src="{% static 'registration/js/material.min.js' %}"></script>
+<script>
+//var cookie = document.cookie;
+//console.log(cookie+'null');
+$.material.init();
+
+  var prof_flag=0
+  $("input#dp").on('change', function(e) {
+        dp = e.target.files;
+        prof_flag=1;
+    });
+$(document).ready(function(e) {
+	var str = '{{allied.inventory_list}}'.toString().replace(/&quot;/g,'"');
+    var invList = JSON.parse(str);
+	console.log(invList);
+	for(var i=0; i < invList.length;i++) {
+		$('.inv-tags-cover ul').append('<li class="inv-tags"><span>'+ invList[i].name + '</span><input type="number" value="'+invList[i].number+'" required/><span class="glyphicon glyphicon-remove" onclick="cross($(this))"></span></li>');
+	}
+});
+  function collect_data() {
+        var data = new FormData() ;
+        data.append('name', $('input[name="name"]').val());
+        data.append('phone', $('input[name="phone"]').val());
+        data.append('certifications', $('textarea[name="certifications"]').val());
+        data.append('address', $('textarea[name="address"]').val());
+        data.append('ob_type', $('select[name="ob_type"] option:selected').val());
+        data.append('location', $('select[name="location"] option:selected').val());
+        data.append('my_story', $('textarea[name="my_story"]').val());
+        data.append('inv_list', inventory);
+
+        if(prof_flag==1){
+          $.each(dp, function(key, value)
+                {
+                    data.append(key, value);
+                });
+        }
+        return data;
+    }
+    $("form#profile_update").submit(function(e) {
+        e.preventDefault();
+		var position = 1;
+		var objString = '';
+		$('div.inv-tags-cover ul li').each(function(index, element) {
+			if(index == 0)
+        		objString = '{"name":"' + $(this).children('span').html() + '","number":"' + $(this).children('input').val() + '"}';
+			else 
+    	    	objString = ',{"name":"' + $(this).children('span').html() + '","number":"' + $(this).children('input').val() + '"}';
+		//	console.log(objString);
+			if( inventory.indexOf(objString) == -1) {
+			inventory = inventory.substr(0, position) + objString + inventory.substr(position);
+			//console.log(objString);console.log(inventory);console.log(objString.length);console.log(position);
+			position = position + objString.length; }
+	});
+
+        var dat = collect_data();
+		if($('select[name="location"] option:selected').val() == "None") {
+        $('select[name="location"]').parent().parent('li').addClass('has-error'); }
+    else {
+        $.ajax({
+            url: '../updateprofile/',
+            type: 'POST',
+            data: dat,
+            cache: false,
+            // dataType: 'html',
+            processData: false,
+            contentType: false,
+
+            success: function(data)
+            {
+                if(data=='done')
+                  window.location.href="../dashboard";
+            }
+        }); }
+        
+    });
+
+$('select[name="ob_type"]').click(function() {
+if( $('select[name="ob_type"] option:selected').val() == "Portfolio Makers") {
+$('#inventory-wrapper').css('display','none'); 
+$('.inv-tags').each(function(index) {
+  cross($(this).children('.glyphicon'));  
+}); }
+else $('#inventory-wrapper').css('display','block'); });
+	$(document).ready(function() {
+           var loc_val = '{{allied.location}}';
+		$('select[name="location"] option[value="'+loc_val+'"]').attr('selected','selected');
+	});
+// Inventory 
+var availableTags = [
+        "CANON 5DS R",
+        "CANON 5DS",
+        "CANON EOS 5D MARK II",
+        "CANON EOS 5D MARK III",
+        "CANON EOS 6D",
+        "CANON EOS 7D",
+        "CANON EOS 50D",
+        "CANON EOS 60D",
+        "CANON EOS M DIGITAL CAMERA",
+        "CANON EOS REBEL SL1 DSLR",
+        "CANON EOS REBEL T2I",
+        "NIKON COOLPIX P7000",
+        "NIKON COOLPIX S80",
+        "NIKON COOLPIX S1100PJ",
+        "NIKON COOLPIX S5100",
+        "SONY ALPHA 900",
+        "SONY ALPHA NEX-3"
+    ];
+var inventory = '[]';
+$('.widget input.fakeInput').bind("keyup",function() {
+	$('.widget ul').html('');
+    var key = $(this).val().toLowerCase();
+	console.log(key);
+	if( key.length > 2) {
+		for(var i=0; i < availableTags.length;i++) {
+			if( availableTags[i].toLowerCase().indexOf(key) >= 0) {
+				$('.widget ul').append('<li onclick="addTag($(this).html())">' + availableTags[i] + '</li>').show();
+			}
+
+		}
+	}
+});
+function addTag(data) {
+	console.log(data);
+	$('.widget ul').hide();
+	if($('div.inv-tags-cover').html().toString().indexOf(data) >= 0);
+	else
+ 		 $('div.inv-tags-cover ul').append('<li class="inv-tags"><span>' + data + '</span><input type="number"  required/><span class="glyphicon glyphicon-remove" onclick="cross($(this))"></span></li>'); 
+}
+function cross(elem) {
+	elem.parent('li').remove();
+}
+$('#submit').click(function() {
+});
+	
+
+</script>
+{% endblock %}
+</body>
+</html>

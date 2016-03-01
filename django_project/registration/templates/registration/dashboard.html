@@ -16,13 +16,26 @@
     	    	<a href="#">Guest<img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
         {% endif %}
 {% endblock %}
+{% block notification %}
+        {% if user.is_authenticated %}
+		<li class="dropdown">
+       		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
+			<span class="badge"></span>
+       		<span class="caret"></span></a>
+       		<ul class="dropdown-menu">
+            {% for m in msg %}
+              <li><a href="https://{{m.url}}">{{m.message}}</a></li>
+              {% endfor %}
+       		</ul>
+    	</li>
+        {% else %} {% endif %}
+{% endblock %}
 {% block content %}
 <div class="col-sm-12 sec-nav">
     	<ul class="col-xs-12">
         	<li class="sec-nav active"><a target="_blank" id="nav-about">About</a></li>
             <li class="sec-nav"><a target="_blank" id="nav-exp">Experience</a></li>
             <li class="sec-nav"><a target="_blank" id="nav-rec">Recommendations</a></li>
-            <li class="sec-nav"><a href="../projects" id="">Projects</a></li>
        	</ul>
 </div>
 <div class="right float-container">
@@ -46,7 +59,8 @@
                 <div class="detail">{{artist.my_story}}</div>
             </div>
             <div class="col-sm-8">
-    	        <div class="col-sm-6 profile-pic"><img src={{artist.profile_pic.url}} alt="{% static 'registration/image/user-male-big.png'  %}" /></div>
+    	        <div class="col-sm-6 profile-pic">{% if artist.profile_pic %}<img src={{artist.profile_pic.url}} />{% else %}
+              <img src="{% static 'registration/image/user-male-big.png'  %}" /> {% endif %}</div>
     		    <div class="col-sm-6">
             		<h2 class="sec" style="margin-bottom:3px;">Personal Info</h2>
             	    <div class="detail" id="personal-info">
@@ -84,12 +98,14 @@
          <div class="detail">
           {% for k in exp %} 	
             <div class="card">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
                	 <ul class="list-group list-group-flush">
    					 	<li class="list-group-item"><span class="text left">{{k.duration_start}}-{{k.duration_end}}</span><span class="tag right">{{k.project_type}} {{k.project_status}}</span></li>
                   </ul>
- 				 <div class="card-img-top" data-src="..." style="height:225px;" ><a href="../editexp/{{k.id}}"><span class="card-edit glyphicon glyphicon-pencil"></span></a></div>
- 					 <div class="card-block rippler rippler-inverse">
-                      	  <h4 class="card-title">{{k.project_name}}<span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
+ 				
+        {% if k.profile_pic %}<div class="card-img-top" data-src="..." style="height:225px;background: url({{k.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %} <div class="card-img-top" data-src="..." style="height:225px;" ></div>{% endif %}
+ 					 <div class="card-block">
+                      	  <h4 class="card-title"><span class="card-title">{{k.project_name}}</span><span class="tag right">{{k.skills}} {{k.role_played}}</span><a href="../editexp/{{k.id}}"><span class="card-edit glyphicon glyphicon-pencil"></span></a></h4>
    						  <p class="card-text">{{k.character_name}}</p>
                           <div class="card-reveal"><span class="label right">Remarks</span>{{k.remarks}}<br> 
 <span class="label right">Special Mention</span> {{k.special_mention}} 
@@ -115,12 +131,13 @@
          <div class="detail">
            	{% for k in rec %}  
             <div class="card">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
                  <ul class="list-group list-group-flush">
               <li class="list-group-item"><span class="text left">{{k.duration_start}}-{{k.duration_end}}</span><span class="tag right">{{k.project_type}} {{k.project_status}}</span></li>
                   </ul>
          <div class="card-img-top" data-src="..." style="height:225px;" ></div>
            <div class="card-block rippler rippler-inverse">
-                          <h4 class="card-title">{{k.project_name}}<span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
+                          <h4 class="card-title"><span class="card-title">{{k.project_name}}</span><span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
                 <p class="card-text">{{k.character_name}}</p>
                           <div class="card-reveal">
 <span class="label right">Recieved from</span> {{k.seek_from_name}}, {{k.seek_from_type}} 
@@ -133,7 +150,10 @@
       {% endfor %}
       </div>
     </div>
+
 </div>
+    <div class="col-sm-12 applied main">
+    </div>
 
 
 <script src="{% static 'registration/js/ripples.min.js' %}"></script>

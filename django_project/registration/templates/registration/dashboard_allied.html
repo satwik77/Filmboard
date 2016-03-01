@@ -24,7 +24,6 @@
         	<li class="sec-nav active"><a target="_blank" id="nav-about">About</a></li>
             <li class="sec-nav"><a target="_blank" id="nav-exp">Experience</a></li>
             <li class="sec-nav"><a target="_blank" id="nav-rec">Recommendations</a></li>
-            <li class="sec-nav"><a href="../projects" id="">Projects</a></li>
       	</ul>
 </div>
 <div class="right float-container">
@@ -61,9 +60,10 @@
                       <li class="col-sm-12"><label>Name</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{allied.name}}</span></li>
                       <li class="col-sm-12"><label>Type</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{allied.ob_type}}</span></li>
             				<li class="col-sm-12"><label>Phone</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{allied.phone}}</span></li> 
-            				<li class="col-sm-12"><label>Addresss</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{allied.address}}</span></li>
-                    	    <li class="col-sm-12"><label>Services</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{allied.location}}</span></li>
-                    	    <li class="col-sm-12"><label>Certifications</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{artist.certifications}}</span></li>
+            				<li class="col-sm-12"><label>Address</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{allied.services}}</span></li>
+                    	    <li class="col-sm-12"><label>Services provided at</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{% for l in l_list%}{{l.name}}{% endfor %}</span></li>
+                          <li></li>
+                    	    <li class="col-sm-12"><label>Certifications</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{allied.certifications}}</span></li>
                       <li class="col-sm-12" id="inventory-li"><label>Inventory List</label>&nbsp;&nbsp;&nbsp;&nbsp;<span></span></li>
    
   	    	      	 	</ul>
@@ -87,13 +87,14 @@
          <div class="detail">
           {% for k in exp %} 	
             <div class="card">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
                	 <ul class="list-group list-group-flush">
    					 	<li class="list-group-item"><span class="text left">{{k.duration_start}}-{{k.duration_end}}</span><span class="tag right">{{k.project_type}} {{k.project_status}}</span></li>
                   </ul>
- 				 <div class="card-img-top" data-src="..." style="height:225px;" ><a href="../editexp/{{k.id}}"><span class="card-edit glyphicon glyphicon-pencil"></span></a></div>
- 					 <div class="card-block rippler rippler-inverse">
-                      	  <h4 class="card-title">{{k.project_name}}<span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
-   						  <p class="card-text">{{k.character_name}}</p>
+{% if k.profile_pic %}<div class="card-img-top" data-src="..." style="height:225px;background: url({{k.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %} <div class="card-img-top" data-src="..." style="height:225px;" ></div>{% endif %}
+ 					 <div class="card-block">
+                      	  <h4 class="card-title">{{k.project_name}}<a href="../editexp/{{k.id}}"><span class="card-edit glyphicon glyphicon-pencil"></span></a></h4>
+   						  <p class="card-text">{{k.skills}}</p>
                           <div class="card-reveal"><span class="label right">Remarks</span>{{k.remarks}}<br> 
 <span class="label right">Special Mention</span> {{k.special_mention}} 
                            </div>
@@ -118,13 +119,14 @@
          <div class="detail">
            	{% for k in rec %}  
             <div class="card">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
                  <ul class="list-group list-group-flush">
               <li class="list-group-item"><span class="text left">{{k.duration_start}}-{{k.duration_end}}</span><span class="tag right">{{k.project_type}} {{k.project_status}}</span></li>
                   </ul>
          <div class="card-img-top" data-src="..." style="height:225px;" ></div>
            <div class="card-block rippler rippler-inverse">
-                          <h4 class="card-title">{{k.project_name}}<span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
-                <p class="card-text">{{k.character_name}}</p>
+                          <h4 class="card-title">{{k.project_name}}</h4>
+                <p class="card-text">{{k.skills}}</p>
                           <div class="card-reveal">
 <span class="label right">Recieved from</span> {{k.seek_from_name}}, {{k.seek_from_type}} 
 <br><span class="label right">Remarks</span> {{k.add_msg}} 
@@ -137,6 +139,8 @@
       </div>
     </div>
 </div>  
+    <div class="col-sm-12 applied main">
+    </div>
 
 
 <script src="{% static 'registration/js/ripples.min.js' %}"></script>
@@ -146,13 +150,8 @@
 $(document).ready(function(e) {
 	var str = '{{allied.inventory_list}}'.toString().replace(/&quot;/g,'"');
     var invList = JSON.parse(str);
-	console.log(invList);
-	for(var i=0; i < invList.length;i++) {
-		if(i==0)
-		$('#inventory-li span').append(invList[i].name + ' : ' + invList[i].number + '&nbsp;').parent('li').css('display','block');
-		else 		$('#inventory-li span').append(', ' + invList[i].name + ' : ' + invList[i].number + '&nbsp;').parent('li').css('display','block');
-
-	}
+	if(invList[0].name != null)
+	$('#inventory-li span').append(invList[0].name + ' : ' + invList[0].number + '&nbsp;<a href="../inventory/" style="color:#1ABBAC">see more</a>').parent('li').css('display','block');
 });
 </script>
 {% endblock %}

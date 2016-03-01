@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^addexp/', views.add_exp, name='addexperience'),
     url(r'^viewexp/', views.view_experiences, name='viewexperience'),
     url(r'^editexp/(?P<expid>[0-9]+)/', views.change_exp, name='editexperience'),    
-    url(r'^seek_rec/', views.seek_rec, name='seekrecommendation'),
+    url(r'^seek_rec/', views.add_reco, name='seekrecommendation'),
     url(r'^view_rec/', views.view_rec, name='viewrecommendation'),
     url(r'^home/', views.home, name='home'),
     url(r'^projects/', views.show_projects, name='projectlistings'),
@@ -45,10 +45,18 @@ urlpatterns = [
 
 
     url(r'^prod_profile/(?P<prod_id>[0-9]+)/', views.show_profile_prod, name='show profile prod'),
+    url(r'^allied_profile/(?P<allied_id>[0-9]+)/', views.show_profile_allied, name='show profile allied'),
    
     url(r'^guest_talent/',views.guest_artist_dashboard, name='guest artist'),
     url(r'^guest_service/',views.guest_allied_dashboard, name='guest allied'),
     url(r'^guest_producer/',views.guest_producer_dashboard, name='guest producer'),
+
+    # url(r'^apply_rec/', views.apply_reco, name='applyrecommendation'),
+    url(r'^accept_reco/(?P<rid>[0-9]+)/', views.accept_reco, name='applyrecommendation'),
+    url(r'^see_applied/', views.see_applied, name='applyrecommendation'),
+    url(r'^see_rec_applied/', views.see_rec_applied, name='applyrecommendation'),
+
+    url(r'^inventory/', views.view_inventory, name='inventory'),
 
     # url(r'^guest/allied/',views.guest_allied_dashboard, name='guest allied'),
     # url(r'^guest/production/',views.guest_production_dashboard, name='guest production'),
@@ -57,5 +65,7 @@ urlpatterns = [
 
     url(r'^mailtest/', views.mail_test, name='login'),
     # url(r'^fblogin/', views.fb_login, name='fblogin'),
+
+    url(r'^email_verify/(?P<uid>[0-9]+)/', views.email_verify, name='Email Verification'),
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

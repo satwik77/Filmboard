@@ -39,11 +39,11 @@
     	        <div class="col-sm-6 profile-pic"><img src="{% static 'registration/image/user-male-big.png'  %}" /></div>
     		    <div class="col-sm-6">
             		<h2 class="sec" style="margin-bottom:3px;">Personal Info</h2>
-            	    <div class="detail">
+            	    <div class="detail" id="personal-info">
             	    	<ul>
-            	    		<li class="col-sm-12"><label>Name</label>&nbsp;&nbsp;&nbsp;&nbsp;{{production.name}}</li>
-            				<li class="col-sm-12"><label>Phone</label>&nbsp;&nbsp;&nbsp;&nbsp;{{production.phone}}</li> 
-            				<li class="col-sm-12"><label>Address</label>&nbsp;&nbsp;&nbsp;&nbsp;{{production.location}}</li>
+            	    		<li class="col-sm-12"><label>Name</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{production.name}}</span></li>
+            				<li class="col-sm-12"><label>Phone</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{production.phone}}</span></li> 
+            				<li class="col-sm-12"><label>Address</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{production.location}}</span></li>
    
   	    	      	 	</ul>
 					</div>
@@ -62,18 +62,18 @@
    	<div class="exp sec">
        	<div class="col-sm-12 sec">
            	<h2 class="sec">Past Projects</h2>
-            <p>shadjksahdkjsahdjkhsajdasjkhasjdasjkjashkdjhsajhdkjashdjkashdasjhdasjkhdas</p>
          </div>
          <div class="detail">
           {% for k in exp %} 	
             <div class="card">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
                	 <ul class="list-group list-group-flush">
    					 	<li class="list-group-item"><span class="text left">{{k.duration_start}}-{{k.duration_end}}</span><span class="tag right">{{k.project_type}} {{k.project_status}}</span></li>
                   </ul>
  				 <div class="card-img-top" data-src="..." style="height:225px;" ></div>
  					 <div class="card-block rippler rippler-inverse">
-                      	  <h4 class="card-title">{{k.project_name}}<span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
-   						  <p class="card-text">{{k.character_name}}</p>
+                      	  <h4 class="card-title">{{k.project_name}}</h4>
+   						  <p class="card-text">{{k.skills}}</p>
                           <div class="card-reveal"><span class="label right">Remarks</span>{{k.remarks}}<br> 
 <span class="label right">Special Mention</span> {{k.special_mention}} 
                            </div>
@@ -95,18 +95,18 @@
 <div class="rec sec">
        	<div class="col-sm-12 sec">
            	<h2 class="sec">Recommendations</h2>
-            <p>shadjksahdkjsahdjkhsajdasjkhasjdasjkjashkdjhsajhdkjashdjkashdasjhdasjkhdas</p>
          </div>
          <div class="detail">
            	{% for k in rec %}  
             <div class="card">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
                  <ul class="list-group list-group-flush">
               <li class="list-group-item"><span class="text left">{{k.duration_start}}-{{k.duration_end}}</span><span class="tag right">{{k.project_type}} {{k.project_status}}</span></li>
                   </ul>
          <div class="card-img-top" data-src="..." style="height:225px;" ></div>
            <div class="card-block rippler rippler-inverse">
-                          <h4 class="card-title">{{k.project_name}}<span class="tag right">{{k.skills}} {{k.role_played}}</span></h4>
-                <p class="card-text">{{k.character_name}}</p>
+                          <h4 class="card-title">{{k.project_name}}</h4>
+                <p class="card-text">{{k.skills}}</p>
                           <div class="card-reveal">
 <span class="label right">Recieved from</span> {{k.seek_from_name}}, {{k.seek_from_type}} 
 <br><span class="label right">Remarks</span> {{k.add_msg}} 
@@ -123,6 +123,7 @@
 
 <script src="{% static 'registration/js/ripples.min.js' %}"></script>
 <script src="{% static 'registration/js/material.min.js' %}"></script>
+<script src="{% static 'registration/js/dashboard.js' %}"></script>
 <script>
 //var cookie = document.cookie;
 //console.log(cookie+'null');

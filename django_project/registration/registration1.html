@@ -1,0 +1,84 @@
+{% load staticfiles %}
+{% block body %}
+       		
+        	 <h1 class="title">Register</h1>
+        	<form action = '.' id="user_form" method="POST" enctype="multipart/form-data" onsubmit="Registering" class="form-horizontal">
+         <div class="row" style="float:left">
+          {% for field in user_form %}
+          
+
+	            {% csrf_token %}
+                  <div class="input">
+               {{ field.label_tag  }} {{ field  }}
+        {% if field.help_text %}
+        <p class="help" style="font-size:10px;margin-top:70px">{{ field.help_text|safe }}</p>
+        {% endif %}
+        </div>
+   
+{% endfor %}
+		</div>
+        <div class="row input" style="float:left;height:30px;text-align:center;"><span>
+        Artist</span>&nbsp;<input type ='radio' name = 'choice' value = '1' class="css-checkbox" style="height:auto;width:auto;float:none;top:0">  &nbsp;
+        <span>Allied Services</span>&nbsp;<input type = 'radio' name = 'choice' value = '2' class="css-checkbox" style="height:auto;width:auto;float:none;top:0">   &nbsp;
+        <span>Production House</span>&nbsp;<input type ='radio' name = 'choice' value = '3' class="css-checkbox" style="height:auto;width:auto;float:none;top:0" > 
+      </div>
+            
+            <input type="hidden" name="submit" value="Register">
+             
+      		  
+      		   <input  type="submit" class="input" name="submitfake" value="Next" style="width:80%;margin-left:10%;background-color:#fff;color:#ED2553 !important;float:left;z-index-1300;height:40px;margin-top:20px;font-weight:900;"/>
+      		                                         		
+            
+        </form>
+            </div>
+          
+        </div>
+    </div>
+</div>
+<script>
+   $(".input input").focus(function() {
+
+      $(this).parent(".input").each(function() {
+         $("label", this).css({
+            "line-height": "18px",
+            "font-size": "18px",
+            "font-weight": "100",
+            "top": "0px"
+         })
+         $(".spin", this).css({
+            "width": "100%"
+         })
+      });
+   }).blur(function() {
+      $(".spin").css({
+         "width": "0px"
+      })
+      if ($(this).val() == "") {
+         $(this).parent(".input").each(function() {
+            $("label", this).css({
+               "line-height": "60px",
+               "font-size": "24px",
+               "font-weight": "300",
+               "top": "10px"
+            })
+         });
+
+      }
+   });
+   $('#user_form').submit(function(e) {
+    e.preventDefault();
+	console.log('register');
+	 $.ajax({
+  url: "http://filmboard.ml/register/",
+  method : "POST",
+  data: $('#user_form').serialize()
+}).done(function(data) {
+	console.log(data);
+   window.location.href ="http://filmboard.ml/updateprofile/";
+ 
+   
+  }); });
+
+</script>
+</body>
+{% endblock body %}

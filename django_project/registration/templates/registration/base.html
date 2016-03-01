@@ -44,13 +44,14 @@
             </form>
       </div>    
     </div>
-                  {% for m in msg %}
-              <li><a href="https://{{m.url}}">{{m.message}}</a></li>
-              {% endfor %}
+
     </div>
     <div class="collapse navbar-collapse" id="myNavbar"> 
 
     <ul class="nav navbar-nav navbar-right">
+    	<li id="project-link"><a href="../projects">Projects</a></li>
+        {% block notification %}
+        {% if user.is_authenticated %}
 		<li class="dropdown">
        		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Notifications
 			<span class="badge"></span>
@@ -61,6 +62,8 @@
               {% endfor %}
        		</ul>
     	</li>
+        {% else %} {% endif %}
+        {% endblock %}
        	<li id="avatar-wrapper" class="dropdown-toggle" data-toggle="dropdown"> 
         {% block logout %}
         {% if user.is_authenticated %}
@@ -70,7 +73,7 @@
         {% endif %}
         {% endblock %}
             	     <ul class="dropdown-menu">
- 	    	  		<li><a href="../logout/">Logout</a></li>
+ 	    	  		<li><a href="../logout/" id="logout-link">Logout</a></li>
 	    		    </ul>
 
     </ul>

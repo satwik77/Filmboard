@@ -1,0 +1,99 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+{% block extra_file %}<style>
+.card-title a {
+	    padding: 8px;
+    font-size: 22px;
+    color: #1A86bb;
+    
+}
+</style>{% endblock %}
+        {% block logout %}
+        {% if user.is_authenticated %}
+	           	<a href="#"><img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+	    {% else %}
+    	    	<a href="#">Guest<img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+        {% endif %}
+        {% endblock %}
+{% block content %}
+{% if choice == 'myproj' %}
+<div class="right float-container">
+	<div class="wrapper">
+		<div class="addrec-button">
+  	 	 	<a href="../addproject/"  class="rippler rippler-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+  	    </div>
+     </div>
+</div>
+{% endif %}
+<div class="container-fluid" id="after-nav">
+        
+        <div class="col-sm-12 main">
+        	<div class="sec">
+            {% if choice == 'myproj' %}
+			<h2 style="text-align:center;margin-bottom:20px;font-size:24px;color:#BDBDBD;"> My Projects</h2>
+            {% else %}
+			<h2 style="text-align:center;margin-bottom:20px;font-size:24px;color:#BDBDBD;">Project Listings</h2><br>
+            {% endif %}
+            
+            <!-- <a href='../dashboard/' class='button'>Dashboard </a> -->
+
+            
+                
+            
+                {% for p in projectlist reversed %}
+                            
+            <!-- <a href='../dashboard/' class='button'>Dashboard </a> -->
+			<div class="card">
+             	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
+              	 <ul class="list-group list-group-flush">
+   					 	<li class="list-group-item"><span class="text left">{{p.duration_start}}-{{p.duration_end}}</span><span class="tag right">{{p.project_type}} {{p.project_status}}</span></li>
+                  </ul>
+ 				 <div class="card-img-top" data-src="..." style="height:225px;" ></div>
+ 					 <div class="card-block desc">
+                      	  <h4 class="card-title">
+                          {% if choice == 'myproj' %}
+              				<a href="../my-projects-details/{{p.id}}/">{{p.project_name}}</a>
+              			  {% else %}
+              				<a href="../projects-details/{{p.id}}/">{{p.project_name}}</a>
+            		      {% endif %}
+						  </h4>
+   						  <p class="card-text">{{p.date_posted}}</p>
+
+                          <div class="card-reveal"><span class="label right">Description</span>{{p.description}}<br /></div>
+                     </div>
+             </div>
+             <script>
+			 $(document).ready(function(e) {
+				var str = '{{p.inventory_list}}'.toString().replace(/&quot;/g,'"');
+ 			    var invList = JSON.parse(str);
+				if(invList[0].name != null) {
+				$('#card-revel').append('<span class="label right">Inventory</span>');
+				for(var i=0;i< invList.length; i++)
+					$('#card-reveal').append(invList[i].name + ' : ' + invList[i].number);
+				}
+			});
+
+			 </script>
+             {% endfor %}
+                
+         
+        
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'registration/js/ripples.min.js' %}"></script>
+<script src="{% static 'registration/js/material.min.js' %}"></script>
+<script>
+//var cookie = document.cookie;
+//console.log(cookie+'null');
+$.material.init();
+$('.card-block.desc').click(function() {
+	if ($(this).css('top') == '0px')
+    	$(this).css('top','-285px');
+	else $(this).css('top','0px');
+});
+
+</script>
+{% endblock %}

@@ -4,10 +4,20 @@
 .card {
 	height:400px;
 }
+.card.profile {
+	height:360px;
+}
 .card-block.last {
 	position:relative;
 	top:-290px;
 }
+.card-title a {
+	    padding: 8px;
+    font-size: 22px;
+    color: #1A86bb;
+    
+}
+
 </style>
 {% endblock %}
         {% block logout %}
@@ -41,6 +51,7 @@
                     <h2 class="sec" style="margin-bottom:3px;">Requirements</h2>
             {% for r in requirements %}
            	<div class="card">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
                	 <ul class="list-group list-group-flush">
    					 	<li class="list-group-item"><span class="text left" style="font-size:18px">{{r.skills}}</span><span class="tag right" style="min-width:50px">{{r.numbers}}</span></li>
                   </ul>
@@ -48,7 +59,11 @@
  					 <div class="card-block desc rippler rippler-inverse">
                       	  <h4 class="card-title">{{r.req_type}}<span class="tag right">{{r.role}}</span></h4>
    						  <p class="card-text">{{r.character}}</p>
-                          <div class="card-reveal"><span class="label right">Description</span>{{r.description}}</div>
+                          <div class="card-reveal">
+                          	<span class="label right">Description</span>{{r.description}}<br />
+                            <span class="label right">Height(in m)</span>{{r.height}}<br />
+                            <span class="label right">Body Type</span>{{r.body_type}}<br />
+                            <span class="label right">Ethnicity</span>{{r.ethnicity}}</div>
                      </div>
                      <div class="card-block last">
                      	<a target="_blank" class="card-link"></a>
@@ -85,7 +100,7 @@
 //var cookie = document.cookie;
 //console.log(cookie+'null');
 $.material.init();
-$('.card-block.desc').click(function() {
+$('.card-block').click(function() {
 	if ($(this).css('top') == '0px')
     	$(this).css('top','-285px');
 	else $(this).css('top','0px');
@@ -98,9 +113,7 @@ function getApplicants(id)
 					$('.main.applicants').css('opacity',1);
 	   				$( ".main.applicants" ).html(html);
  			}); 
-			settimeout($('html, body').animate({
-        scrollTop: $('.main').offset().top + 90
-    }, 500),1000);
+			
 }
 </script>
 {% endblock %}

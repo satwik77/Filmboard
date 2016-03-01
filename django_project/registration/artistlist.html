@@ -1,0 +1,96 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+{% block extra_file %}
+{% endblock %}
+{% block content %}
+<div class="col-sm-12 sec-nav">
+    	<ul class="col-xs-12">
+        	<li class="sec-nav active"><a target="_blank" id="nav-about">About</a></li>
+            <li class="sec-nav"><a target="_blank" id="nav-exp">Experience</a></li>
+            <li class="sec-nav"><a target="_blank" id="nav-rec">Recommendations</a></li>
+            <li class="sec-nav"><a href="../projects" id="">Projects</a></li>
+       	</ul>
+</div>
+
+<div class="container-fluid" id="after-nav">
+    <div class="col-sm-12 about main" id="about" >
+<!-- 
+{{inp}}<br>
+{{proj_list}}
+            <br>
+<br>
+                
+            <div class="sec">
+            	<h2 class="sec">Projects </h2><br>
+  			      {% if proj_resp %}	
+   			      {% for proj in proj_resp reversed %}
+		        	<div class="card">
+      		         	 <ul class="list-group list-group-flush">
+   		 				 	<li class="list-group-item"><span class="text left"></span><span class="tag right">{{proj.project_type}}</span></li>
+           		         </ul>
+ 						 <div class="card-img-top" data-src="..." style="height:225px;background-color:#ddd;" ></div>
+	 					 <div class="card-block rippler rippler-inverse">
+    	                  	  <h4 class="card-title">{{proj.project_name}</h4>
+   							  <p class="card-text">{{proj.producer.name}}</p>
+            	              <div class="card-reveal"><span class="label right">Address</span> {{proj.location}} 
+                           </div>
+       		             </div>
+                         </div>
+                     
+            {% endfor %}
+            {% else %}
+            No results found
+            {% endif %}
+           </div> -->
+<!--            <div class="sec">
+  			   <h2 class="sec">Production Houses.. </h2><br>
+                    {% if prod_resp %}
+                    {% for prod in prod_resp reversed %}
+            			<div class="card">
+      		         	 <ul class="list-group list-group-flush">
+   		 				 	<li class="list-group-item"><span class="text left">{{prod.phone}}</span></li>
+           		         </ul>
+ 						 <div class="card-img-top" data-src="..." style="height:225px;background-color:#ddd;" ></div>
+	 					 <div class="card-block rippler rippler-inverse">
+    	                  	  <h4 class="card-title"><a href='../prod_profile/{{prod.id}}'>{{prod.name}}</a></h4>
+   							  <p class="card-text">{{prod.location}}</p>
+                           </div>
+       		             </div>
+                     
+            {% endfor %}
+            {% else %}
+            No results found
+            {% endif %}
+		   </div> -->
+           <div class="sec">
+  			  <h2 class="sec">Artists </h2><br>
+          
+                 {% for art in artistlist reversed %}
+              			<div class="card">
+      		         	 <ul class="list-group list-group-flush">
+   		 				 	<li class="list-group-item"><span class="text left">{{art.phone}}</span><span class="tag right">{{art.skills}}</span></li>
+           		         </ul>
+ 						 <div class="card-img-top" data-src="..." style="height:225px;background-color:#ddd;" ></div>
+	 					 <div class="card-block rippler rippler-inverse">
+    	                  	  <h4 class="card-title"><a href='../artist_search/{{art.id}}'>{{art.name}}</a></h4>
+   							  <p class="card-text">{{art.location}}</p>
+                           </div>
+       		             </div>
+                     
+            {% endfor %}
+
+        </div>
+
+
+    </div>
+    </div>
+</div>
+<script>
+$('.card-block').click(function() {
+	if ($(this).css('top') == '0px')
+    	$(this).css('top','-285px');
+	else $(this).css('top','0px');
+});
+
+</script>
+{% endblock %}

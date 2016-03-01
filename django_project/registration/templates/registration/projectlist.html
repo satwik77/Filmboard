@@ -16,12 +16,6 @@
         {% endif %}
         {% endblock %}
 {% block content %}
-<div class="col-sm-12 sec-nav">
-    	<ul class="col-xs-12">
-        	<li class="sec-nav"><a href="../dashboard" id="nav-about">Profile</a></li>
-            <li class="sec-nav active"><a href="../projects" id="">Projects</a></li> 
-       	</ul>
-</div>
 {% if choice == 'myproj' %}
 <div class="right float-container">
 	<div class="wrapper">
@@ -50,7 +44,8 @@
                             
             <!-- <a href='../dashboard/' class='button'>Dashboard </a> -->
 			<div class="card">
-               	 <ul class="list-group list-group-flush">
+             	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
+              	 <ul class="list-group list-group-flush">
    					 	<li class="list-group-item"><span class="text left">{{p.duration_start}}-{{p.duration_end}}</span><span class="tag right">{{p.project_type}} {{p.project_status}}</span></li>
                   </ul>
  				 <div class="card-img-top" data-src="..." style="height:225px;" ></div>
@@ -64,9 +59,21 @@
 						  </h4>
    						  <p class="card-text">{{p.date_posted}}</p>
 
-                          <div class="card-reveal"><span class="label right">Description</span>{{p.description}}</div>
+                          <div class="card-reveal"><span class="label right">Description</span>{{p.description}}<br /></div>
                      </div>
              </div>
+             <script>
+			 $(document).ready(function(e) {
+				var str = '{{p.inventory_list}}'.toString().replace(/&quot;/g,'"');
+ 			    var invList = JSON.parse(str);
+				if(invList[0].name != null) {
+				$('#card-revel').append('<span class="label right">Inventory</span>');
+				for(var i=0;i< invList.length; i++)
+					$('#card-reveal').append(invList[i].name + ' : ' + invList[i].number);
+				}
+			});
+
+			 </script>
              {% endfor %}
                 
          

@@ -1,0 +1,34 @@
+<form method='POST' action='.' id="applied-form">
+<h2 class="sec" style="margin-bottom:3px;"> Applied Projects <button type='submit' class="btn btn-raised btn-primary" name='del' style="float:right;margin-right:30px;">Save</button></h2>
+<p style="margin-bottom:30px"> {{req.req_type}}&nbsp;&nbsp;&nbsp;&nbsp;{{req.role}}&nbsp;&nbsp;&nbsp;&nbsp;{{req.skills}}
+</p>
+		{% for x in req_list %}
+			<div class="card">
+              	 <ul class="list-group list-group-flush">
+   					 	<li class="list-group-item"><span class="text left">{{x.skills}}</span><span class="tag right">{{x.type}}</span></li>
+                  </ul>
+ 				 <div class="card-img-top" data-src="..." style="height:225px;" ></div>
+ 					 <div class="card-block desc">
+                      	  <h4 class="card-title">
+              				<a href="../projects-details/{{x.id}}/"><h4 class="card-title">{{x.project}}</h4></a>
+						  </h4>
+   						  <p class="card-text">Delete Application <input type='radio' value='{{x.id}}' name='rid'></p>
+
+                          <div class="card-reveal"><span class="label right">Description</span>{{x.description}}</div>
+                     </div>
+             </div>
+
+		{% endfor %}
+	</form>
+<script>
+$('#applied-form').submit(function(e) {
+  e.preventDefault();
+  $.ajax({
+  url: "http://filmboard.ml/see_applied/",
+  method : "POST",
+  data: $('#applied-form').serialize()
+}).done(function(data) {
+	$( ".main.applied" ).html(data);	
+   
+}); });
+</script>

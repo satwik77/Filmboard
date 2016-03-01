@@ -1,0 +1,187 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+{% block extra_file %}
+<link rel="stylesheet" type="text/css" href="{% static 'registration/css/form.css' %}" />
+<link href="{% static 'registration/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet">
+<script src="{% static 'registration/js/bootstrap-datepicker.min.js' %}"></script>
+{% endblock %}
+{% block content %}
+<div class="container-fluid" id="after-nav">
+	<div class="col-sm-2">
+    	<ul class="content-nav">
+        <li id="profile"> <div class="icon">&#8592;</div> <a href="../dashboard">Back to Profile</a> </li>
+        </ul>
+    </div>
+    <div class="col-sm-8 content" >
+        <div class="row">
+            <h2 style="text-align:center;">Seek Recommendation</h2>
+            <form method='POST' action='../seek_rec/' class="form-horizontal">
+            
+                {% csrf_token %}
+            <strong>
+            <fieldset>
+            <div class="form-group">
+            	<label for="projectName" class="col-sm-2 control-label">Project Name</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='name' >
+                </div>
+            </div>
+            <div class="form-group">
+      			<label for="select111" class="col-md-2 control-label">Project Type</label>
+		        <div class="col-md-10">
+        			<select id="select1" class="form-control"  name='type' style="color:#000">
+          				<option style="color:#000">Feature Film</option>
+          				<option style="color:#000">Short Film</option>
+          				<option style="color:#000">Music Video</option>
+          				<option style="color:#000">TV Serial</option>
+          				<option style="color:#000">Advertisement</option>
+                        <option style="color:#000">Reality Show</option>
+                        <option style="color:#000">Any Other</option>
+        			</select>
+      			</div>
+    		</div>
+            <div class="form-group">
+      			<label for="select222" class="col-md-2 control-label">Current Project Status</label>
+		        <div class="col-md-10">
+        			<select id="select1" class="form-control"  name='status' style="color:#000">
+          				<option style="color:#000">On going</option>
+          				<option style="color:#000">Completed</option>
+          				<option style="color:#000">Shelved</option>
+          				<option style="color:#000">Live</option>
+          			</select>
+      			</div>
+    		</div>
+                       {% if artist %}
+            <div class="form-group">
+      			<label for="skills" class="col-md-2 control-label">Skills</label>
+		        <div class="col-md-10">
+        			<select id="select333" class="form-control"  name='skills'>
+          				<option value="Artist, Model" style="color:#000">Artist, Model</option>
+          				<option value="Director of Photography" style="color:#000">Director of Photography</option>
+          				<option value="TMO Director" style="color:#000">TMO Director</option>
+        			</select>
+      			</div>
+    		</div>
+                       <div class="form-group" id="char-wrapper">
+            	<label for="charName" class="col-sm-2 control-label">Character Name</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='char_name' >
+                </div>
+            </div>
+            <div class="form-group"  id="role-wrapper">
+            	<label for="rolePlayed" class="col-md-2 control-label">Role</label>
+            	<div class="col-md-10">
+              		<select id="select00" class="form-control"  name='role_played' style="color:#000">
+                  		<option style="color:#000">Hero</option>
+                 	 	<option style="color:#000">Heroine</option>
+                 	   <option style="color:#000">Villain</option>
+               	 	   <option style="color:#000">Supporting</option>
+                 	   <option style="color:#000">Technician</option>
+                	</select>
+            	</div>
+            </div>
+
+           {% elif allied %}
+            <div class="form-group">
+      			<label for="skills" class="col-md-2 control-label">Skills</label>
+		        <div class="col-md-10">
+        			<select id="select333" class="form-control"  name='skills'>
+                	<option value="Camera Equipment Seller" >Camera Equipment Sellers</option>
+                	<option value="Portfolio Makers" >Portfolio Makers</option>
+        			</select>
+      			</div>
+    		</div>
+          {% elif prod %}
+          {% else %}
+                      <div class="form-group">
+      			<label for="skills" class="col-md-2 control-label">Not Working</label>
+		        <div class="col-md-10">
+        			<select id="select333" class="form-control"  name='skills'>
+                	<option value="Camera Equipment Seller" >Camera Equipment Sellers</option>
+                	<option value="Portfolio Makers" >Portfolio Makers</option>
+        			</select>
+      			</div>
+    		</div>
+
+                      {% endif %}
+            <div class="form-group">
+            	<label for="start" class="col-sm-2 control-label">Start Duration</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='start' >
+                </div>
+            </div>
+            <div class="form-group">
+            	<label for="end" class="col-sm-2 control-label">End Duration</label> 	            	<div class="col-sm-10">
+                	<input type='text' class="form-control" name='end' >
+                </div>
+            </div>
+            <div class="form-group">
+      			<label for="email" class="col-md-2 control-label">Email</label>
+		        <div class="col-md-10">
+      				<input type='text' class="form-control" name='email' >
+                </div>
+           </div>
+           <div class="form-group">
+      			<label for="seektype" class="col-md-2 control-label">Recommender type</label>
+		        <div class="col-md-10">
+        			<select id="select1" class="form-control"  name='seek_type' style="color:#000">
+          				<option style="color:#000">Superior</option>
+          				<option style="color:#000">Colleague</option>
+          				<option style="color:#000">Junior</option>
+          			</select>
+      			</div>
+    		</div>
+		    <div class="form-group">
+      			<label for="seekname" class="col-md-2 control-label">Recommender Name</label>
+		        <div class="col-md-10">
+      				<input type='text'class="form-control" name='seek_name'>
+                </div>
+           </div>
+           <div class="form-group">
+      			<label for="textArea" class="col-md-2 control-label">Additional Message</label>
+		        <div class="col-md-10">
+      				<textarea name="message" id="body" class="form-control" row="3"></textarea>
+                </div>
+           </div>
+            <br>
+            <button type='submit' class="btn btn-raised btn-primary" name='save' style="float:right;margin-right:30px;">Save</button>
+        </form>
+        </fieldset>
+        </strong>
+        </div>
+       
+
+        </div>
+    </div>
+
+        </div>
+    </div>
+    
+</div>
+<script src="{% static 'registration/js/ripples.min.js' %}"></script>
+<script src="{% static 'registration/js/material.min.js' %}"></script>
+<script>
+//var cookie = document.cookie;
+//console.log(cookie+'null');
+$.material.init();
+$('input[name=end]').datepicker({
+    format: "yyyy-mm-dd",
+	orientation: "bottom right",
+	autoclose: true
+});
+$('input[name=start]').datepicker({
+    format: "yyyy-mm-dd",
+	orientation: "bottom right",
+	autoclose: true
+}).on('changeDate',function(e) {
+	$('input[name=end]').datepicker('setStartDate',e.date);
+	});
+$('select[name="skills"]').click(function() {
+	if( $('select[name="skills"] option:selected').val() == "Artist, Model") {
+		$('#role-wrapper').css('display','block');
+		$('#role-wrapper').css('display','block');
+	}
+	else { $('#role-wrapper').css('display','none'); $('#role-wrapper').css('display','none'); }
+});
+
+</script>
+{% endblock %}
+</body>
+</html>

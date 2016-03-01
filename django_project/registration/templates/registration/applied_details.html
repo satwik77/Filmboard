@@ -1,30 +1,40 @@
+{% load staticfiles %}
 <h2 class="sec" style="margin-bottom:3px;"> Applicants </h2>
-<p style="margin-bottom:30px"> {{req.req_type}}&nbsp;&nbsp;&nbsp;&nbsp;{{req.role}}&nbsp;&nbsp;&nbsp;&nbsp;{{req.skills}}</p>
-<table class="table table-fixed">
-	<tbody>
-    	<thead>
-        	<th class="col-xs-1">#</th><th class="col-xs-4">Name</th><th class="col-xs-3">Phone</th><th class="col-xs-4">E-mail</th>
-        </thead>
+<p style="margin-bottom:30px"> &nbsp;&nbsp;&nbsp;&nbsp;{{req.skills}}&nbsp;&nbsp;&nbsp;&nbsp;{{req.role}}</p>
 	{% if req.req_type == "Artist" %}
 		{% for u in artlist %}
-		<tr>
-        	<td class="col-xs-1">{{ forloop.counter }}</td>
-			<td class="col-xs-4"><a href = '../../artist_search/{{u.id}}/'>{{u.name}}</a></td>
-			<td class="col-xs-3">{{u.phone}}</td>
-            <td class="col-xs-4">{{u.email_id}}</td>
-		</tr>
+              			<div class="card profile">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
+      		         	 <ul class="list-group list-group-flush">
+                <li class="list-group-item"><span class="text left">{{u.type}}</span><span class="tag right">{{u.body_type}}</span></li>
+           		         </ul>
+				 {% if u.profile_pic %}<div class="card-img-top" data-src="..." style="height:225px;background: url({{u.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %}<div class="card-img-top" data-src="..." style="height:225px;background: url({% static 'registration/image/user-male-big.png'  %}) center no-repeat; background-size:cover;" ></div> {% endif %}
+
+	 					 <div class="card-block">
+    	                  	  <h4 class="card-title"><a href="../../artist_search/{{u.id}}/">{{u.name}}</a></h4>
+   							  <p class="card-text">Height : {{u.height}}</p>
+                              <div class="card-reveal"><span class="label right">My story</span>{{u.my_story}}</div>
+                           </div>
+                         
+       		             </div>
 		{% endfor %}
 		{% endif %}
 	{% if req.req_type == "Allied Service" %}
 		{% for u in alllist %}
-		<tr>
-        	<td class="col-xs-1">{{ forloop.counter }}</td>
-			<td class="col-xs-4"><a href = '../../artist_search/{{u.id}}/'>{{u.name}}</a></td>
-			<td class="col-xs-3">{{u.phone}}</td>
-            <td class="col-xs-4">{{u.email_id}}</td>
-		</tr>
+              			<div class="card profile">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
+      		         	 <ul class="list-group list-group-flush">
+                <li class="list-group-item"></li>
+           		         </ul>
+				 {% if u.profile_pic %}<div class="card-img-top" data-src="..." style="height:225px;background: url({{u.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %}<div class="card-img-top" data-src="..." style="height:225px;background: url({% static 'registration/image/user-male-big.png'  %}) center no-repeat; background-size:cover;" ></div> {% endif %}
+
+	 					 <div class="card-block">
+    	                  	  <h4 class="card-title"><a href="../../artist_search/{{u.id}}/">{{u.name}}</a></h4>
+   							  <p class="card-text">{{u.type}}</p>
+                              <div class="card-reveal"><span class="label right">My story</span>{{u.my_story}}</div>
+                           </div>
+                         
+       		             </div>
 		{% endfor %}
 		{% endif %}
-	</tbody>
-</table>
 

@@ -17,14 +17,6 @@
         {% endif %}
         {% endblock %}
 {% block content %}
-<div class="col-sm-12 sec-nav">
-    	<ul class="col-xs-12">
-        	<li class="sec-nav"><a href="../dashboard" id="nav-about">About</a></li>
-            <li class="sec-nav"><a href="../dashboard#exp" id="nav-exp">Experience</a></li>
-            <li class="sec-nav"><a href="../dashboard#rec" id="nav-rec">Recommendations</a></li>
-            <li class="sec-nav"><a href="../projects" id="">Projects</a></li>
-       	</ul>
-</div>
 <div class="container-fluid" id="after-nav">
     <div class="col-sm-12 about main" id="about" >
 
@@ -41,7 +33,8 @@
                  <ul class="list-group list-group-flush">
               <li class="list-group-item"><span class="text left">{{p.duration_start}}-{{p.duration_end}}</span><span class="tag right">{{p.project_type}} {{p.project_status}}</span></li>
                   </ul>
-         <div class="card-img-top" data-src="..." style="height:225px;" ></div>
+            				 {% if p.profile_pic %}<div class="card-img-top" data-src="..." style="height:245px;background: url({{p.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %}<div class="card-img-top" data-src="..." style="height:245px;" ></div> {% endif %}
+
            <div class="card-block desc">
                  <h4 class="card-title">
                   {% if choice == 'myproj' %}
@@ -70,7 +63,7 @@
                     {% for prod in prod_resp reversed %}
             			<div class="card profile">
       		         	 <ul class="list-group list-group-flush">
-   		 				 	<li class="list-group-item"><span class="text left">{{prod.phone}}</span></li>
+   		 				 	<li class="list-group-item"></li>
            		         </ul>
  						 {% if prod.profile_pic %}<div class="card-img-top" data-src="..." style="height:245px;background: url({{prod.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %}<div class="card-img-top" data-src="..." style="height:245px;background: url({% static 'registration/image/user-male-big.png'  %}) center no-repeat; background-size:cover;" ></div> {% endif %}
 	 					 <div class="card-block">
@@ -90,14 +83,15 @@
                  {% if artlist %}
                  {% for art in artlist reversed %}
               			<div class="card profile">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
       		         	 <ul class="list-group list-group-flush">
-   		 				 	<li class="list-group-item"><span class="text left">{{art.phone}}</span><span class="tag right">{{art.skills}}</span></li>
+                <li class="list-group-item"><span class="text left">Height : {{art.height}}</span><span class="tag right">{{art.body_type}}</span></li>
            		         </ul>
 				 {% if art.profile_pic %}<div class="card-img-top" data-src="..." style="height:225px;background: url({{art.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %}<div class="card-img-top" data-src="..." style="height:225px;background: url({% static 'registration/image/user-male-big.png'  %}) center no-repeat; background-size:cover;" ></div> {% endif %}
 
 	 					 <div class="card-block">
     	                  	  <h4 class="card-title"><a href="../artist_search/{{art.id}}/">{{art.name}}</a></h4>
-   							  <p class="card-text">{{art.location}}</p>
+   							  <p class="card-text">{{art.skills}}</p>
                               <div class="card-reveal"><span class="label right">My story</span>{{art.my_story}}</div>
                            </div>
                          
@@ -108,6 +102,31 @@
             No results found
             {% endif %}
         </div>
+           <div class="sec">
+          <h2 class="sec">Allied Services </h2><br>
+                 {% if allied_list %}
+                 {% for art in allied_list reversed %}
+                    <div class="card profile">
+            	 <img src="{% static 'registration/image/arrows.png' %}" class="card-arrow"/>
+                     <ul class="list-group list-group-flush">
+                <li class="list-group-item"></li>
+                       </ul>
+         {% if art.profile_pic %}<div class="card-img-top" data-src="..." style="height:225px;background: url({{art.profile_pic.url}}) center no-repeat; background-size:cover;" ></div>{% else %}<div class="card-img-top" data-src="..." style="height:225px;background: url({% static 'registration/image/user-male-big.png'  %}) center no-repeat; background-size:cover;" ></div> {% endif %}
+
+             <div class="card-block">
+                            <h4 class="card-title"><a href="../allied_profile/{{art.id}}/">{{art.name}}</a></h4>
+                  <p class="card-text">{{art.skills}}</p>
+                              <div class="card-reveal"><span class="label right">My story</span>{{art.my_story}}</div>
+                           </div>
+                         
+                       </div>
+                     
+            {% endfor %}
+            {% else %}
+            No results found
+            {% endif %}
+        </div>
+
 
 
     </div>

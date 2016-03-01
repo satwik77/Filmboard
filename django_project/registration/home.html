@@ -1,0 +1,121 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilmBoard</title>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static 'registration/css/javascript.fullPage.css' %}" />
+<link rel="stylesheet" href="{% static 'registration/css/reset.css' %}" />
+<link rel="stylesheet" href="{% static 'registration/css/home.css' %}" />
+<style>
+* {
+	font-size:16px;
+}
+</style>
+</head>
+
+<body>
+<div id="menu-wrapper">
+	<div id="logo">
+    	<a href="#home" ><img src="{% static 'registration/image/logo.png' %}" style="float:left;margin-right:10px;"/></a>
+        <div>FilmBoard</div>
+    </div>
+    <div id="menu-links">
+    	<ul>
+        	<li><a href="#producers">Producers</a></li>
+            <li><a href="#artists">Artists</a></li>
+            <li><a href="#business">Business</a></li>
+            <li style="display:none"><a target="_blank">Login</a></li>
+            <li id="login-lightbox-button"><a target="_blank" id="signup-button">Login</a></li>
+        </ul>
+    </div>
+</div>
+<div id="lightbox" style="display:none"> </div>
+<div id="overlay"></div>
+<div id="fullpage">
+	<div class="section" id="section0">
+    	<div class="slide"><div><span class="highlight-letter">D</span>ream of stardum? let’s make it true.</div></div>
+        <div class="slide"><div><span class="highlight-letter">W</span>ant to start making your own movie?</div></div>
+        <div class="slide"><div><span class="highlight-letter">W</span>ant to showcase your talent to the people who deserve?</div></div>   
+        <div class="slide"><div><span class="highlight-letter">W</span>ant your business to work for the film industry?</div></div>
+    </div>
+    <div class="section" id="section1">
+    	<div style="transition:all 2s ease-in-out;" id="director-icon">
+         	<img src="{% static 'registration/image/director-cam.png' %}" id="base" />
+         	<img src="{% static 'registration/image/director-reel.png' %}" class="reel left"> 
+            <img src="{% static 'registration/image/director-reel.png' %}" class="reel right">
+         </div>
+        <div class="side-info">	
+            <h1 style="transition:all 1s ease-in-out;">For Producers</h1>
+        	<div class="content" style="transition:all 1s ease-in-out;transition-delay: 0.5s;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. 	Mauris quis.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis</div>
+        	<div class="content" style="transition:all 1.5s ease-in-out;transition-delay: 1s;">Suspendisse tincidunt bibendum nulla nec ultrices. Fusce hendrerit, orci eu.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis</div>
+        	<div class="content" style="transition:all 2s ease-in-out;transition-delay: 1.5s;">Phasellus viverra lacus sed nulla scelerisque commodo. Aliquam blandit ullamcorper nisl.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis</div>
+        </div>
+    </div>
+    <div class="section" id="section2">
+    	<div class="side-info">
+        	<h1>For Artists</h1>
+        	<div class="content" style="transition:all 1s ease-in-out;transition-delay: 0.5s;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis accumsan.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis</div>
+            <div style="height:100%;width:225px;" class="dummy"></div>                        
+        	<div class="content" style="transition:all 1s ease-in-out;transition-delay: 1.5s;">Suspendisse tincidunt bibendum nulla nec ultrices. Fusce hendrerit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis</div>
+        	<div class="content" style="transition:all 1s ease-in-out;transition-delay: 1s;">Phasellus viverra lacus sed nulla scelerisque commodo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis</div>
+            <div style="height:100%;width:225px;" class="dummy"></div>
+        	<div class="content" style="transition:all 1s ease-in-out;transition-delay: 2s;">Donec ut leo et neque lobortis varius. Fusce eget sodales libero, quis blandit nulla. Sed fermentum hendrerit libero, ut ullamcorper dolor.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis</div>
+        </div>
+       <div class="icon-wrapper">
+        	<img src="{% static 'registration/image/mic.png' %}" id="mic">
+        </div>
+        <img src="{% static 'registration/image/melody.png' %}" class="melody">
+        <img src="{% static 'registration/image/melody.png' %}" class="melody" style="animation-delay:1s; transform:translateY(-30%)">
+        <img src="{% static 'registration/image/melody.png' %}" class="melody" style="animation-delay:2.5s;transform:translateY(-40%)">
+        <img src="{% static 'registration/image/melody.png' %}" class="melody" style="animation-delay:4s;transform:translateY(-35%)">
+        <img src="{% static 'registration/image/melody.png' %}" class="melody" style="animation-delay:5s;transform:translateY(-45%)">
+        <img src="{% static 'registration/image/melody.png' %}" class="melody" style="animation-delay:5.5s;transform:translateY(-25%)">
+   </div>
+   <div class="section" id="section3">
+   		<h1>For Business</h1>
+        <img src="{% static 'registration/image/cater-icon.png' %}" style="float:right"/>
+        <div class="content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis accumsan ligula.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis</div>
+        <img src="{% static 'registration/image/cater-icon1.png' %}" style="float:left;clear:right;"/>
+        <div class="content" style="float:left;">Suspendisse tincidunt bibendum nulla nec ultrices. Fusce hendrerit, orci eu luctus rutrum, orci urna hendrerit eros, ut lobortis magna orci vitae dui.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis</div>
+   </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="{% static 'registration/js/javascript.fullPage.min.js' %}"></script>
+<script type="text/javascript">
+	fullpage.initialize('#fullpage', {
+		anchors: ['home', 'producers', 'artists', 'business'],
+		menu: '#menu',
+		css3:true,
+		scrollOverflow: true,
+		afterRender: function () {
+            setInterval(function () {
+                fullpage.moveSlideRight();
+            }, 3000);
+		}
+	});
+	$('#login-lightbox-button').click(function() {
+		 $.ajax({
+  url: "http://filmboard.ml/login/",
+  method : "GET"
+}).done(function( html ) {
+	
+    $( "#lightbox" ).show().html( html );
+	$('#overlay').show();
+	
+  }); });
+  $('#overlay').click(function(e) {
+    if($('#lightbox').css('display') == 'block') {
+	  $('#lightbox').hide();
+	  $(this).hide(); }
+	  
+});
+	
+
+	
+
+</script>
+</body>
+</html>

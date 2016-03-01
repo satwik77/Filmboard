@@ -1,0 +1,42 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+{% block extra_file %}<link rel="stylesheet" type="text/css" href="{% static 'registration/css/form.css' %}" />
+{% endblock %}
+        {% block logout %}
+        {% if user.is_authenticated %}
+	           	<a href="#"><img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+	    {% else %}
+    	    	<a href="#">Guest<img src="{% static 'registration/image/user-male.png'  %}" /></a></li>
+        {% endif %}
+        {% endblock %}
+{% block content %}
+<div class="container-fluid" id="after-nav">
+	<div class="col-sm-2">
+    	<ul class="content-nav">
+        <li id="profile"> <div class="icon">&#8592;</div> <a href="../dashboard">Back to Dashboard</a> </li>
+        </ul>
+    </div>
+    <div class="col-sm-8 content" >
+            <div class="row">
+            <h2 style="text-align:center;">Apply for a recommendation:</h2>
+           
+			
+            <form method='POST' action='.' class="form-horizontal">
+                {% csrf_token %}
+                <div class="form-group" id="character-wrapper">
+            <label for="rolePlayed" class="col-md-2 control-label">Email: (An email will be sent on your behalf to this account asking them for a recommendation): </label>
+            <div class="col-md-10">
+              <input type='email' class="form-control" name='email' required >
+            </div>
+        </div>
+<br>
+            <button type='submit' class="btn btn-raised btn-primary" style="float:right;margin-right:30px;">Apply</button>
+
+        </form>
+        </div>
+    </div>
+
+        </div>
+                {% endblock %}
+</body>
+</html>
